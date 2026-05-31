@@ -11,3 +11,4 @@ C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\V
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\refint\VintageCanvas.dll
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.pdb
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\ref\VintageCanvas.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.sourcelink.json

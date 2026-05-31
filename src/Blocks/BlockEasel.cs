@@ -64,6 +64,7 @@ namespace VintageCanvas.src.Blocks
 
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref EnumHandling handling)
         {
+            world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
             handling = EnumHandling.PreventDefault;
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
             if (ee == null) return false;
@@ -108,7 +109,6 @@ namespace VintageCanvas.src.Blocks
             Vec3d raystart = playerray.origin;
             Vec3d raydir = playerray.dir;
 
-
             //plane normal and origin
             Vec3d origin = blockSel.Position.ToVec3d();
             BlockFacing blockFace = blockSel.Face;
@@ -116,7 +116,8 @@ namespace VintageCanvas.src.Blocks
 
             //shared origin for every direction over the block centre
             origin.X = origin.X + 0.5;
-            origin.Y = origin.Y + 2.332; //Where all four directions share a plane point
+            //origin.Y = origin.Y + 2.332; //Where all four directions share a plane point
+            origin.Y = origin.Y + 2.1137;
             origin.Z = origin.Z + 0.5;
 
             //Predefined normal vectors for 15 degree planes
@@ -184,11 +185,11 @@ namespace VintageCanvas.src.Blocks
                 return;
             }
             Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel, 15);
-            //world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
+            world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
 
-            //Square canvas covers approx x[-0.5, 0.5], y[-0.62, -1.62]
+            //Square canvas covers approx x[-0.5, 0.5], y[-0.3898, -1.3898]
             int xpixel = (int)((canvasIntersect.X + 0.5) * 32);
-            int ypixel = (int)(-(canvasIntersect.Y + 0.62) * 32);
+            int ypixel = (int)(-(canvasIntersect.Y + 0.3898f) * 32);
 
             if (xpixel < 0 || ypixel < 0) {
                 return;
