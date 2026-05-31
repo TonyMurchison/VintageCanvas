@@ -1,0 +1,13 @@
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Debug\Mods\mod\modinfo.json
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Debug\Mods\mod\VintageCanvas.deps.json
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Debug\Mods\mod\VintageCanvas.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Debug\Mods\mod\VintageCanvas.pdb
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.csproj.AssemblyReference.cache
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.AssemblyInfoInputs.cache
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.AssemblyInfo.cs
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.csproj.CoreCompileInputs.cache
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\refint\VintageCanvas.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\VintageCanvas.pdb
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\obj\Debug\ref\VintageCanvas.dll

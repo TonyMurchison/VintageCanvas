@@ -1,0 +1,211 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using VintageCanvas.src.Utility;
+using Vintagestory.API.Client;
+using Vintagestory.API.Common;
+using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
+using Vintagestory.API.Util;
+using Vintagestory.Client.NoObf;
+using Vintagestory.GameContent;
+
+namespace VintageCanvas.src.Entities
+{
+    internal class BLockEntityCanvas : BlockEntity
+    {
+        ICoreClientAPI capi;
+        IBlockTextureAtlasAPI atlas;
+        public int? canvasId;
+        public int[] pixeldata;
+        private MeshData clientMesh;
+
+        Dictionary<string, string> FrameSequence = new Dictionary<string, string>{
+            { "none", "simple" },
+            { "simple", "fancy" },
+            { "fancy", "none" }
+        };
+
+        public override void Initialize(ICoreAPI api)
+        {
+            if (api.Side == EnumAppSide.Client)
+            {
+                capi = api as ICoreClientAPI;
+                atlas = capi.BlockTextureAtlas;                
+            }
+            base.Initialize(api);
+
+            if (pixeldata != null)
+            {
+                RegisterDelayedCallback(dt =>
+                {
+                    UpdateTexture();
+                }, 200);
+            }
+
+        }
+
+
+
+        public override void OnBlockPlaced(ItemStack byItemStack = null)
+        {         
+
+            canvasId = byItemStack.Attributes.GetInt("canvasid");
+            if (Api.Side == EnumAppSide.Client)
+            {
+                //If canvas has pixeldata: load and set local
+                if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
+                {
+                    byte[] serialisedpixeldata = byItemStack.Attributes.GetBytes("vc_pixeldata");
+                    pixeldata = SerializerUtil.Deserialize<int[]>(serialisedpixeldata);
+                }
+                //Else, initialise pixeldata as canvas default
+                else
+                {
+                    BitmapRef bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/canvas.png")).ToBitmap(capi);
+                    pixeldata = bmp.Pixels;
+                }
+            }
+
+            MarkDirty(true);
+
+            if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
+            {
+                RegisterDelayedCallback(dt =>
+                {
+                    UpdateTexture();
+                }, 200);
+            }
+
+            base.OnBlockPlaced(byItemStack);
+        }
+
+        public void AddFrame(ItemStack held)
+        {
+            if (held == null)
+            {
+                return;
+            }
+
+            string frame = Block.Variant["frameshape"];
+
+            UpdateFrame(held, FrameSequence[frame]);
+            VintageCanvasModSystem.NetworkHandler.SendFrameData(Pos, FrameSequence[frame]);
+            UpdateTexture();            
+            MarkDirty(true);
+        }
+
+        private void UpdateTexture()
+        {
+            if (Api.Side == EnumAppSide.Client)
+            {
+                //send pixeldata to server
+                BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata));
+
+
+                ClientMain main = capi.World as ClientMain;
+
+                ClientPlatformAbstract platform = main.Platform;
+                if (pixeldata == null)
+                {
+                    return;
+                }
+                BitmapRef bmpref = platform.CreateBitmapFromPixels(pixeldata, 32, 32);
+
+                //Insert custom texture at vintagecanvas:canvasId
+                if (canvasId == null)
+                {
+                    Api.World.Logger.Error("Wall canvas tried to update without canvasId");
+                    return;
+                }
+                AssetLocation texLoc = new AssetLocation("vintagecanvas", canvasId.ToString());
+
+                capi.BlockTextureAtlas.GetOrInsertTexture(
+                        texLoc,
+                        out int _,
+                        out TextureAtlasPosition texPos,
+                        () => platform.CreateBitmapFromPixels(pixeldata, 32, 32),
+                        0.005f
+                    );
+                //Api.World.Logger.Event("Texture inserted at texPos: " + texPos);
+
+                //Reroute "painting" slot of the renderer
+                ITexPositionSource defaultSrc = capi.Tesselator.GetTextureSource(Block);
+                var paintingSrc = new TextureUtil.PaintingTexSource(defaultSrc, texPos, capi.BlockTextureAtlas.Size);
+
+
+                String shapestring = "vintagecanvas-canvas-" + Block.Variant["ratio"];
+                capi.Tesselator.TesselateShape(
+                    shapestring,
+                    Block.Code,
+                    Block.Shape,
+                    out MeshData mesh,
+                    paintingSrc
+                );
+
+                clientMesh = mesh;                
+
+                MarkDirty(true);
+            }
+        }
+        public void UpdatePixelData(int[] pixeldata)
+        {
+            this.pixeldata = pixeldata;
+        }
+
+        public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
+        {
+            if (clientMesh != null)
+            {
+                mesher.AddMeshData(clientMesh.Clone());
+                return true;   // skip default block mesh
+            }
+
+            return base.OnTesselation(mesher, tessThreadTesselator);
+        }
+
+        public override void ToTreeAttributes(ITreeAttribute tree)
+        {
+            base.ToTreeAttributes(tree);
+            if (canvasId != null)
+            {
+                tree["canvasid"] = new IntAttribute((int)canvasId);
+            }
+            if (pixeldata != null)
+            {
+                tree.SetBytes("vc_pixeldata", SerializerUtil.Serialize(pixeldata));
+            }
+        }
+        public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
+        {
+            base.FromTreeAttributes(tree, worldForResolving);
+            canvasId = tree.GetInt("canvasid");
+            if (tree.HasAttribute("vc_pixeldata"))
+            {
+                pixeldata = SerializerUtil.Deserialize<int[]>(tree.GetBytes("vc_pixeldata"));
+            }
+        }
+
+        public void UpdateFrame(ItemStack held, string frametype)
+        {
+            if (held.Collectible.Code.BeginsWith("game", "plank"))
+            {
+                string wood = held.Collectible.Variant["wood"];
+                string ratio = Block.Variant["ratio"];
+                string side = Block.Variant["side"];
+
+                Dictionary<string, string> canvasVariant = new Dictionary<string, string>
+                {
+                    { "ratio", ratio },
+                    { "frameshape", frametype },
+                    { "framewood", wood },
+                    { "side", side }
+                };
+
+                Block newBlock = Api.World.GetBlock(Block.CodeWithVariants(canvasVariant));
+                Api.World.BlockAccessor.ExchangeBlock(newBlock.BlockId, Pos);
+            }
+        }
+    }
+}

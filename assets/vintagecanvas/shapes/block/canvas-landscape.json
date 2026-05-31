@@ -1,0 +1,29 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+	},
+	"elements": [
+		{
+			"name": "canvas",
+			"from": [ 16.0, 15.0, 2.0 ],
+			"to": [ 32.0, 16.0, 14.0 ],
+			"rotationOrigin": [ 16.0, 16.0, 0.0 ],
+			"rotationX": -90.0,
+			"rotationY": -180.0,
+			"faces": {
+				"north": { "texture": "#painting", "uv": [ 0.0, 2.0, 16.0, 3.0 ] },
+				"east": { "texture": "#painting", "uv": [ 0.0, 2.0, 1.0, 14.0 ], "rotation": 90 },
+				"south": { "texture": "#painting", "uv": [ 0.0, 13.0, 16.0, 14.0 ] },
+				"west": { "texture": "#painting", "uv": [ 15.0, 2.0, 16.0, 14.0 ], "rotation": -90 },
+				"up": { "texture": "#canvasback", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#painting", "uv": [ 0.0, 2.0, 16.0, 14.0 ] }
+			}
+		}
+	]}

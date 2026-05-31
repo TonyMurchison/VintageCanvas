@@ -1,0 +1,34 @@
+{
+  "code": "turpentine",
+  "perishableProps": {
+    "type": "None",
+    "freshHours": { "avg": 48 },
+    "transitionHours": { "avg": 48 },
+    "transitionRatio": 1,
+    "transitionedStack": {
+      "type": "item",
+      "code": "turpentine"
+    }
+  },
+  "shape": { "base": "block/food/meal/liquid" },
+  "ingredients": [
+    {
+      "code": "resin",
+      "validStacks": [
+        {
+          "type": "item",
+          "code": "game:resin"
+        }
+      ],
+      "minQuantity": 1,
+      "maxQuantity": 1
+
+    }
+  ],
+
+  "cooksInto": {
+    "type": "Item",
+    "code": "turpentine",
+    "quantity": 100
+  }
+}

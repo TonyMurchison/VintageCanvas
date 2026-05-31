@@ -1,0 +1,20 @@
+{
+  "code": "leadwhite",
+  "ingredients": [
+    {
+      "type": "item",
+      "code": "game:dilutedcassiteriteportion",
+      "litres": 1
+    },
+    {
+      "type": "item",
+      "code": "pigment-leadwhite",
+      "quantity": 1
+    }
+  ],
+  "output": {
+    "type": "item",
+    "code": "pigment-leadtin",
+    "stackSize": 1
+  }
+}

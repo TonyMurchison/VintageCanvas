@@ -1,0 +1,117 @@
+{
+  "code": "easel",
+  "entityclass": "EaselEntity",
+  "class":  "BlockEasel",
+
+  "variantgroups": [
+    {
+      "code": "woodtype",
+      "states": [ "aged", "veryaged" ],
+      "loadFromProperties": "block/wood"
+    },
+    {
+      "code": "canvas",
+      "states": [ "none", "landscape", "portrait", "square" ]
+    },
+    {
+      "code": "side",
+      "loadFromProperties": "abstract/horizontalorientation"
+    }    
+  ],
+
+  "behaviors": [
+    { "name": "HorizontalOrientable" },
+    { "name": "EaselBlockBehavior" },
+    { name: "Multiblock", propertiesByType: {
+				"*": { sizex: 1, sizey: 2, sizez: 1, cposition: { x: 0, y: 0, z: 0 }}
+			}
+    }
+  ],
+  "attributes": {
+  },
+
+  "textures": {
+    "wood": { "base": "game:block/wood/debarked/{woodtype}" },
+    "canvas": { "base": "block/canvas" },
+    "canvasback": { "base": "block/canvasback" },
+    "painting":  { "base":  "block/canvas"}
+  },
+
+  "shapebytype": {
+    "*-none-north": { "base": "block/easel", "rotateY": 0 },
+    "*-none-east": { "base": "block/easel", "rotateY": 270 },
+    "*-none-south": { "base": "block/easel", "rotateY": 180 },
+    "*-none-west": { "base": "block/easel", "rotateY": 90 },
+    "*-landscape-north": { "base": "block/easel-landscape", "rotateY": 0 },
+    "*-landscape-east": { "base": "block/easel-landscape", "rotateY": 270 },
+    "*-landscape-south": { "base": "block/easel-landscape", "rotateY": 180 },
+    "*-landscape-west": { "base": "block/easel-landscape", "rotateY": 90 },
+    "*-portrait-north": { "base": "block/easel-portrait", "rotateY": 0 },
+    "*-portrait-east": { "base": "block/easel-portrait", "rotateY": 270 },
+    "*-portrait-south": { "base": "block/easel-portrait", "rotateY": 180 },
+    "*-portrait-west": { "base": "block/easel-portrait", "rotateY": 90 },
+    "*-square-north": { "base": "block/easel-square", "rotateY": 0 },
+    "*-square-east": { "base": "block/easel-square", "rotateY": 270 },
+    "*-square-south": { "base": "block/easel-square", "rotateY": 180 },
+    "*-square-west": { "base": "block/easel-square", "rotateY": 90 },
+  },
+
+  "sideopaque": {
+    "all": false
+  },
+
+  "sidesolid": {
+    "all": false
+  },
+
+  "sounds": {
+    "place": "game:block/planks",
+    "break": "game:block/planks",
+    "hit": "game:block/planks"
+  },
+
+  "resistance": 2,
+  "lightAbsorption": 0,
+  "rainPermeable": true,
+  "creativeinventory": {
+    "general": [ "*-{woodtype}-none-north" ],
+    "decorative": [ "*-{woodtype}-none-north" ],
+    "vintagecanvas": [ "*-{woodtype}-none-north" ]
+  },
+
+  "selectionBoxes": [
+    {
+      "x1": 0,
+      "y1": 0,
+      "z1": 0,
+      "x2": 1,
+      "y2": 1,
+      "z2": 1
+      }
+  ],
+
+  "collisionBoxes": [
+    {
+      "x1": 0,
+      "y1": 0,
+      "z1": 0,
+      "x2": 1,
+      "y2": 1,
+      "z2": 1
+    }
+  ],
+
+  "guiTransform": {
+    "translation": {
+      "x": 2,
+      "y": 7,
+      "z": 0
+    },
+    "rotation": {
+      "x": -23,
+      "y": -154,
+      "z": 0
+    },
+    "scale": 0.68
+  }
+}

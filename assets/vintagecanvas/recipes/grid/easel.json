@@ -1,0 +1,26 @@
+[
+  {
+    "ingredientPattern": "_S_,PSP,P_P",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "P": {
+        "type": "item",
+        "code": "game:plank-*",
+        "name": "wood",
+        "quantity": 1,
+        "skipVariant": [ "agedebony", "rottenebony" ]
+      }
+    },
+    "name": "easel",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "easel-{wood}-none-north",
+      "quantity": 1
+    }
+  }
+]

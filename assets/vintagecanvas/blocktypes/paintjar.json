@@ -1,0 +1,197 @@
+{
+  "code": "paintjar",
+  "creativeinventory": {
+    "general": [ "*" ]
+  },
+
+  "classByType": {
+    "*-fired": "BlockPaintJar"
+  },
+
+  "behaviors": [
+    {
+      "name": "GroundStorable",
+      "properties": {
+        "layout": "Quadrants",
+        "collisionBox": {
+          "x1": 0,
+          "y1": 0,
+          "z1": 0,
+          "x2": 1,
+          "y2": 0.25,
+          "z2": 1
+        }
+      }
+    },
+    { "name": "Unplaceable" }
+  ],
+
+  "attributes": {
+    "mediums": [
+      { "medium": "game:oilportion-flax" },
+      { "medium": "game:oilportion-olive" }
+    ],
+
+    "pigmentrecipes": [
+      {
+        "input": "powder-cinnabar",
+        "output": "vintagecanvas:paint-vermillion"
+      },
+      {
+        "input": "powder-lapislazuli",
+        "output": "vintagecanvas:paint-ultramarine"
+      },
+      {
+        "input": "pigment-redochre",
+        "output": "vintagecanvas:paint-redochre"
+      },
+      {
+        "input": "pigment-woad",
+        "output": "vintagecanvas:paint-woad"
+      },
+      {
+        "input": "pigment-leadtin",
+        "output": "vintagecanvas:paint-leadtin"
+      },
+      {
+        "input": "pigment-yellowochre",
+        "output": "vintagecanvas:paint-yellowochre"
+      },
+      {
+        "input": "pigment-organicgreen",
+        "output": "vintagecanvas:paint-organicgreen"
+      },
+      {
+        "input": "pigment-malachite",
+        "output": "vintagecanvas:paint-malachite"
+      },
+      {
+        "input": "powder-charcoal",
+        "output": "vintagecanvas:paint-carbonblack"
+      },
+      {
+        "input": "pigment-chalkwhite",
+        "output": "vintagecanvas:paint-chalkwhite"
+      },
+      {
+        "input": "pigment-leadwhite",
+        "output": "vintagecanvas:paint-leadwhite"
+      }
+    ],
+
+    "paintcolors": [
+      {
+        "input": "vintagecanvas:paint-vermillion",
+        "output": "-3669996"
+      },
+      {
+        "input": "vintagecanvas:paint-ultramarine",
+        "output": "-15466296"
+      },
+      {
+        "input": "vintagecanvas:paint-redochre",
+        "output": "-6927317"
+      },
+      {
+        "input": "vintagecanvas:paint-woad",
+        "output": "-13225332"
+      },
+      {
+        "input": "vintagecanvas:paint-leadtin",
+        "output": "-199595"
+      },
+      {
+        "input": "vintagecanvas:paint-yellowochre",
+        "output": "-5339583"
+      },
+      {
+        "input": "vintagecanvas:paint-organicgreen",
+        "output": "-10582992"
+      },
+      {
+        "input": "vintagecanvas:paint-malachite",
+        "output": "-14241530"
+      },
+      {
+        "input": "vintagecanvas:paint-carbonblack",
+        "output": "-16119286"
+      },
+      {
+        "input": "vintagecanvas:paint-chalkwhite",
+        "output": "-4080464"
+      },
+      {
+        "input": "vintagecanvas:paint-leadwhite",
+        "output": "-1184275"
+      }
+    ],
+
+    "shelvable": true,
+    "handbook": {
+      "ignoreCreativeInvStacks": true,
+      "groupBy": [ "paintjar-*" ]
+    },
+    "liquidContainerProps": {
+      "capacityLitres": 1,
+      "transferSizeLitres": 0.1,
+      "emptyShapeLoc": "shapes/item/paintjar",
+      "liquidContentShapeLoc": "shapes/item/paintjar-contents",
+      "liquidMaxYTranslate": 0.19
+    }
+  },
+
+  "variantgroups": [
+    {
+      "code": "color",
+      "states": [ "blue", "fire", "black", "brown", "cream", "earthyorange", "gray", "orange", "red", "tan" ]
+    },
+    {
+      "code": "type",
+      "states": [ "fired" ]
+    }
+  ],
+
+  "textures": {
+    "mat": { "base": "game:block/clay/hardened/{color}" }
+  },
+
+  "shape": {
+    "base": "item/paintjar"
+  },
+
+  "sounds": {
+    "walk": "walk/stone",
+    "break": "block/ceramicplace",
+    "hit": "block/ceramichit",
+    "place": "block/ceramicplace"
+  },
+
+  "guiTransform": {
+    "rotation": {
+      "x": -36,
+      "y": 33,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0.2,
+      "z": 0.5
+    },
+    "scale": 2.56
+  },
+
+  "tpHandTransform": {
+    "translation": {
+      "x": -1.6,
+      "y": -1,
+      "z": -1
+    },
+    "rotation": {
+      "x": 2,
+      "y": 7,
+      "z": -86
+    },
+    "scale": 0.47
+  }
+
+}

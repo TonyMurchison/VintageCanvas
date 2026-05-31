@@ -1,0 +1,67 @@
+[
+  {
+    "ingredientPattern": "C__,_S_,__S",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "C": {
+        "type": "item",
+        "code": "game:cattailtops"
+      }
+    },
+    "name": "Small Brush",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "item",
+      "code": "brush-small",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "_C_,CS_,__S",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "C": {
+        "type": "item",
+        "code": "game:cattailtops"
+      }
+    },
+    "name": "Medium Brush",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "item",
+      "code": "brush-medium",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "CC_,CS_,__S",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "C": {
+        "type": "item",
+        "code": "game:cattailtops"
+      }
+    },
+    "name": "Large Brush",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "item",
+      "code": "brush-large",
+      "quantity": 1
+    }
+  }
+]

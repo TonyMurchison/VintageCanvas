@@ -1,0 +1,92 @@
+{
+  "code": "palette",
+  "creativeinventory": {
+    "general": [ "*" ]
+  },
+  "class": "BlockPalette",
+  "entityClass": "BlockEntityPalette",
+
+  "handbook": {
+    "ignoreCreativeInvStacks": true,
+    "groupBy": [ "palette-*" ]
+  },
+
+  "textures": {
+    "wood": { "base": "game:block/wood/debarked/oak" },
+    "painting": { "base": "game:block/wood/debarked/oak" }
+  },
+
+
+  "shape": {
+    "base": "block/palette"
+  },
+  "behaviors": [
+
+  ],
+
+  "resistance": 1,
+  "lightAbsorption": 0,
+  "rainPermeable": true,
+  "sideopaque": {
+    "all": false
+  },
+  "sidesolid": {
+    "all": false
+  },
+
+  "selectionBoxes": [
+    {
+      "x1": 0.125,
+      "y1": 0,
+      "z1": 0.25,
+      "x2": 0.875,
+      "y2": 0.0625,
+      "z2": 0.75
+    }
+  ],
+
+  "collisionBoxes": [
+    {
+      "x1": 0.125,
+      "y1": 0,
+      "z1": 0.25,
+      "x2": 0.875,
+      "y2": 0.0625,
+      "z2": 0.75
+    }
+  ],
+
+  "tpHandTransform": {
+    "translation": {
+      "x": -0.8,
+      "y": 0.9,
+      "z": -0.4
+    },
+    "rotation": {
+      "x": -7,
+      "y": -180,
+      "z": 6
+    },
+    "origin": {
+      "x": 0.5,
+      "y": -2.5,
+      "z": 0.5
+    },
+    "scale": 0.73
+  },
+
+  "guiTransform": {
+    "rotation": {
+      "x": -86,
+      "y": -124,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 1.52
+  }
+
+}

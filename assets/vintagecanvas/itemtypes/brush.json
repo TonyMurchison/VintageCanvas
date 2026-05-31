@@ -1,0 +1,119 @@
+{
+  "code": "brush",
+  "variantgroups": [
+    {
+      "code": "size",
+      "states": [ "small", "medium", "large" ]
+    }
+  ],
+
+  "class": "ItemBrush",
+  "tags": [ "tool" ],
+  "attributes": {
+    "rackable": true,
+    "toolrackTransform": {
+      "translation": {
+        "x": -0.1,
+        "y": 0.6,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 90,
+        "z": -1
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.8,
+        "z": 0.5
+      },
+      "scale": 1.25
+    }
+  },
+
+  "shapebytype": {
+    "*": {
+      "base": "item/brush-{size}"
+    }
+  },
+  "textures": {
+    "wood": { "base": "game:block/wood/debarked/oak" },
+    "metal": { "base": "game:block/metal/ingot/iron" },
+    "painting": { "base": "game:block/hay/bamboo-side" },
+    "bristles": { "base": "game:block/hay/bamboo-side" }
+  },
+
+  "creativeinventory": {
+    "general": [ "*" ],
+    "items": [ "*" ]
+  },
+
+  "onDisplayTransform": {
+    "translation": {
+      "x": 0.05,
+      "y": 0,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 0.65
+  },
+  "groundStorageTransform": {
+    "translation": {
+      "x": 0,
+      "y": -0.055,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0.1,
+      "y": 8,
+      "z": 0.1
+    },
+    "scale": 0.9
+  },
+  "handbook": {
+    "groupBy": [ "brush-*" ]
+  },
+
+  "maxstacksize": 1,
+  "materialDensity": 500,
+  "guiTransform": {
+    "translation": {
+      "x": -10,
+      "y": -12,
+      "z": 0
+    },
+    "rotation": {
+      "x": 55,
+      "y": -28,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.41,
+      "y": -0.1,
+      "z": 0.8
+    },
+    "scale": 2.54
+  },
+  "tpHandTransform": {
+    "translation": {
+      "x": -0.4,
+      "y": 0.9,
+      "z": 0.8
+    },
+    "rotation": {
+      "x": -128,
+      "y": 81,
+      "z": -65
+    },
+    "origin": {
+      "x": 0.7,
+      "y": -0.8,
+      "z": 0
+    },
+    "scale": 0.82
+  }  
+}

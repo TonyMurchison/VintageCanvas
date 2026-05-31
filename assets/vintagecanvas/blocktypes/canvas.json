@@ -1,0 +1,156 @@
+{
+  "code": "canvas",
+  "creativeinventory": {
+    "general": [ "*-{ratio}-none-oak-north" ]
+  },
+
+  "class": "BlockCanvas",
+  "entityClass": "BlockEntityCanvas",
+
+  "variantgroups": [
+    {
+      "code": "ratio",
+      "states": [ "portrait", "landscape", "square" ]
+    },
+
+    {
+      "code": "frameshape",
+      "states": [ "none", "simple", "fancy" ]
+    },
+    {
+      "code": "framewood",
+      "states": [ "aged", "veryaged" ],
+      "loadFromProperties": "block/wood"
+    },
+    {
+      "code": "side",
+      "loadFromProperties": "abstract/horizontalorientation"
+    }
+
+  ],
+
+  "shapebytype": {
+    "*-none-*": {
+      "base": "block/canvas-{ratio}",
+      "rotateYByType": {
+        "*-north": 0,
+        "*-east": 270,
+        "*-south": 180,
+        "*-west": 90
+      }
+    },
+    "*-simple-*": {
+      "base": "block/canvas-{ratio}-simple",
+      "rotateYByType": {
+        "*-north": 0,
+        "*-east": 270,
+        "*-south": 180,
+        "*-west": 90
+      }
+    },
+    "*-fancy-*": {
+      "base": "block/canvas-{ratio}-fancy",
+      "rotateYByType": {
+        "*-north": 0,
+        "*-east": 270,
+        "*-south": 180,
+        "*-west": 90
+      }
+    }
+  },
+
+  "textures": {
+    "canvas": { "base": "block/canvas" },
+    "canvasback": { "base": "block/canvasback" },
+    "painting": { "base": "block/canvas" },
+    "frame": { "base": "game:block/wood/debarked/{framewood}" }
+  },
+  "sideopaque": {
+    "all": false
+  },
+  "sidesolid": {
+    "all": false
+  },
+  "heldTpIdleAnimation": "holdbothhands",
+  "maxstacksize": 1,
+
+  "behaviors": [
+    { "name": "HorizontalAttachable" },
+    {
+      "name": "GroundStorable",
+      "properties": {
+        "layout": "Stacking",
+        "upSolid": true,
+        "placeRemoveSound": "game:block/walk/wood",
+        "stackingModel": "block/canvas-stacking-{ratio}",
+        "collisionBox": {
+          "x1": 0.125,
+          "y1": 0,
+          "z1": 0.125,
+          "x2": 0.875,
+          "y2": 0.0625,
+          "z2": 0.875
+        },
+        "cbScaleYByLayer": 1,
+        "modelItemsToStackSizeRatio": 1,
+        "stackingCapacity": 10,
+        "transferQuantity": 1,
+        "bulkTransferQuantity": 4
+      }
+    },
+    { "name": "RightClickPickup" }
+  ],
+  "resistance": 0.1,
+  "collisionbox": null,
+  "selectionbox": {
+    "x1": 0,
+    "y1": 0,
+    "z1": 0,
+    "x2": 1,
+    "y2": 1,
+    "z2": 0.0625,
+    "rotateYByType": {
+      "*-east": 270,
+      "*-south": 180,
+      "*-west": 90,
+      "*-north": 0
+    }
+  },
+
+  "guiTransform": {
+    "rotation": {
+      "x": -21,
+      "y": -139,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.1,
+      "y": 0.7,
+      "z": 0.5
+    },
+    "scaleXyz": {
+      "x": -1.24,
+      "y": 1.24,
+      "z": 1.24
+    }
+  },
+
+  "tpHandTransform": {
+    "translation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 93,
+      "y": 6,
+      "z": -75
+    },
+    "origin": {
+      "x": 0.2,
+      "y": 0.05,
+      "z": 0.2
+    },
+    "scale": 0.55
+  }
+}

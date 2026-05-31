@@ -1,0 +1,52 @@
+{
+  "vintagecanvas:block-easel-*": "Easel",
+  "vintagecanvas:block-paintjar-*": "Paint Jar",
+  "vintagecanvas:block-palette": "Palette",
+  "vintagecanvas:block-canvas-*": "Canvas",
+
+  "vintagecanvas:item-brush-small": "Small brush",
+  "vintagecanvas:item-brush-medium": "Medium brush",
+  "vintagecanvas:item-brush-large": "Large brush",
+
+  "vintagecanvas:item-paintjar-*-raw": "Raw paint jar",
+
+  "vintagecanvas:incontainer-item-paint-vermillion": "Vermillion paint",
+  "vintagecanvas:incontainer-item-paint-redochre": "Red ochre paint",
+  "vintagecanvas:incontainer-item-paint-ultramarine": "Ultramarine paint",
+  "vintagecanvas:incontainer-item-paint-yellowochre": "Yellow ochre paint",
+  "vintagecanvas:incontainer-item-paint-woad": "Woad blue paint",
+  "vintagecanvas:incontainer-item-paint-leadtin": "Lead-tin yellow paint",
+  "vintagecanvas:incontainer-item-paint-organicgreen": "Organic green paint",
+  "vintagecanvas:incontainer-item-paint-malachite": "Malachite paint",
+  "vintagecanvas:incontainer-item-paint-leadwhite": "Lead white paint",
+  "vintagecanvas:incontainer-item-paint-chalkwhite": "Chalk white paint",
+  "vintagecanvas:incontainer-item-paint-carbonblack": "Carbon black paint",
+  "vintagecanvas:incontainer-item-turpentine": "Turpentine",
+
+  "vintagecanvas:item-pigment-vermillion": "Vermillion pigment",
+  "vintagecanvas:item-pigment-redochre": "Red ochre pigment",
+  "vintagecanvas:item-pigment-ultramarine": "Ultramarine pigment",
+  "vintagecanvas:item-pigment-yellowochre": "Yellow ochre pigment",
+  "vintagecanvas:item-pigment-woad": "Woad blue pigment",
+  "vintagecanvas:item-pigment-leadtin": "Lead-tin yellow pigment",
+  "vintagecanvas:item-pigment-organicgreen": "Organic green pigment",
+  "vintagecanvas:item-pigment-malachite": "Malachite pigment",
+  "vintagecanvas:item-pigment-leadwhite": "Lead white pigment",
+  "vintagecanvas:item-pigment-chalkwhite": "Chalk white pigment",
+  "vintagecanvas:item-pigment-carbonblack": "Carbon black pigment",
+
+  "vintagecanvas:item-paint-vermillion": "Vermillion paint",
+  "vintagecanvas:item-paint-redochre": "Red ochre paint",
+  "vintagecanvas:item-paint-ultramarine": "Ultramarine paint",
+  "vintagecanvas:item-paint-yellowochre": "Yellow ochre paint",
+  "vintagecanvas:item-paint-woad": "Woad blue paint",
+  "vintagecanvas:item-paint-leadtin": "Lead-tin yellow paint",
+  "vintagecanvas:item-paint-organicgreen": "Organic green paint",
+  "vintagecanvas:item-paint-malachite": "Malachite paint",
+  "vintagecanvas:item-paint-leadwhite": "Lead white paint",
+  "vintagecanvas:item-paint-chalkwhite": "Chalk white paint",
+  "vintagecanvas:item-paint-carbonblack": "Carbon black paint",
+  "vintagecanvas:item-turpentine": "Turpentine",
+
+  "tabname-vintagecanvas": "Vintage Canvas"
+}

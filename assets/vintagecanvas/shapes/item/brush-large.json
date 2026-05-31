@@ -1,0 +1,83 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+	},
+	"elements": [
+		{
+			"name": "shaft-tip",
+			"from": [ 7.6, 0.1, 4.0 ],
+			"to": [ 8.4, 0.9, 8.0 ],
+			"rotationOrigin": [ 7.0, 2.0, 9.0 ],
+			"faces": {
+				"north": { "texture": "#wood", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
+				"east": { "texture": "#wood", "uv": [ 0.0, 0.0, 4.0, 0.5 ] },
+				"south": { "texture": "#wood", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
+				"west": { "texture": "#wood", "uv": [ 0.0, 0.0, 4.0, 0.5 ] },
+				"up": { "texture": "#wood", "uv": [ 0.0, 0.0, 0.5, 4.0 ] },
+				"down": { "texture": "#wood", "uv": [ 0.0, 0.0, 0.5, 4.0 ] }
+			}
+		},
+		{
+			"name": "shaft-base",
+			"from": [ 7.5, 0.0, 8.0 ],
+			"to": [ 8.5, 1.0, 12.0 ],
+			"rotationOrigin": [ 7.0, 2.0, 7.0 ],
+			"faces": {
+				"north": { "texture": "#wood", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"east": { "texture": "#wood", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+				"south": { "texture": "#wood", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"west": { "texture": "#wood", "uv": [ 0.0, 0.0, 4.0, 1.0 ] },
+				"up": { "texture": "#wood", "uv": [ 0.0, 0.0, 1.0, 4.0 ] },
+				"down": { "texture": "#wood", "uv": [ 0.0, 0.0, 1.0, 4.0 ] }
+			}
+		},
+		{
+			"name": "ring",
+			"from": [ 7.4, -0.1, 11.3 ],
+			"to": [ 8.6, 1.1, 12.0 ],
+			"rotationOrigin": [ 7.0, 2.0, 10.0 ],
+			"faces": {
+				"north": { "texture": "#metal", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"east": { "texture": "#metal", "uv": [ 0.0, 0.0, 0.5, 1.0 ] },
+				"south": { "texture": "#metal", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"west": { "texture": "#metal", "uv": [ 0.0, 0.0, 0.5, 1.0 ] },
+				"up": { "texture": "#metal", "uv": [ 0.0, 0.0, 1.0, 0.5 ] },
+				"down": { "texture": "#metal", "uv": [ 0.0, 0.0, 1.0, 0.5 ] }
+			}
+		},
+		{
+			"name": "bristles-base",
+			"from": [ 6.5, 0.1, 12.0 ],
+			"to": [ 9.5, 0.9, 14.5 ],
+			"rotationOrigin": [ 7.0, 2.0, 11.0 ],
+			"faces": {
+				"north": { "texture": "#painting", "uv": [ 0.0, 0.0, 3.0, 0.5 ] },
+				"east": { "texture": "#painting", "uv": [ 0.0, 0.0, 2.5, 0.5 ] },
+				"south": { "texture": "#painting", "uv": [ 0.0, 0.0, 3.0, 0.5 ] },
+				"west": { "texture": "#painting", "uv": [ 0.0, 0.0, 2.5, 0.5 ] },
+				"up": { "texture": "#painting", "uv": [ 0.0, 0.0, 3.0, 2.5 ] },
+				"down": { "texture": "#painting", "uv": [ 0.0, 0.0, 3.0, 2.5 ]}
+			}
+		},
+		{
+			"name": "bristles-base2",
+			"from": [ 6.4, 0.0, 12.0 ],
+			"to": [ 9.6, 1.0, 13.0 ],
+			"rotationOrigin": [ 7.0, 2.0, 11.0 ],
+			"faces": {
+				"north": { "texture": "#bristles", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+				"east": { "texture": "#bristles", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"south": { "texture": "#bristles", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+				"west": { "texture": "#bristles", "uv": [ 0.0, 0.0, 1.0, 1.0 ] },
+				"up": { "texture": "#bristles", "uv": [ 0.0, 0.0, 3.0, 1.0 ] },
+				"down": { "texture": "#bristles", "uv": [ 0.0, 0.0, 3.0, 1.0 ] }
+			}
+		}
+	]}

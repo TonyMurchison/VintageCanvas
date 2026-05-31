@@ -1,0 +1,27 @@
+[
+  {
+    "ingredientPattern": "KP",
+    "ingredients": {
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      },
+      "P": {
+        "type": "item",
+        "code": "game:plank-*",
+        "name": "wood",
+        "quantity": 1,
+        "skipVariant": [ "agedebony", "rottenebony" ]
+      }
+    },
+    "name": "palette",
+    "width": 2,
+    "height": 1,
+    "output": {
+      "type": "block",
+      "code": "palette",
+      "quantity": 1
+    }
+  }
+]

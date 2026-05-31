@@ -1,0 +1,67 @@
+[
+  {
+    "ingredientPattern": "SLS,SLS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "block",
+        "code": "game:linen-*"
+      }
+    },
+    "name": "Portrait Canvas",
+    "width": 3,
+    "height": 2,
+    "output": {
+      "type": "block",
+      "code": "canvas-portrait-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "SS,LL,SS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "block",
+        "code": "game:linen-*"
+      }
+    },
+    "name": "Landscape Canvas",
+    "width": 2,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-landscape-none-oak-north",
+      "quantity": 1
+    }
+  },
+  {
+    "ingredientPattern": "_S_,SLS,_S_",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "block",
+        "code": "game:linen-*",
+        "quantity":  2
+      }
+    },
+    "name": "Square Canvas",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-square-none-oak-north",
+      "quantity": 1
+    }
+  }
+]
