@@ -25,7 +25,7 @@ namespace VintageCanvas.src.Blocks
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
             ItemStack blockdrops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier)[0];
-            BLockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BLockEntityCanvas;
+            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
             blockdrops.Attributes.SetInt("canvasid", (int)ce.canvasId);
             if (ce.pixeldata != null)
             {
@@ -51,7 +51,7 @@ namespace VintageCanvas.src.Blocks
         public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
         {
             ItemStack canvasStack = base.OnPickBlock(world, pos);
-            BLockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BLockEntityCanvas;
+            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
             if (ce != null && ce.pixeldata != null)
             {
                 canvasStack.Attributes.SetBytes("vc_pixeldata", SerializerUtil.Serialize(ce.pixeldata));
@@ -68,10 +68,19 @@ namespace VintageCanvas.src.Blocks
             base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
         }
 
+        public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
+        {
+            if (blockSel.Block.Code.PathStartsWith("easel"))
+            {
+                return;
+            }
+            base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
+        }
+
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
-            BLockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BLockEntityCanvas;
+            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityCanvas;
             if (ce != null)
             {
                 ce.AddFrame(held);

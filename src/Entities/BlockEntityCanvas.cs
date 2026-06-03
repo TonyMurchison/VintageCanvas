@@ -12,7 +12,7 @@ using Vintagestory.GameContent;
 
 namespace VintageCanvas.src.Entities
 {
-    internal class BLockEntityCanvas : BlockEntity
+    internal class BlockEntityCanvas : BlockEntity
     {
         ICoreClientAPI capi;
         IBlockTextureAtlasAPI atlas;
@@ -40,12 +40,9 @@ namespace VintageCanvas.src.Entities
                 RegisterDelayedCallback(dt =>
                 {
                     UpdateTexture();
-                }, 200);
+                }, 100);
             }
-
         }
-
-
 
         public override void OnBlockPlaced(ItemStack byItemStack = null)
         {         

@@ -29,9 +29,8 @@ namespace VintageCanvas
             api.RegisterBlockClass("BlockEasel", typeof(BlockEasel));
             api.RegisterBlockClass("BlockPalette", typeof(BlockPalette));
             api.RegisterItemClass("ItemBrush", typeof(ItemBrush));
-            api.RegisterBlockBehaviorClass("EaselBlockBehavior", typeof(EaselBlockBehavior));
             api.RegisterBlockEntityClass("EaselEntity", typeof(BlockEntityEasel));
-            api.RegisterBlockEntityClass("BlockEntityCanvas", typeof(BLockEntityCanvas));
+            api.RegisterBlockEntityClass("BlockEntityCanvas", typeof(BlockEntityCanvas));
             api.RegisterBlockEntityClass("BlockEntityPalette", typeof(BlockEntityPalette));
 
             new Harmony("vintagecanvas").PatchAll();

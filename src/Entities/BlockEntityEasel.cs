@@ -29,6 +29,7 @@ namespace VintageCanvas.src.Entities
         ICoreServerAPI sapi;
         ITextureAtlasAPI atlas;
         int[] pixeldata;
+        public HashSet<int> changedpixels = new HashSet<int>();
         public int? canvasId;
         BitmapRef bmp;
         private MeshData clientMesh;
@@ -94,9 +95,14 @@ namespace VintageCanvas.src.Entities
                     pixeldata = bmp.Pixels;
                 }
             }
+            if (Api.Side == EnumAppSide.Client)
+            {
+                Api.World.Logger.Debug("Canvas placed: " + canvasId);
+            }
 
-            MarkDirty(true);
             UpdateShape();
+            MarkDirty(true);
+            
             if (canvas.Attributes.HasAttribute("vc_pixeldata"))
             {
                 UpdateTexture();
@@ -116,7 +122,7 @@ namespace VintageCanvas.src.Entities
             canvasStack.Attributes.SetBool("vc_rendered", false);
 
             byPlayer.InventoryManager.TryGiveItemstack(canvasStack);
-            //TODO also store these data when broken            
+            byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
             canvasinventory[0].Itemstack = null;
             canvasId = null;
             clientMesh = null;
@@ -151,8 +157,12 @@ namespace VintageCanvas.src.Entities
             {
                 if (0 <= pixelindices[i] && 1023 >= pixelindices[i])
                 {
-                    int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
-                    pixeldata[pixelindices[i]] = newColor;
+                    if (!changedpixels.Contains(pixelindices[i]))
+                    {
+                        int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
+                        pixeldata[pixelindices[i]] = newColor;
+                        changedpixels.Add(pixelindices[i]);
+                    }
                 }
             }
             UpdateTexture();

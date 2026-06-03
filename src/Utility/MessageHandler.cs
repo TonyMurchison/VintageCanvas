@@ -50,7 +50,7 @@ namespace VintageCanvas.src.Utility
             var sapi = (ICoreServerAPI)api;
             var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
 
-            var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BLockEntityCanvas;
+            var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
             if (ce != null)
             {
                 ce.UpdateFrame(fromPlayer.InventoryManager.ActiveHotbarSlot.Itemstack, packet.FrameType);
@@ -82,7 +82,7 @@ namespace VintageCanvas.src.Utility
                 var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
 
                 var ee = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
-                var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BLockEntityCanvas;
+                var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
                 var pe = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityPalette;
                 
                 if (ee != null)

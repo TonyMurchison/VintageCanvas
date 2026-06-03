@@ -18,7 +18,7 @@ namespace VintageCanvas.src.Blocks
 
     //Responsibilities:
     //Track player interactions, perform raycasting, calculate paint intersections
-    public class EaselBlockBehavior : BlockBehavior
+    public class BlockEasel : Block
     {
         Dictionary<string, int[]> brushPatterns = new Dictionary<string, int[]> {
                         {"small", [0] },
@@ -34,8 +34,13 @@ namespace VintageCanvas.src.Blocks
                 "vintagecanvas:brush-large"
             ];
 
+        float paintFrequency = 10f;
         ICoreClientAPI capi;
-        public EaselBlockBehavior(Block block) : base(block) { }
+
+        public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
+        {
+            return new Vec4f(0f, 0f, 0f, 0.05f);
+        }
 
         public override void OnLoaded(ICoreAPI api)
         {
@@ -43,32 +48,54 @@ namespace VintageCanvas.src.Blocks
             capi = api as ICoreClientAPI;
         }
 
-        public override bool OnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref EnumHandling handling)
-        {
-            float paintInterval = 0.3f;
-            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
-            if (ee == null) return false;
+        public override bool OnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
+        {            
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
 
-            //world.Logger.Event("Frequency test: " + secondsUsed + ", " + paintInterval);
+            if(held == null)
+            {
+                return false;
+            }
+
+            //frequency limiter: only allow edits if the last edit was > 1/paintfrequency ago
+            float? timestamp = held.Attributes.TryGetFloat("timestamp");            
+            if (timestamp != null)
+            {
+                float timelapse = secondsUsed - (float)timestamp;
+                if (timelapse < (1f / paintFrequency))
+                {
+                    return true;
+                }
+            }
+            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            if (ee == null)
+            {
+                return false;
+            }
+            
+
             if (held != null)
             {
                 if (paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {
                     applyPaintingTool(world, byPlayer, held, blockSel, ee);
+                    held.Attributes.SetFloat("timestamp", secondsUsed);
                     return true;
                 }
             }
-            return base.OnBlockInteractStep(secondsUsed, world, byPlayer, blockSel, ref handling);
+            return base.OnBlockInteractStep(secondsUsed, world, byPlayer, blockSel);
         }
 
-        public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ref EnumHandling handling)
+        public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
-            world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
-            handling = EnumHandling.PreventDefault;
+            //world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
             if (ee == null) return false;
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
+            if(api.Side == EnumAppSide.Server)
+            {
+                api.World.Logger.Debug("Serverside: held stack = " + held);
+            }
 
             //Retrieve canvas with empty hand
             if (held == null && !ee.CanvasSlot.Empty)
@@ -81,19 +108,20 @@ namespace VintageCanvas.src.Blocks
                 //canvas placement
                 if (held.Collectible.Code.Path.StartsWith("canvas") && ee.CanvasSlot.Empty)
                 {
-                    string canvasid = SetCanvas(held, byPlayer, world, ee);
-                    world.Api.Logger.Event("ID: " + canvasid);
+                    SetCanvas(held, byPlayer, world, ee);
                     return true;
                 }
 
                 //applying painting tools
                 if (paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {
+                    ee.changedpixels.Clear();
+                    held.Attributes.SetFloat("timestamp", -10f);
                     return true;
                 }
             }
 
-            return base.OnBlockInteractStart(world, byPlayer, blockSel, ref handling);
+            return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
         public Vec2d CanvasAngleRaycast(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, double canvasAngle)
@@ -122,7 +150,7 @@ namespace VintageCanvas.src.Blocks
 
             //Predefined normal vectors for 15 degree planes
             Vec3d canvasNormal = new Vec3d(0.0, 0.259, 0.0);
-            this.block.Variant.TryGetValue("side", out string side);
+            Variant.TryGetValue("side", out string side);
             switch (side)
             {
                 case "north":
@@ -162,7 +190,7 @@ namespace VintageCanvas.src.Blocks
             return (UVhitPoint);
         }
 
-        private string SetCanvas(ItemStack held, IPlayer byPlayer, IWorldAccessor world, BlockEntityEasel ee)
+        private void SetCanvas(ItemStack held, IPlayer byPlayer, IWorldAccessor world, BlockEntityEasel ee)
         {
             //Read or initialise canvas ID
             string canvasId = held.Attributes.GetString("canvasid");
@@ -173,8 +201,7 @@ namespace VintageCanvas.src.Blocks
             ee.PlaceCanvas(transfer);
             byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
             byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
-
-            return held.Attributes.GetString("canvasid");
+            return;
         }
 
         private void applyPaintingTool(IWorldAccessor world, IPlayer byPlayer, ItemStack held, BlockSelection blockSel, BlockEntityEasel ee)
@@ -185,9 +212,9 @@ namespace VintageCanvas.src.Blocks
                 return;
             }
             Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel, 15);
-            world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
+            //world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
 
-            //Square canvas covers approx x[-0.5, 0.5], y[-0.3898, -1.3898]
+            //Square canvas covers approx u[-0.5, 0.5], v[-0.3898, -1.3898]
             int xpixel = (int)((canvasIntersect.X + 0.5) * 32);
             int ypixel = (int)(-(canvasIntersect.Y + 0.3898f) * 32);
 
@@ -226,13 +253,13 @@ namespace VintageCanvas.src.Blocks
                     ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity);
                 }
             }
-        }
-    }
-    public class BlockEasel : Block
-    {
-        public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
-        {
-            return new Vec4f(0f, 0f, 0f, 0.05f);
+            if (held.Collectible.Code.BeginsWith("game", "charcoal")){
+                Random rnd = new Random();
+
+                ee.PaintPixels([ypixel * 32 + xpixel], -16119286, 0.5f);
+
+
+            }
         }
     }
 }
