@@ -2,14 +2,17 @@
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using VintageCanvas.src.Entities;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
@@ -40,6 +43,27 @@ namespace VintageCanvas.src.Blocks
         public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
         {
             return new Vec4f(0f, 0f, 0f, 0.05f);
+        }
+
+        public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
+            if (ee != null)
+            {
+                Block easelBlock = api.World.GetBlock(new AssetLocation("vintagecanvas:easel-" + Variant["woodtype"] + "-" + "none" + "-" + "north"));
+
+                ItemStack[] dropStack = [new ItemStack(easelBlock), new ItemStack()];
+                
+                if (ee.pixeldata != null)
+                {
+                    dropStack[1] = ee.CanvasSlot.Itemstack;
+                    var pdata = SerializerUtil.Serialize(ee.pixeldata);
+                    dropStack[1].Attributes.SetBytes("vc_pixeldata", pdata);
+                    dropStack[1].Attributes.SetBool("vc_rendered", false);
+                }
+                return dropStack;
+            }
+            return base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier);
         }
 
         public override void OnLoaded(ICoreAPI api)

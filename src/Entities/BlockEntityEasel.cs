@@ -28,7 +28,7 @@ namespace VintageCanvas.src.Entities
         ICoreClientAPI capi;
         ICoreServerAPI sapi;
         ITextureAtlasAPI atlas;
-        int[] pixeldata;
+        public int[] pixeldata;
         public HashSet<int> changedpixels = new HashSet<int>();
         public int? canvasId;
         BitmapRef bmp;
