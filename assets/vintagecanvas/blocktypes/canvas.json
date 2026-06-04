@@ -1,5 +1,6 @@
 {
   "code": "canvas",
+  "categoryCode": "vintagecanvas:category",
   "creativeinventory": {
     "general": [ "*-{ratio}-none-oak-north" ]
   },
