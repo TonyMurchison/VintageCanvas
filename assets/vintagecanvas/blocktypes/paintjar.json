@@ -160,10 +160,10 @@
   },
 
   "sounds": {
-    "walk": "walk/stone",
-    "break": "block/ceramicplace",
-    "hit": "block/ceramichit",
-    "place": "block/ceramicplace"
+    "walk": "game:walk/stone",
+    "break": "game:block/ceramicplace",
+    "hit": "game:block/ceramichit",
+    "place": "game:block/ceramicplace"
   },
 
   "guiTransform": {

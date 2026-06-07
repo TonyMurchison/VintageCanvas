@@ -15,6 +15,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
+using Vintagestory.Common;
 using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 using Vintagestory.Server;
@@ -31,15 +32,22 @@ namespace VintageCanvas.src.Entities
         public int[] pixeldata;
         public HashSet<int> changedpixels = new HashSet<int>();
         public int? canvasId;
-        BitmapRef bmp;
+        public int canvasSize = 32;
+        public string easelName = "vintagecanvas:easel";
+        public string textureName = "canvas.png";
+        public string allowedCanvas = "canvas";
         private MeshData clientMesh;
-        int? tsubid;
         TextureAtlasPosition TexPos;
 
 
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);
+
+            if(this is BlockEntityEaselH)
+            {
+                canvasSize = 64;
+            }
 
             //Load trees explicitly
             if (canvasinventory == null)
@@ -50,11 +58,15 @@ namespace VintageCanvas.src.Entities
             {                
                 canvasinventory.FromTreeAttributes(cachedTree);
                 canvasinventory?.ResolveBlocksOrItems();
-                byte[] pixelbytes = cachedTree.GetBytes("vc_pixeldata");
-                if (pixelbytes != null)
+                if (cachedTree.HasAttribute("vc_pixeldata"))
                 {
-                    pixeldata = SerializerUtil.Deserialize<int[]>(pixelbytes);
-                }
+                    byte[] pixelbytes = cachedTree.GetBytes("vc_pixeldata");
+                    if (pixelbytes != null)
+                    {
+                        pixeldata = SerializerUtil.Deserialize<int[]>(
+                            TextureUtil.Decompress(pixelbytes));
+                    }
+                }                
             }
 
 
@@ -77,6 +89,17 @@ namespace VintageCanvas.src.Entities
 
         public void PlaceCanvas(ItemStack canvas)
         {
+            if (this is BlockEntityEaselH)
+            {
+                canvasSize = 64;
+                textureName = "canvas-large.png";
+            }
+
+            if (!canvas.Collectible.Code.PathStartsWith(allowedCanvas))
+            {
+                return;
+            }
+
             canvasinventory[0].Itemstack = canvas;
             canvasId = canvas.Attributes.GetAsInt("canvasid");
 
@@ -86,13 +109,12 @@ namespace VintageCanvas.src.Entities
                 if (canvas.Attributes.HasAttribute("vc_pixeldata"))
                 {
                     byte[] serialisedpixeldata = canvas.Attributes.GetBytes("vc_pixeldata");
-                    pixeldata = SerializerUtil.Deserialize<int[]>(serialisedpixeldata);
+                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(serialisedpixeldata));
                 }
                 //Else, initialise pixeldata as canvas default
                 else
-                {
-                    bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/canvas.png")).ToBitmap(capi);
-                    pixeldata = bmp.Pixels;
+                {                    
+                    pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/") + textureName).ToBitmap(capi).Pixels;
                 }
             }
             if (Api.Side == EnumAppSide.Client)
@@ -116,7 +138,8 @@ namespace VintageCanvas.src.Entities
             if (pixeldata != null)
             {
                 var pdata = SerializerUtil.Serialize(pixeldata);
-                canvasStack.Attributes.SetBytes("vc_pixeldata", pdata);
+                var cdata = TextureUtil.Compress(pdata);
+                canvasStack.Attributes.SetBytes("vc_pixeldata", cdata);
             }
 
             canvasStack.Attributes.SetBool("vc_rendered", false);
@@ -142,7 +165,7 @@ namespace VintageCanvas.src.Entities
             {
                 ratio = canvasinventory[0].Itemstack.Collectible.Variant["ratio"];
             }
-            Block newBlock = Api.World.GetBlock(new AssetLocation("vintagecanvas:easel-" + woodtype + "-" + ratio + "-" + side));
+            Block newBlock = Api.World.GetBlock(new AssetLocation(easelName + "-" + woodtype + "-" + ratio + "-" + side));
 
             if (newBlock != null)
             {
@@ -155,7 +178,7 @@ namespace VintageCanvas.src.Entities
             if (pixeldata == null) { Api.World.Logger.Error("Canvas pixel data not initiated"); return; }
             for (int i = 0; i < pixelindices.Length; i++)
             {
-                if (0 <= pixelindices[i] && 1023 >= pixelindices[i])
+                if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
                     if (!changedpixels.Contains(pixelindices[i]))
                     {
@@ -194,7 +217,7 @@ namespace VintageCanvas.src.Entities
 
                 clientMesh = TextureUtil.SwapPaintingTexture(
                     pixeldata,
-                    32,
+                    canvasSize,
                     texLoc,
                     capi.Tesselator.GetTextureSource(Block),
                     Block.Code,
@@ -219,29 +242,57 @@ namespace VintageCanvas.src.Entities
 
         public override void ToTreeAttributes(ITreeAttribute tree)
         {
-            base.ToTreeAttributes(tree);
-            canvasinventory.ToTreeAttributes(tree);
-            if(pixeldata != null)
+            try
             {
-                tree.SetBytes("vc_pixeldata", SerializerUtil.Serialize(pixeldata));
+                base.ToTreeAttributes(tree);
+                canvasinventory.ToTreeAttributes(tree);
+                if (pixeldata != null)
+                {
+                    try
+                    {
+                        tree.SetBytes("vc_pixeldata",TextureUtil.Compress(SerializerUtil.Serialize(pixeldata)));
+                    }
+                    catch
+                    {
+                        Api.World.Logger.Error("Failed to write pixeldata to tree");
+                    }
+                }
+                if (canvasId != null)
+                {
+                    tree.SetInt("canvasid", (int)canvasId);
+                }
             }
-            if(canvasId != null)
+            catch
             {
-                tree.SetInt("canvasid", (int)canvasId);
+                Api.World.Logger.Error("Error in ToTreeAttributes");
             }
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
-            base.FromTreeAttributes(tree, worldForResolving);
-            if (tree.HasAttribute("canvasid"))
+            try
             {
-                canvasId = tree.GetAsInt("canvasid");
+                base.FromTreeAttributes(tree, worldForResolving);
+                if (tree.HasAttribute("canvasid"))
+                {
+                    canvasId = tree.GetAsInt("canvasid");
+                }
+                cachedTree = tree.Clone();
+                if (tree.HasAttribute("vc_pixeldata"))
+                {
+                    try
+                    {
+                        pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(tree.GetBytes("vc_pixeldata")));
+                    }
+                    catch
+                    {
+                        Api.World.Logger.Error("Failed to read pixeldata from tree");
+                    }
+                }
             }
-            cachedTree = tree.Clone();
-            if (tree.HasAttribute("vc_pixeldata")){
-                pixeldata = SerializerUtil.Deserialize<int[]>(tree.GetBytes("vc_pixeldata")); 
+            catch
+            {
+                Api.World.Logger.Error("Error in FromTreeAttributes");
             }
-            
         }
 
         public void UpdatePixelData(int[] pixeldata)

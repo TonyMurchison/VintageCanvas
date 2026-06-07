@@ -1,0 +1,4 @@
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\modinfo.json
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.deps.json
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.pdb

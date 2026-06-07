@@ -19,10 +19,13 @@ namespace VintageCanvas.src.Utility
                 
                 Block coreBlock = capi.World.BlockAccessor.GetBlock(mb.GetControlBlockPos(pos));
 
-                if (coreBlock.Code.Domain == "vintagecanvas" && coreBlock.Code.Path.StartsWith("easel"))
+                if (coreBlock.Code.Domain == "vintagecanvas")
                 {
-                    __result = new Vec4f(0f, 0f, 0f, 0.05f);
-                    return false;
+                    if (coreBlock.Code.Path.StartsWith("easel") || coreBlock.Code.Path.StartsWith("heasel"))
+                    {
+                        __result = new Vec4f(0f, 0f, 0f, 0.05f);
+                        return false;
+                    }
                 }
             }
             return true;

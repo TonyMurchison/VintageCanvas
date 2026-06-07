@@ -19,7 +19,7 @@
 			"rotationY": -180.0,
 			"faces": {
 				"north": { "texture": "#painting", "uv": [ 0.0, 0.0, 16.0, 1.0 ] },
-				"east": { "texture": "#painting", "uv": [ 0.0, 0.0, 1.0, 16.0 ], "rotation": -90 },
+				"east": { "texture": "#painting", "uv": [ 0.0, 0.0, 1.0, 16.0 ], "rotation": 90 },
 				"south": { "texture": "#painting", "uv": [ 0.0, 15.0, 16.0, 16.0 ] },
 				"west": { "texture": "#painting", "uv": [ 15.0, 0.0, 16.0, 16.0 ], "rotation": -90 },
 				"up": { "texture": "#canvasback", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },

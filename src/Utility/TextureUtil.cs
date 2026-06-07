@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -13,19 +15,40 @@ namespace VintageCanvas.src.Utility
 {
     public static class TextureUtil
     {
+        //items which trigger ee.PaintPixels() when right-clicked
+        static public string[] paintingTools = [
+                "game:charcoal",
+                "vintagecanvas:brush-small",
+                "vintagecanvas:brush-medium",
+                "vintagecanvas:brush-large"
+            ];
+
+        static public Dictionary<string, Vec2i[]> brushPatterns = new Dictionary<string, Vec2i[]> {
+            {  "small", new Vec2i[] { new Vec2i(0,0) } },
+            {  "medium", new Vec2i[] { new Vec2i(-1,-1), new Vec2i(0,-1), new Vec2i(1, -1), 
+                new Vec2i(-1, 0), new Vec2i(0, 0), new Vec2i(1, 0), 
+                new Vec2i(-1, 1), new Vec2i(0, 1), new Vec2i(1, 1) } },          
+            {  "large", new Vec2i[] { new Vec2i(-1, -2), new Vec2i(0, -2), new Vec2i(1, -2), 
+                new Vec2i(-2, -1), new Vec2i(-1, -1), new Vec2i(0, -1), new Vec2i(1, -1), new Vec2i(2, -1),
+                new Vec2i(-2, 0), new Vec2i(-1, 0), new Vec2i(0, 0), new Vec2i(1, 0), new Vec2i(2, 0),
+                new Vec2i(-2, 1), new Vec2i(-1, 1), new Vec2i(0, 1), new Vec2i(1, 1), new Vec2i(2, 1),
+                new Vec2i(-1, 2), new Vec2i(0, 2), new Vec2i(1, 2) } }
+            };
+
         static public Dictionary<String, int> PaintColors = new Dictionary<String, int>{
-            {"vermillion", -3669996},
-            {"ultramarine", -15466296 },
-            {"redochre", -6927317 },
-            {"woad", -13225332 },
-            {"leadtin", -199595 },
-            {"yellowochre", -5339583 },
-            {"organicgreen", -10582992 },
-            {"malachite", -14241530 },
-            {"carbonblack", -16119286 },
-            {"chalkwhite", -4080464 },
-            {"leadwhite", -1184275 }
-        };
+                    {"vermillion", -3669996},
+                    {"ultramarine", -15466296 },
+                    {"redochre", -6927317 },
+                    {"woad", -13225332 },
+                    {"leadtin", -199595 },
+                    {"yellowochre", -5339583 },
+                    {"organicgreen", -10582992 },
+                    {"malachite", -14241530 },
+                    {"carbonblack", -16119286 },
+                    {"chalkwhite", -4080464 },
+                    {"leadwhite", -1184275 }
+                };
+
         public static int BlendColor(int src, int dst, float alpha)
         {
             int sr = (src >> 16) & 0xFF, sg = (src >> 8) & 0xFF, sb = src & 0xFF;
@@ -109,6 +132,21 @@ namespace VintageCanvas.src.Utility
                 textureCode == "painting" ? paintingPos : defaultSrc[textureCode];
 
             public Size2i AtlasSize => atlasSize;
+        }
+        public static byte[] Compress(byte[] data)
+        {
+            using var output = new MemoryStream();
+            using (var gzip = new GZipStream(output, CompressionMode.Compress))
+                gzip.Write(data, 0, data.Length);
+            return output.ToArray();
+        }
+        public static byte[] Decompress(byte[] data)
+        {
+            using var input = new MemoryStream(data);
+            using var output = new MemoryStream();
+            using (var gzip = new GZipStream(input, CompressionMode.Decompress))
+                gzip.CopyTo(output);
+            return output.ToArray();
         }
     }
 }

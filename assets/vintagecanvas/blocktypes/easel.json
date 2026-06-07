@@ -1,7 +1,9 @@
 {
   "code": "easel",
   "entityclass": "EaselEntity",
-  "class":  "BlockEasel",
+  "class": "BlockEasel",
+
+  
 
   "variantgroups": [
     {
@@ -16,43 +18,105 @@
     {
       "code": "side",
       "loadFromProperties": "abstract/horizontalorientation"
-    }    
+    }
   ],
 
   "behaviors": [
     { "name": "HorizontalOrientable" },
-    { name: "Multiblock", propertiesByType: {
-				"*": { sizex: 1, sizey: 2, sizez: 1, cposition: { x: 0, y: 0, z: 0 }}
-			}
+    {
+      "name": "Multiblock",
+      "propertiesByType": {
+        "*": {
+          "sizex": 1,
+          "sizey": 2,
+          "sizez": 1,
+          "cposition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      }
     }
   ],
   "attributes": {
+    "canvasangle": "15",
+    "uvyoffset": "0.3898",
+    "originheight": "2.1137"
   },
 
   "textures": {
     "wood": { "base": "game:block/wood/debarked/{woodtype}" },
     "canvas": { "base": "block/canvas" },
     "canvasback": { "base": "block/canvasback" },
-    "painting":  { "base":  "block/canvas"}
+    "painting": { "base": "block/canvas" }
   },
 
   "shapebytype": {
-    "*-none-north": { "base": "block/easel", "rotateY": 0 },
-    "*-none-east": { "base": "block/easel", "rotateY": 270 },
-    "*-none-south": { "base": "block/easel", "rotateY": 180 },
-    "*-none-west": { "base": "block/easel", "rotateY": 90 },
-    "*-landscape-north": { "base": "block/easel-landscape", "rotateY": 0 },
-    "*-landscape-east": { "base": "block/easel-landscape", "rotateY": 270 },
-    "*-landscape-south": { "base": "block/easel-landscape", "rotateY": 180 },
-    "*-landscape-west": { "base": "block/easel-landscape", "rotateY": 90 },
-    "*-portrait-north": { "base": "block/easel-portrait", "rotateY": 0 },
-    "*-portrait-east": { "base": "block/easel-portrait", "rotateY": 270 },
-    "*-portrait-south": { "base": "block/easel-portrait", "rotateY": 180 },
-    "*-portrait-west": { "base": "block/easel-portrait", "rotateY": 90 },
-    "*-square-north": { "base": "block/easel-square", "rotateY": 0 },
-    "*-square-east": { "base": "block/easel-square", "rotateY": 270 },
-    "*-square-south": { "base": "block/easel-square", "rotateY": 180 },
-    "*-square-west": { "base": "block/easel-square", "rotateY": 90 },
+    "*-none-north": {
+      "base": "block/easel",
+      "rotateY": 0
+    },
+    "*-none-east": {
+      "base": "block/easel",
+      "rotateY": 270
+    },
+    "*-none-south": {
+      "base": "block/easel",
+      "rotateY": 180
+    },
+    "*-none-west": {
+      "base": "block/easel",
+      "rotateY": 90
+    },
+    "*-landscape-north": {
+      "base": "block/easel-landscape",
+      "rotateY": 0
+    },
+    "*-landscape-east": {
+      "base": "block/easel-landscape",
+      "rotateY": 270
+    },
+    "*-landscape-south": {
+      "base": "block/easel-landscape",
+      "rotateY": 180
+    },
+    "*-landscape-west": {
+      "base": "block/easel-landscape",
+      "rotateY": 90
+    },
+    "*-portrait-north": {
+      "base": "block/easel-portrait",
+      "rotateY": 0
+    },
+    "*-portrait-east": {
+      "base": "block/easel-portrait",
+      "rotateY": 270
+    },
+    "*-portrait-south": {
+      "base": "block/easel-portrait",
+      "rotateY": 180
+    },
+    "*-portrait-west": {
+      "base": "block/easel-portrait",
+      "rotateY": 90
+    },
+    "*-square-north": {
+      "base": "block/easel-square",
+      "rotateY": 0
+    },
+    "*-square-east": {
+      "base": "block/easel-square",
+      "rotateY": 270
+    },
+    "*-square-south": {
+      "base": "block/easel-square",
+      "rotateY": 180
+    },
+    "*-square-west": {
+      "base": "block/easel-square",
+      "rotateY": 90
+    }
   },
 
   "sideopaque": {
@@ -86,7 +150,7 @@
       "x2": 1,
       "y2": 1,
       "z2": 1
-      }
+    }
   ],
 
   "collisionBoxes": [

@@ -19,6 +19,8 @@ namespace VintageCanvas.src.Entities
         public int? canvasId;
         public int[] pixeldata;
         private MeshData clientMesh;
+        public int canvasSize = 32;
+        public string textureName = "canvas.png";
 
         Dictionary<string, string> FrameSequence = new Dictionary<string, string>{
             { "none", "simple" },
@@ -54,12 +56,12 @@ namespace VintageCanvas.src.Entities
                 if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
                 {
                     byte[] serialisedpixeldata = byItemStack.Attributes.GetBytes("vc_pixeldata");
-                    pixeldata = SerializerUtil.Deserialize<int[]>(serialisedpixeldata);
+                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(serialisedpixeldata));
                 }
                 //Else, initialise pixeldata as canvas default
                 else
                 {
-                    BitmapRef bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/canvas.png")).ToBitmap(capi);
+                    BitmapRef bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/" + textureName)).ToBitmap(capi);
                     pixeldata = bmp.Pixels;
                 }
             }
@@ -108,7 +110,7 @@ namespace VintageCanvas.src.Entities
                 {
                     return;
                 }
-                BitmapRef bmpref = platform.CreateBitmapFromPixels(pixeldata, 32, 32);
+                BitmapRef bmpref = platform.CreateBitmapFromPixels(pixeldata, canvasSize, canvasSize);
 
                 //Insert custom texture at vintagecanvas:canvasId
                 if (canvasId == null)
@@ -122,7 +124,7 @@ namespace VintageCanvas.src.Entities
                         texLoc,
                         out int _,
                         out TextureAtlasPosition texPos,
-                        () => platform.CreateBitmapFromPixels(pixeldata, 32, 32),
+                        () => platform.CreateBitmapFromPixels(pixeldata, canvasSize, canvasSize),
                         0.005f
                     );
                 //Api.World.Logger.Event("Texture inserted at texPos: " + texPos);
@@ -164,23 +166,39 @@ namespace VintageCanvas.src.Entities
 
         public override void ToTreeAttributes(ITreeAttribute tree)
         {
-            base.ToTreeAttributes(tree);
-            if (canvasId != null)
+            try
             {
-                tree["canvasid"] = new IntAttribute((int)canvasId);
+                base.ToTreeAttributes(tree);
+                if (canvasId != null)
+                {
+                    tree["canvasid"] = new IntAttribute((int)canvasId);
+                }
+                if (pixeldata != null)
+                {
+                    tree.SetBytes("vc_pixeldata", TextureUtil.Compress(
+                        SerializerUtil.Serialize(pixeldata)));
+                }
             }
-            if (pixeldata != null)
+            catch
             {
-                tree.SetBytes("vc_pixeldata", SerializerUtil.Serialize(pixeldata));
+                Api.World.Logger.Debug("Canvas failed to write to tree");
             }
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
-            base.FromTreeAttributes(tree, worldForResolving);
-            canvasId = tree.GetInt("canvasid");
-            if (tree.HasAttribute("vc_pixeldata"))
+            try
+            { 
+                base.FromTreeAttributes(tree, worldForResolving);
+                canvasId = tree.GetInt("canvasid");
+                if (tree.HasAttribute("vc_pixeldata"))
+                {
+                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(
+                        tree.GetBytes("vc_pixeldata")));
+                } 
+            }
+            catch
             {
-                pixeldata = SerializerUtil.Deserialize<int[]>(tree.GetBytes("vc_pixeldata"));
+                Api.World.Logger.Debug("Canvas failed to read from tree");
             }
         }
 

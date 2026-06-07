@@ -1,0 +1,57 @@
+{
+  "editor": {
+    "backdrops": [],
+    "attachments": []
+  },
+  "textures": {},
+  "elements": [
+    {
+      "name": "canvas",
+      "from":[28.0,32.0,1.0],
+      "to":[52.0,33.0,33.0],
+      "faces": {
+        "north": {
+          "texture": "#painting",
+          "uv":[2.0,0.0,26.0,1.0]
+        },
+        "east": {
+          "texture": "#painting",
+          "uv":[2.0,0.0,3.0,32.0],
+          "rotation": 90.0,
+          "rotationIndex": 1
+        },
+        "south": {
+          "texture": "#painting",
+          "uv":[2.0,15.0,26.0,16.0]
+        },
+        "west": {
+          "texture": "#painting",
+          "uv":[13.0,0.0,14.0,32.0],
+          "rotation": 270.0,
+          "rotationIndex": 3
+        },
+        "up": {
+          "texture": "#canvasback",
+          "uv":[0.0,0.0,16.0,16.0],
+          "autoUv": false,
+          "snapUV": false
+        },
+        "down": {
+          "texture": "#painting",
+          "uv":[4.0,0.0,28.0,32.0]
+        }
+      },
+      "rotationOrigin":[28.0,32.0,1.0],
+      "rotationX": -90.0,
+      "rotationY": -180.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0,
+      "uv":[0.0,0.0]
+    }
+  ],
+  "animations": [],
+  "textureWidth": 32,
+  "textureHeight": 32,
+  "textureSizes": {}
+}

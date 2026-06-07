@@ -74,7 +74,17 @@
   },
   "heldTpIdleAnimation": "holdbothhands",
   "maxstacksize": 1,
-
+  "attributes": {
+    "moldrackable": true,
+    "onmoldrackTransform": {
+      "rotation": {
+        "x": 0,
+        "y": -90,
+        "z": 0
+      },
+      "scale": 0.99
+    }
+  },
   "behaviors": [
     { "name": "HorizontalAttachable" },
     {

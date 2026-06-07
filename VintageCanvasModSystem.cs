@@ -26,11 +26,15 @@ namespace VintageCanvas
             base.Start(api);
             api.RegisterBlockClass("BlockPaintJar", typeof(BlockPaintJar));
             api.RegisterBlockClass("BlockCanvas", typeof(BlockCanvas));
+            api.RegisterBlockClass("BlockLargeCanvas", typeof(BlockLargeCanvas));
             api.RegisterBlockClass("BlockEasel", typeof(BlockEasel));
+            api.RegisterBlockClass("BlockEaselH", typeof(BlockEaselH));
             api.RegisterBlockClass("BlockPalette", typeof(BlockPalette));
             api.RegisterItemClass("ItemBrush", typeof(ItemBrush));
             api.RegisterBlockEntityClass("EaselEntity", typeof(BlockEntityEasel));
+            api.RegisterBlockEntityClass("BlockEntityEaselH", typeof(BlockEntityEaselH));
             api.RegisterBlockEntityClass("BlockEntityCanvas", typeof(BlockEntityCanvas));
+            api.RegisterBlockEntityClass("BlockEntityLargeCanvas", typeof(BlockEntityLargeCanvas));
             api.RegisterBlockEntityClass("BlockEntityPalette", typeof(BlockEntityPalette));
 
             new Harmony("vintagecanvas").PatchAll();

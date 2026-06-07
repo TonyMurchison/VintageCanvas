@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using VintageCanvas.src.Entities;
+using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -23,22 +24,11 @@ namespace VintageCanvas.src.Blocks
     //Track player interactions, perform raycasting, calculate paint intersections
     public class BlockEasel : Block
     {
-        Dictionary<string, int[]> brushPatterns = new Dictionary<string, int[]> {
-                        {"small", [0] },
-                        {"medium", [-33, -32, -31, -1, 0, 1, 31, 32, 33] },
-                        {"large",  [-65, -64, -63, -34, -33, -32, -31, -30, -2, -1, 0, 1, 2, 30, 31, 32, 33, 34, 63, 64, 65]}
-                    };
-
-        //items which trigger ee.PaintPixels() when right-clicked
-        private string[] paintingTools = [
-                "game:charcoal",
-                "vintagecanvas:brush-small",
-                "vintagecanvas:brush-medium",
-                "vintagecanvas:brush-large"
-            ];
-
-        float paintFrequency = 10f;
+        float paintFrequency = 20f;
         ICoreClientAPI capi;
+        public string easelName = "vintagecanvas:easel";
+        public string allowedCanvas = "canvas";
+        public int canvasSize = 32;
 
         public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
         {
@@ -50,10 +40,10 @@ namespace VintageCanvas.src.Blocks
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
             if (ee != null)
             {
-                Block easelBlock = api.World.GetBlock(new AssetLocation("vintagecanvas:easel-" + Variant["woodtype"] + "-" + "none" + "-" + "north"));
+                Block easelBlock = api.World.GetBlock(new AssetLocation(easelName + "-" + Variant["woodtype"] + "-" + "none" + "-" + "north"));
 
                 ItemStack[] dropStack = [new ItemStack(easelBlock), new ItemStack()];
-                
+
                 if (ee.pixeldata != null)
                 {
                     dropStack[1] = ee.CanvasSlot.Itemstack;
@@ -100,7 +90,7 @@ namespace VintageCanvas.src.Blocks
 
             if (held != null)
             {
-                if (paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
+                if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {
                     applyPaintingTool(world, byPlayer, held, blockSel, ee);
                     held.Attributes.SetFloat("timestamp", secondsUsed);
@@ -130,14 +120,14 @@ namespace VintageCanvas.src.Blocks
 
             if (held != null) {
                 //canvas placement
-                if (held.Collectible.Code.Path.StartsWith("canvas") && ee.CanvasSlot.Empty)
+                if (held.Collectible.Code.Path.StartsWith(allowedCanvas) && ee.CanvasSlot.Empty)
                 {
                     SetCanvas(held, byPlayer, world, ee);
                     return true;
                 }
 
                 //applying painting tools
-                if (paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
+                if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {
                     ee.changedpixels.Clear();
                     held.Attributes.SetFloat("timestamp", -10f);
@@ -148,7 +138,7 @@ namespace VintageCanvas.src.Blocks
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
-        public Vec2d CanvasAngleRaycast(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, double canvasAngle)
+        public Vec2d CanvasAngleRaycast(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //returns the raycast intersection with the canvas plane. Normalised to a UV space centred around x 0.5, z0
 
@@ -157,6 +147,7 @@ namespace VintageCanvas.src.Blocks
             var pru = new PickingRayUtil();
             ClientMain mainworld = capi.World as ClientMain;
             Ray playerray = pru.GetPickingRayByMouseCoordinates(mainworld);
+            api.World.Logger.Event("Click coordinates: " + blockSel.HitPosition.X + ", " + blockSel.HitPosition.Y + ", " + blockSel.HitPosition.Z);
 
             Vec3d raystart = playerray.origin;
             Vec3d raydir = playerray.dir;
@@ -167,27 +158,27 @@ namespace VintageCanvas.src.Blocks
             Vec3d faceNormal = blockSel.Face.Normald;
 
             //shared origin for every direction over the block centre
-            origin.X = origin.X + 0.5;
-            //origin.Y = origin.Y + 2.332; //Where all four directions share a plane point
-            origin.Y = origin.Y + 2.1137;
+            origin.X = origin.X + 0.5;            
+            origin.Y = origin.Y + Attributes["originheight"].AsFloat();
             origin.Z = origin.Z + 0.5;
 
             //Predefined normal vectors for 15 degree planes
-            Vec3d canvasNormal = new Vec3d(0.0, 0.259, 0.0);
+            float anglerad = Attributes["canvasangle"].AsFloat() * (float)Math.PI / 180f;
+            Vec3d canvasNormal = new Vec3d(0.0, Math.Sin(anglerad), 0.0);
             Variant.TryGetValue("side", out string side);
             switch (side)
             {
                 case "north":
-                    canvasNormal.Z = 0.966;
+                    canvasNormal.Z = Math.Cos(anglerad);
                     break;
                 case "south":
-                    canvasNormal.Z = -0.966;
+                    canvasNormal.Z = -Math.Cos(anglerad);
                     break;
                 case "east":
-                    canvasNormal.X = -0.966;
+                    canvasNormal.X = -Math.Cos(anglerad);
                     break;
                 case "west":
-                    canvasNormal.X = 0.966;
+                    canvasNormal.X = Math.Cos(anglerad);
                     break;
             }
 
@@ -235,14 +226,17 @@ namespace VintageCanvas.src.Blocks
             {
                 return;
             }
-            Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel, 15);
-            //world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
+            Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel);
+            world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
+
+            float yoffset = Attributes["uvyoffset"].AsFloat();
+            Vec2f UVoffset = new Vec2f(0.5f, yoffset);
 
             //Square canvas covers approx u[-0.5, 0.5], v[-0.3898, -1.3898]
-            int xpixel = (int)((canvasIntersect.X + 0.5) * 32);
-            int ypixel = (int)(-(canvasIntersect.Y + 0.3898f) * 32);
+            int xpixel = (int)((canvasIntersect.X + UVoffset.X) * 32); //Not canvasSize! This is the pixel width of a block, not of the whole canvas.
+            int ypixel = (int)(-(canvasIntersect.Y + UVoffset.Y) * 32);
 
-            if (xpixel < 0 || ypixel < 0) {
+            if (xpixel < 0 || ypixel < 0 || xpixel > canvasSize || ypixel > canvasSize) {
                 return;
             }           
 
@@ -254,19 +248,20 @@ namespace VintageCanvas.src.Blocks
                 Random rnd = new Random();
                 if (brushPaint != 0)
                 {
-                    int basepixel = ypixel * 32 + xpixel;
+                    int basepixel = ypixel * canvasSize + xpixel;
                     List<int> pixels = new List<int>();
-                    int[] brushPattern = brushPatterns[held.Collectible.Variant["size"].ToString()];
                     
-                    foreach (int shift in brushPattern)
+                    Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
+                    
+                    foreach (Vec2i shift in brushPattern)
                     {
                         //Check if X coordinate is not on other side of canvas
-                        int x1 = basepixel % 32;
-                        int x2 = (basepixel + shift) % 32;
+                        int x1 = basepixel % canvasSize;
+                        int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
 
                         if (Math.Abs(x2 - x1) < 16)
                         {
-                            pixels.Add(basepixel + shift);
+                            pixels.Add(basepixel + shift[0] + (shift[1] * canvasSize));
                         }
                     }                        
 
@@ -280,9 +275,7 @@ namespace VintageCanvas.src.Blocks
             if (held.Collectible.Code.BeginsWith("game", "charcoal")){
                 Random rnd = new Random();
 
-                ee.PaintPixels([ypixel * 32 + xpixel], -16119286, 0.5f);
-
-
+                ee.PaintPixels([ypixel * canvasSize + xpixel], -16119286, 0.5f);
             }
         }
     }
