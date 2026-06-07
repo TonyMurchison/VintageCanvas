@@ -1,0 +1,99 @@
+{
+  "editor": {
+    "allAngles": true,
+    "backdrops": [],
+    "attachments": []
+  },
+  "textures": {},
+  "elements": [
+    {
+      "name": "canvas",
+      "from":[32.0,32.0,1.0],
+      "to":[64.0,33.0,33.0],
+      "faces": {
+        "north": {
+          "texture": "#painting",
+          "uv":[0.0,0.0,32.0,1.0]
+        },
+        "east": {
+          "texture": "#painting",
+          "uv":[0.0,0.0,1.0,32.0],
+          "rotation": 90.0,
+          "rotationIndex": 1
+        },
+        "south": {
+          "texture": "#painting",
+          "uv":[0.0,15.0,32.0,16.0]
+        },
+        "west": {
+          "texture": "#painting",
+          "uv":[15.0,0.0,16.0,16.0],
+          "rotation": -90.0,
+          "autoUv": false,
+          "snapUV": false
+        },
+        "up": {
+          "texture": "#canvasback",
+          "uv":[0.0,0.0,32.0,32.0]
+        },
+        "down": {
+          "texture": "#painting",
+          "uv":[0.0,0.0,32.0,32.0]
+        }
+      },
+      "rotationOrigin":[32.0,32.0,1.0],
+      "rotationX": -90.0,
+      "rotationY": -180.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0,
+      "uv":[0.0,0.0]
+    },
+    {
+      "name": "frame",
+      "from":[32.999999912577223,33.000000027818118,0.99000003933906811],
+      "to":[66.999999912577209,33.990000037354861,34.990000039339066],
+      "faces": {
+        "north": {
+          "texture": "#wood",
+          "uv":[0.0,0.0,34.0,0.5]
+        },
+        "east": {
+          "texture": "#wood",
+          "uv":[0.0,0.0,0.5,34.0],
+          "rotation": 90.0,
+          "rotationIndex": 1
+        },
+        "south": {
+          "texture": "#wood",
+          "uv":[0.0,15.0,34.0,15.5]
+        },
+        "west": {
+          "texture": "#wood",
+          "uv":[15.0,0.0,16.0,16.0],
+          "autoUv": false,
+          "snapUV": false
+        },
+        "up": {
+          "texture": "#wood",
+          "uv":[0.0,0.0,34.0,34.0]
+        },
+        "down": {
+          "texture": "#wood",
+          "uv":[0.0,0.0,34.0,34.0]
+        }
+      },
+      "rotationOrigin":[32.999999912577223,33.000000027818118,0.99000003933906811],
+      "rotationX": -90.0,
+      "rotationY": -180.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0,
+      "uv":[0.0,0.0]
+    }
+  ],
+  "animations": [],
+  "textureWidth": 32,
+  "textureHeight": 32,
+  "textureSizes": {}
+}

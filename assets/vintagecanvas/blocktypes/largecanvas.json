@@ -64,7 +64,7 @@
     "canvas": { "base": "block/canvas-large" },
     "canvasback": { "base": "block/canvasback-large" },
     "painting": { "base": "block/canvas-large" },
-    "frame": { "base": "game:block/wood/debarked/{framewood}" }
+    "wood": { "base": "game:block/wood/debarked/{framewood}" }
   },
   "sideopaque": {
     "all": false
@@ -86,30 +86,53 @@
     }
   },
   "behaviors": [
-    { "name": "HorizontalAttachable" },
+    { "name": "HorizontalAttachable" },   
+    { "name": "RightClickPickup" },
     {
-      "name": "GroundStorable",
-      "properties": {
-        "layout": "Stacking",
-        "upSolid": true,
-        "placeRemoveSound": "game:block/walk/wood",
-        "stackingModel": "block/canvas-stacking-{ratio}",
-        "collisionBox": {
-          "x1": 0.125,
-          "y1": 0,
-          "z1": 0.125,
-          "x2": 0.875,
-          "y2": 0.0625,
-          "z2": 0.875
+      "name": "Multiblock",
+      "propertiesByType": {
+        "*-north": {
+          "sizex": 2,
+          "sizey": 2,
+          "sizez": 1,
+          "cposition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
         },
-        "cbScaleYByLayer": 1,
-        "modelItemsToStackSizeRatio": 1,
-        "stackingCapacity": 10,
-        "transferQuantity": 1,
-        "bulkTransferQuantity": 4
+        "*-east": {
+          "sizex": 1,
+          "sizey": 2,
+          "sizez": 2,
+          "cposition": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "*-south": {
+          "sizex": 2,
+          "sizey": 2,
+          "sizez": 1,
+          "cposition": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+          }
+        },
+        "*-west": {
+          "sizex": 1,
+          "sizey": 2,
+          "sizez": 2,
+          "cposition": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+          }
+        }
       }
-    },
-    { "name": "RightClickPickup" }
+    }
   ],
   "resistance": 0.1,
   "collisionbox": null,
