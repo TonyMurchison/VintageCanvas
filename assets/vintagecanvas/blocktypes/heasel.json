@@ -67,10 +67,27 @@
       }
     }
   ],
-  "attributes": {
-    "canvasangle": "7.5",
-    "uvyoffset": "0.58",
-    "originheight": "3.075"
+  "attributesbytype": {
+    "*-landscape-*": {
+      "canvasangle": "7.5",
+      "uvyoffset": "0.83",
+      "originheight": "3.075"
+    },
+    "*-portrait-*": {
+      "canvasangle": "7.5",
+      "uvyoffset": "0.58",
+      "originheight": "3.075"
+    },
+    "*-square-*": {
+      "canvasangle": "7.5",
+      "uvyoffset": "0.58",
+      "originheight": "3.075"
+    },
+    "*-none-*": {
+      "canvasangle": "7.5",
+      "uvyoffset": "0.58",
+      "originheight": "3.075"
+    }
   },
 
   "textures": {
