@@ -1,8 +1,14 @@
 {
-  //"vintagecanvas:block-easel-*": "Easel",
-  "vintagecanvas:block-paintjar-*": "Paint Jar",
+  "vintagecanvas:block-easel-*": "Small easel",
+  "vintagecanvas:block-heasel-*": "Large easel",
+  "vintagecanvas:block-paintjar-*": "Paint jar",
   "vintagecanvas:block-palette": "Palette",
-  "vintagecanvas:block-canvas-*": "Canvas",
+  "vintagecanvas:block-canvas-square": "Small square canvas",
+  "vintagecanvas:block-canvas-portrait": "Small portrait canvas",
+  "vintagecanvas:block-canvas-landscape": "Small landscape canvas",
+  "vintagecanvas:block-largecanvas-square": "Large square canvas",
+  "vintagecanvas:block-largecanvas-portrait": "Large portrait canvas",
+  "vintagecanvas:block-largecanvas-landscape": "Large landscape canvas",
 
   "vintagecanvas:item-brush-small": "Small brush",
   "vintagecanvas:item-brush-medium": "Medium brush",
