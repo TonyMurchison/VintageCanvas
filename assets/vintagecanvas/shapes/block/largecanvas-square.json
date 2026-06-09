@@ -22,14 +22,12 @@
         },
         "south": {
           "texture": "#painting",
-          "uv":[0.0,15.0,32.0,16.0]
+          "uv":[0.0,31.0,32.0,32.0]
         },
         "west": {
           "texture": "#painting",
-          "uv":[15.0,0.0,16.0,16.0],
-          "rotation": -90.0,
-          "autoUv": false,
-          "snapUV": false
+          "uv":[31.0,0.0,32.0,32.0],
+          "rotation": -90.0
         },
         "up": {
           "texture": "#canvasback",

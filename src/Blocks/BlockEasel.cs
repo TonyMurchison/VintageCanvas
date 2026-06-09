@@ -29,6 +29,7 @@ namespace VintageCanvas.src.Blocks
         public string easelName = "vintagecanvas:easel";
         public string allowedCanvas = "canvas";
         public int canvasSize = 32;
+        private DateTime clearingClock;
 
         public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
         {
@@ -94,6 +95,7 @@ namespace VintageCanvas.src.Blocks
                 {
                     applyPaintingTool(world, byPlayer, held, blockSel, ee);
                     held.Attributes.SetFloat("timestamp", secondsUsed);
+                    clearingClock = DateTime.Now;
                     return true;
                 }
             }
@@ -106,10 +108,6 @@ namespace VintageCanvas.src.Blocks
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
             if (ee == null) return false;
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
-            if(api.Side == EnumAppSide.Server)
-            {
-                api.World.Logger.Debug("Serverside: held stack = " + held);
-            }
 
             //Retrieve canvas with empty hand
             if (held == null && !ee.CanvasSlot.Empty)
@@ -125,11 +123,28 @@ namespace VintageCanvas.src.Blocks
                     SetCanvas(held, byPlayer, world, ee);
                     return true;
                 }
+                else if ( held.Collectible.Code.Path.StartsWith("canvas") || held.Collectible.Code.Path.StartsWith("largecanvas") )
+                {
+                    string hint = Lang.Get("vintagecanvas:canvas-size");
+                    (world.Api as ICoreClientAPI)?.TriggerIngameError(this, "wrongsize", hint);
+                    return true;
+                }
 
                 //applying painting tools
                 if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {
-                    ee.changedpixels.Clear();
+                    if (clearingClock != null)
+                    {
+                        TimeSpan diff = DateTime.Now.Subtract(clearingClock);
+                        if( diff.TotalMilliseconds > 100)
+                        {
+                            ee.changedpixels.Clear();
+                        }
+                    }
+                    else
+                    {
+                        ee.changedpixels.Clear();
+                    }
                     held.Attributes.SetFloat("timestamp", -10f);
                     return true;
                 }
@@ -147,7 +162,7 @@ namespace VintageCanvas.src.Blocks
             var pru = new PickingRayUtil();
             ClientMain mainworld = capi.World as ClientMain;
             Ray playerray = pru.GetPickingRayByMouseCoordinates(mainworld);
-            api.World.Logger.Event("Click coordinates: " + blockSel.HitPosition.X + ", " + blockSel.HitPosition.Y + ", " + blockSel.HitPosition.Z);
+            //api.World.Logger.Event("Click coordinates: " + blockSel.HitPosition.X + ", " + blockSel.HitPosition.Y + ", " + blockSel.HitPosition.Z);
 
             Vec3d raystart = playerray.origin;
             Vec3d raydir = playerray.dir;
@@ -227,7 +242,7 @@ namespace VintageCanvas.src.Blocks
                 return;
             }
             Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel);
-            world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
+            //world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
 
             float yoffset = Attributes["uvyoffset"].AsFloat();
             Vec2f UVoffset = new Vec2f(0.5f, yoffset);

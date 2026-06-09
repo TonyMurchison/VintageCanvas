@@ -1,0 +1,31 @@
+[
+  {
+    "ingredientPattern": "PSP,PNP,PSP",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "P": {
+        "type": "item",
+        "code": "game:plank-*",
+        "name": "wood",
+        "quantity": 1,
+        "skipVariant": [ "agedebony", "rottenebony" ]
+      },
+      "N": {
+        "type": "item",
+        "code": "game:metalnailsandstrips-*",
+        "quantity": 2
+      }
+    },
+    "name": "heasel",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "heasel-{wood}-none-north",
+      "quantity": 1
+    }
+  }
+]

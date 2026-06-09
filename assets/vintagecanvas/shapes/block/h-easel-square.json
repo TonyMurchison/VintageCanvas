@@ -4,8 +4,6 @@
     "attachments": []
   },
   "textures": {
-    "wood": "B:\\Software\\Vintagestory\\assets\\survival\\textures\\block\\wood\\debarked\\ebony",
-    "texture1": ""
   },
   "elements": [
     {
@@ -19,7 +17,7 @@
         },
         "east": {
           "texture": "#painting",
-          "uv":[15.0,0.0,16.0,32.0]
+          "uv":[31.0,0.0,32.0,32.0]
         },
         "south": {
           "texture": "#painting",
@@ -35,7 +33,7 @@
         },
         "down": {
           "texture": "#painting",
-          "uv":[0.0,15.0,32.0,16.0]
+          "uv":[0.0,31.0,32.0,32.0]
         }
       },
       "rotationOrigin":[-0.5,10.4801,12.153],

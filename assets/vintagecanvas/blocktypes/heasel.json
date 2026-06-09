@@ -182,9 +182,9 @@
   "lightAbsorption": 0,
   "rainPermeable": true,
   "creativeinventory": {
-    "general": [ "*-{woodtype}-*-north" ],
-    "decorative": [ "*-{woodtype}-square-north" ],
-    "vintagecanvas": [ "*-{woodtype}-square-north" ]
+    "general": [ "*-{woodtype}-none-north" ],
+    "decorative": [ "*-{woodtype}-none-north" ],
+    "vintagecanvas": [ "*-{woodtype}-none-north" ]
   },
 
   "selectionBoxes": [
