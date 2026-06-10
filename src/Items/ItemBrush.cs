@@ -148,7 +148,7 @@ namespace VintageCanvas.src.Items
             return;
         }
         public override void OnLoaded(ICoreAPI api)
-        {          
+        {
             base.OnLoaded(api);
             capi = api as ICoreClientAPI;
 
@@ -163,14 +163,7 @@ namespace VintageCanvas.src.Items
                 new SkillItem() { Code = new AssetLocation("Slot7"), Name = Lang.Get("Slot 7") },
                 new SkillItem() { Code = new AssetLocation("Slot8"), Name = Lang.Get("Slot 8") },
                 new SkillItem() { Code = new AssetLocation("Slot9"), Name = Lang.Get("Slot 9") }
-        };
-
-        if (capi != null)
-        {
-            toolModes[0].WithIcon(capi, capi.Gui.LoadSvgWithPadding(new AssetLocation("textures/icons/heatmap.svg"), 48, 48, 5, ColorUtil.WhiteArgb));
-            toolModes[0].TexturePremultipliedAlpha = false;
-        }
-            
+            };
         }
 
         public override void OnUnloaded(ICoreAPI api)

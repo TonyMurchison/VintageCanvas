@@ -7,6 +7,7 @@ using VintageCanvas.src.Entities;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
@@ -26,8 +27,9 @@ namespace VintageCanvas.src.Blocks
            
             var playerStack = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
             if(playerStack == null) 
-            { 
-                return base.OnBlockInteractStart(world, byPlayer, blockSel); 
+            {
+                PickUpPalette(world, byPlayer, blockSel);
+                return true;
             }
             if (playerStack.Collectible.Code.Path.StartsWith("paintjar"))
             {
@@ -42,6 +44,7 @@ namespace VintageCanvas.src.Blocks
 
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
+            if(dropQuantityMultiplier == 0) { return null; }
             ItemStack[] paletteStack = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier);
             BlockEntityPalette pe = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityPalette;
             if (pe.paletteId != null)
@@ -147,6 +150,26 @@ namespace VintageCanvas.src.Blocks
                 }
             }
             base.OnModifiedInInventorySlot(world, slot, extractedStack);
+        }
+
+        private void PickUpPalette(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
+        {            
+            ItemStack paletteStack = new ItemStack(this);
+            //TODO picking up logic
+            BlockEntityPalette pe = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityPalette;
+            if (pe.paletteId != null)
+            {
+                paletteStack.Attributes.SetInt("paletteid", (int)pe.paletteId);
+            }
+            if (pe.slots != null)
+            {
+                paletteStack.Attributes.SetBytes("slots",
+                    SerializerUtil.Serialize(pe.slots));
+                paletteStack.Attributes.SetInt("colorhash", HashSlotColors(pe.slots));
+            }
+            byPlayer.InventoryManager.TryGiveItemstack(paletteStack);
+
+            world.BlockAccessor.BreakBlock(blockSel.Position, byPlayer, 0);
         }
 
         static public int HashSlotColors(BlockEntityPalette.Slot[] slots)
