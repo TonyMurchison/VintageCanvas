@@ -5,6 +5,7 @@
   },
   "class": "BlockPalette",
   "entityClass": "BlockEntityPalette",
+  "storageFlags": 257,
 
   "handbook": {
     "ignoreCreativeInvStacks": true,
@@ -21,7 +22,6 @@
     "base": "block/palette"
   },
   "behaviors": [
-
   ],
 
   "resistance": 1,
@@ -32,6 +32,10 @@
   },
   "sidesolid": {
     "all": false
+  },
+
+  "heldLeftTpIdleAnimationbyType": {
+    "*": "holdinglanternlefthand"
   },
 
   "selectionBoxes": [
@@ -73,6 +77,25 @@
       "z": 0.5
     },
     "scale": 0.73
+  },
+
+  "tpOffHandTransform": {
+    "translation": {
+      "x": -0.9,
+      "y": -0.2,
+      "z": -0.9
+    },
+    "rotation": {
+      "x": 0,
+      "y": 179,
+      "z": 94
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 0.56
   },
 
   "guiTransform": {

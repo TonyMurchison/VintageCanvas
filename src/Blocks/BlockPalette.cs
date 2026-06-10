@@ -149,7 +149,7 @@ namespace VintageCanvas.src.Blocks
             base.OnModifiedInInventorySlot(world, slot, extractedStack);
         }
 
-        private int HashSlotColors(BlockEntityPalette.Slot[] slots)
+        static public int HashSlotColors(BlockEntityPalette.Slot[] slots)
         {
             int hash = 0;
             foreach(BlockEntityPalette.Slot slot in slots)

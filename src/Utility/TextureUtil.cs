@@ -59,6 +59,16 @@ namespace VintageCanvas.src.Utility
             return (255 << 24) | (r << 16) | (g << 8) | b;
         }
 
+        public static float[] ARGBtoRGBA(int argb)
+        {
+            float r = (float)(((argb >> 16) & 0xFF) / 255f);
+            float g = (float)(((argb >> 8) & 0xFF) / 255f);
+            float b = (float)((argb & 0xFF) / 255f);
+            float a = (float)(((argb >> 24) & 0xFF) / 255f);
+            float[] rgba = { r, g, b, a };
+            return rgba;
+        }
+
         public static MeshData SwapPaintingTexture(int[] pixeldata, int textureSize, AssetLocation texLoc, ITexPositionSource defaultSrc, AssetLocation code, CompositeShape shape, ICoreClientAPI capi)
         {
             TextureAtlasPosition TexPos = new TextureAtlasPosition();
