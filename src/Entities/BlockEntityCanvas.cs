@@ -42,7 +42,7 @@ namespace VintageCanvas.src.Entities
                 RegisterDelayedCallback(dt =>
                 {
                     UpdateTexture();
-                }, 100);
+                }, 1);
             }
         }
 

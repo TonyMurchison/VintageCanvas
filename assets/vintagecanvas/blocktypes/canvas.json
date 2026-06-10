@@ -64,7 +64,7 @@
     "canvas": { "base": "block/canvas" },
     "canvasback": { "base": "block/canvasback" },
     "painting": { "base": "block/canvas" },
-    "frame": { "base": "game:block/wood/debarked/{framewood}" }
+    "wood": { "base": "game:block/wood/debarked/{framewood}" }
   },
   "sideopaque": {
     "all": false
