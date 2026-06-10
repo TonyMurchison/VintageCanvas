@@ -147,8 +147,6 @@ namespace VintageCanvas.src.Items
             slot.Itemstack.Attributes.SetFloat("opacity", 1f);
             return;
         }
-
-
         public override void OnLoaded(ICoreAPI api)
         {          
             base.OnLoaded(api);
@@ -173,6 +171,18 @@ namespace VintageCanvas.src.Items
             toolModes[0].TexturePremultipliedAlpha = false;
         }
             
+        }
+
+        public override void OnUnloaded(ICoreAPI api)
+        {
+            if (toolModes != null)
+            {
+                foreach (SkillItem skillItem in toolModes)
+                {
+                    skillItem.Texture?.Dispose();
+                }
+            }
+            base.OnUnloaded(api);
         }
     }
 }
