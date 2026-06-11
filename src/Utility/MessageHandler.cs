@@ -87,15 +87,15 @@ namespace VintageCanvas.src.Utility
                 
                 if (ee != null)
                 {
-                    ee.UpdatePixelData(SerializerUtil.Deserialize<int[]>(packet.PixelData));
+                    ee.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
                 }
                 else if (ce != null)
                 {
-                    ce.UpdatePixelData(SerializerUtil.Deserialize<int[]>(packet.PixelData));
+                    ce.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
                 }
                 else if (pe != null)
                 {
-                    pe.UpdatePixelData(SerializerUtil.Deserialize<int[]>(packet.PixelData));
+                    pe.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
                 }
                 else
                     {

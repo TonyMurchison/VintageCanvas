@@ -56,7 +56,7 @@ namespace VintageCanvas.src.Entities
                 if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
                 {
                     byte[] serialisedpixeldata = byItemStack.Attributes.GetBytes("vc_pixeldata");
-                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(serialisedpixeldata));
+                    pixeldata = TextureUtil.ReadPixelData(serialisedpixeldata);
                 }
                 //Else, initialise pixeldata as canvas default
                 else
@@ -100,7 +100,7 @@ namespace VintageCanvas.src.Entities
             {
                 //send pixeldata to server
                 BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata));
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WritePixelData(pixeldata));
 
 
                 ClientMain main = capi.World as ClientMain;
@@ -175,8 +175,7 @@ namespace VintageCanvas.src.Entities
                 }
                 if (pixeldata != null)
                 {
-                    tree.SetBytes("vc_pixeldata", TextureUtil.Compress(
-                        SerializerUtil.Serialize(pixeldata)));
+                    tree.SetBytes("vc_pixeldata", TextureUtil.WritePixelData(pixeldata));
                 }
             }
             catch
@@ -186,20 +185,13 @@ namespace VintageCanvas.src.Entities
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
         {
-            try
-            { 
+            
                 base.FromTreeAttributes(tree, worldForResolving);
                 canvasId = tree.GetInt("canvasid");
                 if (tree.HasAttribute("vc_pixeldata"))
                 {
-                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(
-                        tree.GetBytes("vc_pixeldata")));
-                } 
-            }
-            catch
-            {
-                Api.World.Logger.Debug("Canvas failed to read from tree");
-            }
+                    pixeldata = TextureUtil.ReadPixelData(tree.GetBytes("vc_pixeldata"));
+                }                   
         }
 
         public void UpdateFrame(ItemStack held, string frametype)
@@ -222,5 +214,7 @@ namespace VintageCanvas.src.Entities
                 Api.World.BlockAccessor.ExchangeBlock(newBlock.BlockId, Pos);
             }
         }
+
+        
     }
 }

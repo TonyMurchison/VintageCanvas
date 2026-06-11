@@ -158,5 +158,28 @@ namespace VintageCanvas.src.Utility
                 gzip.CopyTo(output);
             return output.ToArray();
         }
+
+        //Handles legacy cases where old paintings were stored uncompressed
+        public static int[] ReadPixelData(byte[] pixelbytes)
+        {
+            int[] pixeldata;
+            try
+            {
+                pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(
+                    pixelbytes));
+            }
+            catch
+            {
+                pixeldata = SerializerUtil.Deserialize<int[]>(
+                    pixelbytes);
+            }
+
+            return pixeldata;
+        }
+
+        public static byte[] WritePixelData(int[] pixeldata)
+        {
+            return TextureUtil.Compress(SerializerUtil.Serialize(pixeldata));
+        }
     }
 }

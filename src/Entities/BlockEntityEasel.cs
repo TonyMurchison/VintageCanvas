@@ -63,8 +63,7 @@ namespace VintageCanvas.src.Entities
                     byte[] pixelbytes = cachedTree.GetBytes("vc_pixeldata");
                     if (pixelbytes != null)
                     {
-                        pixeldata = SerializerUtil.Deserialize<int[]>(
-                            TextureUtil.Decompress(pixelbytes));
+                        pixeldata = TextureUtil.ReadPixelData(pixelbytes);
                     }
                 }                
             }
@@ -109,7 +108,7 @@ namespace VintageCanvas.src.Entities
                 if (canvas.Attributes.HasAttribute("vc_pixeldata"))
                 {
                     byte[] serialisedpixeldata = canvas.Attributes.GetBytes("vc_pixeldata");
-                    pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(serialisedpixeldata));
+                    pixeldata = TextureUtil.ReadPixelData(serialisedpixeldata);
                 }
                 //Else, initialise pixeldata as canvas default
                 else
@@ -137,8 +136,7 @@ namespace VintageCanvas.src.Entities
 
             if (pixeldata != null)
             {
-                var pdata = SerializerUtil.Serialize(pixeldata);
-                var cdata = TextureUtil.Compress(pdata);
+                var cdata = TextureUtil.WritePixelData(pixeldata);
                 canvasStack.Attributes.SetBytes("vc_pixeldata", cdata);
             }
 
@@ -201,7 +199,7 @@ namespace VintageCanvas.src.Entities
                     return;
                 }
                 //send pixeldata to server
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata));
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WritePixelData(pixeldata));
                 if(pixeldata == null)
                 {
                     return;
@@ -250,7 +248,7 @@ namespace VintageCanvas.src.Entities
                 {
                     try
                     {
-                        tree.SetBytes("vc_pixeldata",TextureUtil.Compress(SerializerUtil.Serialize(pixeldata)));
+                        tree.SetBytes("vc_pixeldata",TextureUtil.WritePixelData(pixeldata));
                     }
                     catch
                     {
@@ -279,15 +277,9 @@ namespace VintageCanvas.src.Entities
                 cachedTree = tree.Clone();
                 if (tree.HasAttribute("vc_pixeldata"))
                 {
-                    try
-                    {
-                        pixeldata = SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(tree.GetBytes("vc_pixeldata")));
-                    }
-                    catch
-                    {
-                        Api.World.Logger.Error("Failed to read pixeldata from tree");
-                    }
-                }
+                    pixeldata = TextureUtil.ReadPixelData(tree.GetBytes("vc_pixeldata"));
+                }                   
+                
             }
             catch
             {
