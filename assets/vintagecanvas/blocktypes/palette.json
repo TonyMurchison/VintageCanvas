@@ -1,7 +1,8 @@
 {
   "code": "palette",
   "creativeinventory": {
-    "general": [ "*" ]
+    "general": [ "*" ],
+    "vintagecanvas": [ "*" ]
   },
   "class": "BlockPalette",
   "entityClass": "BlockEntityPalette",
@@ -24,6 +25,10 @@
   "behaviors": [
   ],
 
+  "attributes": {
+    "partialAttachable": true
+  },
+
   "resistance": 1,
   "lightAbsorption": 0,
   "rainPermeable": true,
@@ -36,6 +41,11 @@
 
   "heldLeftTpIdleAnimationbyType": {
     "*": "holdinglanternlefthand"
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "break": "game:block/planks",
+    "hit": "game:block/planks"
   },
 
   "selectionBoxes": [

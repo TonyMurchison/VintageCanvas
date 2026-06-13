@@ -31,7 +31,8 @@
   },
   "creativeinventory": {
     "general": [ "*" ],
-    "items": [ "*" ]
+    "items": [ "*" ],
+    "vintagecanvas":  [ "*" ]
   },
 
     "dissolveInWater": true,

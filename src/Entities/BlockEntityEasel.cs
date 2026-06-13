@@ -290,6 +290,12 @@ namespace VintageCanvas.src.Entities
         public void UpdatePixelData(int[] pixeldata)
         {
             this.pixeldata = pixeldata;
-        }               
+        }
+
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            clientMesh?.Dispose();
+        }
     }
 }

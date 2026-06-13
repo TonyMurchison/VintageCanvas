@@ -45,7 +45,9 @@
 
   "creativeinventory": {
     "general": [ "*" ],
-    "items": [ "*" ]
+    "items": [ "*" ],
+    "tools": [ "*" ],
+    "vintagecanvas": [ "*" ]
   },
 
   "onDisplayTransform": {

@@ -2,7 +2,8 @@
   "code": "canvas",
   "categoryCode": "vintagecanvas:category",
   "creativeinventory": {
-    "general": [ "*-{ratio}-none-oak-north" ]
+    "general": [ "*-{ratio}-none-oak-north" ],
+    "vintagecanvas": [ "*-{ratio}-none-oak-north" ]
   },
 
   "class": "BlockCanvas",

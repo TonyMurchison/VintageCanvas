@@ -1,7 +1,8 @@
 {
   "code": "paintjar",
   "creativeinventory": {
-    "general": [ "*" ]
+    "general": [ "*" ],
+    "vintagecanvas": [ "*" ]
   },
 
   "classByType": {

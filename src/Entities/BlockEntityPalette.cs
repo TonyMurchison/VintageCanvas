@@ -21,10 +21,7 @@ namespace VintageCanvas.src.Entities
         public Slot[] slots = new Slot[9];
         public int? paletteId;
         MeshData paintMesh = null;
-        Shape paintShape;
         int[] pixeldata = new int[256];
-        int? tsubid;
-        TextureAtlasPosition TexPos;
 
         public override void Initialize(ICoreAPI api)
         {
@@ -46,6 +43,8 @@ namespace VintageCanvas.src.Entities
         public override void OnBlockPlaced(ItemStack byItemStack = null)
         {
             base.OnBlockPlaced(byItemStack);
+            if(byItemStack == null) { return; }
+
             paletteId = byItemStack.Attributes.GetInt("paletteid");
             if (byItemStack.Attributes.HasAttribute("slots"))
             {
@@ -221,6 +220,12 @@ namespace VintageCanvas.src.Entities
             {
                 tree.SetInt("paletteid", (int)paletteId);
             }
+        }
+
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            paintMesh?.Dispose();
         }
 
         [ProtoContract]

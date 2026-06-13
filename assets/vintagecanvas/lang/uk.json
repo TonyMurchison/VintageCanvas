@@ -1,0 +1,70 @@
+{
+  "vintagecanvas:block-easel-*": "Малий мольберт",
+  "vintagecanvas:block-heasel-*": "Великий мольберт",
+  "vintagecanvas:block-paintjar-*": "Банка з фарбою",
+  "vintagecanvas:block-palette": "Палітра",
+
+  "vintagecanvas:block-canvas-square-*": "Мале квадратне полотно",
+  "vintagecanvas:block-canvas-portrait-*": "Мале портретне полотно",
+  "vintagecanvas:block-canvas-landscape-*": "Мале ландшафтне полотно",
+
+  "vintagecanvas:block-largecanvas-square-*": "Велике квадратне полотно",
+  "vintagecanvas:block-largecanvas-portrait-*": "Велике портретне полотно",
+  "vintagecanvas:block-largecanvas-landscape-*": "Велике ландшафтне полотно",
+
+  "vintagecanvas:item-brush-small": "Малий пензель",
+  "vintagecanvas:item-brush-medium": "Середній пензель",
+  "vintagecanvas:item-brush-large": "Великий пензель",
+
+  "vintagecanvas:item-paintjar-*-raw": "Банка з сирою фарбою",
+
+  "vintagecanvas:incontainer-item-paint-vermillion": "Фарба — кіновар",
+  "vintagecanvas:incontainer-item-paint-redochre": "Фарба — червона вохра",
+  "vintagecanvas:incontainer-item-paint-ultramarine": "Фарба — ультрамарин",
+  "vintagecanvas:incontainer-item-paint-yellowochre": "Фарба — жовта вохра",
+  "vintagecanvas:incontainer-item-paint-woad": "Фарба — вайда (синя)",
+  "vintagecanvas:incontainer-item-paint-leadtin": "Фарба — свинцево-олов’яна жовта",
+  "vintagecanvas:incontainer-item-paint-organicgreen": "Фарба — органічна зелена",
+  "vintagecanvas:incontainer-item-paint-malachite": "Фарба — малахіт",
+  "vintagecanvas:incontainer-item-paint-leadwhite": "Фарба — свинцева біла",
+  "vintagecanvas:incontainer-item-paint-chalkwhite": "Фарба — крейдяна біла",
+  "vintagecanvas:incontainer-item-paint-carbonblack": "Фарба — вугільна чорна",
+  "vintagecanvas:incontainer-item-turpentine": "Скипидар",
+
+  "vintagecanvas:item-pigment-vermillion": "Пігмент — кіновар",
+  "vintagecanvas:item-pigment-redochre": "Пігмент — червона вохра",
+  "vintagecanvas:item-pigment-ultramarine": "Пігмент — ультрамарин",
+  "vintagecanvas:item-pigment-yellowochre": "Пігмент — жовта вохра",
+  "vintagecanvas:item-pigment-woad": "Пігмент — вайда (синя)",
+  "vintagecanvas:item-pigment-leadtin": "Пігмент — свинцево-олов’яна жовта",
+  "vintagecanvas:item-pigment-organicgreen": "Пігмент — органічна зелена",
+  "vintagecanvas:item-pigment-malachite": "Пігмент — малахіт",
+  "vintagecanvas:item-pigment-leadwhite": "Пігмент — свинцева біла",
+  "vintagecanvas:item-pigment-chalkwhite": "Пігмент — крейдяна біла",
+  "vintagecanvas:item-pigment-carbonblack": "Пігмент — вугільна чорна",
+
+  "vintagecanvas:item-paint-vermillion": "Фарба — кіновар",
+  "vintagecanvas:item-paint-redochre": "Фарба — червона вохра",
+  "vintagecanvas:item-paint-ultramarine": "Фарба — ультрамарин",
+  "vintagecanvas:item-paint-yellowochre": "Фарба — жовта вохра",
+  "vintagecanvas:item-paint-woad": "Фарба — вайда (синя)",
+  "vintagecanvas:item-paint-leadtin": "Фарба — свинцево-олов’яна жовта",
+  "vintagecanvas:item-paint-organicgreen": "Фарба — органічна зелена",
+  "vintagecanvas:item-paint-malachite": "Фарба — малахіт",
+  "vintagecanvas:item-paint-leadwhite": "Фарба — свинцева біла",
+  "vintagecanvas:item-paint-chalkwhite": "Фарба — крейдяна біла",
+  "vintagecanvas:item-paint-carbonblack": "Фарба — вугільна чорна",
+  "vintagecanvas:item-turpentine": "Скипидар",
+
+  "tabname-vintagecanvas": "Vintage Canvas",
+
+  "vintagecanvas:canvas-size": "Це полотно не підходить до мольберта такого розміру",
+
+  "vintagecanvas:basics-title": "Малювання у Vintage Canvas",
+  "game: handbook-category-vintagecanvas": "Vintage Canvas",
+  "handbook-category-vintagecanvas:category": "Vintage Canvas",
+  "vintagecanvas:basics-text": "<i>Малювання у Vintage Canvas</i>\n\nЛаскаво просимо до Vintage Canvas! Для початку творчої подорожі вам знадобляться щонайменше: мольберт, будь-яке полотно та шматок вугілля.\n\nПоставте мольберт у світі (бажано на добре освітленому місці). Розмістіть полотно на мольберті за допомогою <icon>ПКМ</icon>. Потім візьміть вугілля й малюйте ескізи на свій смак!\n\n<i>Живопис</i>\nКоли будете готові до більшого виклику, настав час створити фарби! Зробіть кілька <a href=\"handbooksearch://Банка з фарбою\">банок із фарбою</a>, наповніть їх <a href=\"handbooksearch://олія\">олією</a> й додайте будь-який пігмент — наприклад, подрібнений лазурит, кіновар, вугілля — або один із <a href=\"handbooksearch://Пігмент\">нових пігментів</a>, доданих Vintage Canvas.\n\nДалі створіть один або всі <a href=\"handbooksearch://Пензель\">пензелі</a>. ПКМ — щоб занурити пензель у вибрану банку з фарбою, і малюйте!\n\nЯкщо вам замало пласких кольорів базових пігментів, є два варіанти: розрідження фарби та змішування фарб.\n\n<i>Розрідження фарби</i>\nЩоб зменшити непрозорість фарби, занурте пензель із фарбою у банку зі <a href=\"handbooksearch://Скипидар\">скипидаром</a>. Чим більше разів ви занурите, тим прозорішою стане фарба — ідеально для градієнтів та плавних переходів!\n\n<i>Змішування фарб</i>\nВсе ще не задоволені доступними кольорами? Настав час створити <a href=\"handbooksearch://Палітра\">палітру</a>! Розміщена у світі, ця дошка дає дев’ять слотів для комбінування базових фарб. Клацніть будь-який слот банкою з фарбою, щоб додати її колір у суміш. Додавайте фарби, доки не отримаєте бажаний відтінок! ПКМ по слоту пензлем — щоб використати фарбу, так само як із банкою. Щоб очистити слот, клацніть ПКМ зі скипидаром.\n\n<i>Великі полотна</i>\nЩоб малювати на великому полотні, потрібен <a href=\"handbooksearch://Великий мольберт\">великий мольберт</a>. Коли він у вас є, можна поєднати будь-які два полотна у відповідний збільшений формат. Ви отримуєте у чотири рази більшу площу за лише подвійні витрати матеріалів — чудова вигода!",
+
+  "vintagecanvas:large-title": "Великі полотна у Vintage Canvas",
+  "vintagecanvas:large-text": "<i>Великі полотна</i>\n\nЩоб малювати на великому полотні, потрібен <a href=\"handbooksearch://large easel\">великий мольберт</a>. Коли він у вас є, можна поєднати будь-які два полотна у відповідний збільшений формат. Ви отримуєте у чотири рази більшу площу за лише подвійні витрати матеріалів — чудова вигода!"
+}

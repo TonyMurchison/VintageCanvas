@@ -48,8 +48,12 @@ namespace VintageCanvas.src.Entities
 
         public override void OnBlockPlaced(ItemStack byItemStack = null)
         {         
-
-            canvasId = byItemStack.Attributes.GetInt("canvasid");
+            if (byItemStack == null)
+            {
+                base.OnBlockPlaced(byItemStack);
+                return;
+            }
+            canvasId = byItemStack.Attributes.TryGetInt("canvasid");
             if (Api.Side == EnumAppSide.Client)
             {
                 //If canvas has pixeldata: load and set local
@@ -215,6 +219,10 @@ namespace VintageCanvas.src.Entities
             }
         }
 
-        
+        public override void OnBlockUnloaded()
+        {
+            base.OnBlockUnloaded();
+            clientMesh?.Dispose();
+        }
     }
 }
