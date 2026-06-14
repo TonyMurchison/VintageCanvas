@@ -154,13 +154,20 @@ namespace VintageCanvas.src.Utility
         {
             using var input = new MemoryStream(data);
             using var output = new MemoryStream();
-            using (var gzip = new GZipStream(input, CompressionMode.Decompress))
-                gzip.CopyTo(output);
+            try
+            {
+                using (var gzip = new GZipStream(input, CompressionMode.Decompress))
+                    gzip.CopyTo(output);
+            }
+            catch
+            {
+                return data;
+            }
             return output.ToArray();
         }
 
         //Handles legacy cases where old paintings were stored uncompressed
-        public static int[] ReadPixelData(byte[] pixelbytes)
+        public static int[] ReadCompressedPixelData(byte[] pixelbytes)
         {
             int[] pixeldata;
             try
@@ -177,7 +184,7 @@ namespace VintageCanvas.src.Utility
             return pixeldata;
         }
 
-        public static byte[] WritePixelData(int[] pixeldata)
+        public static byte[] WriteCompressedPixelData(int[] pixeldata)
         {
             return TextureUtil.Compress(SerializerUtil.Serialize(pixeldata));
         }

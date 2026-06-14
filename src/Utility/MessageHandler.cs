@@ -87,15 +87,15 @@ namespace VintageCanvas.src.Utility
                 
                 if (ee != null)
                 {
-                    ee.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
+                    ee.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
                 }
                 else if (ce != null)
                 {
-                    ce.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
+                    ce.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
                 }
                 else if (pe != null)
                 {
-                    pe.UpdatePixelData(TextureUtil.ReadPixelData(packet.PixelData));
+                    pe.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
                 }
                 else
                     {

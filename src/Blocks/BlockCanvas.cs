@@ -9,6 +9,7 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.Client;
@@ -22,51 +23,65 @@ namespace VintageCanvas.src.Blocks
     internal class BlockCanvas : Block
     {
         private Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
-        public int canvasSize = 32;
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
-            ItemStack blockdrops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier)[0];
             BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
-            blockdrops.Attributes.SetInt("canvasid", (int)ce.canvasId);
+            var id = ce.canvasId;
+            var pixeldata = ce.pixeldata;
+            
+            ItemStack blockdrops = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier)[0];            
+            blockdrops.Attributes.SetInt("canvasid", (int)id);
+
             if (ce.pixeldata != null)
             {
-                var cdata = TextureUtil.Compress(SerializerUtil.Serialize(ce.pixeldata));
-                blockdrops.Attributes.SetBytes("vc_pixeldata", cdata);
+                blockdrops.Attributes.SetBytes("vc_pixeldata", TextureUtil.WriteCompressedPixelData(pixeldata));
             }
             return [blockdrops];
+        }
+        
+        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
+        {
+            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
+            if(ce == null) { return null; }
+            var id = ce.canvasId;
+            var pixeldata = ce.pixeldata;
+
+            ItemStack canvasStack = base.OnPickBlock(world, pos);
+            if(canvasStack == null)  return null; 
+            if (ce != null && ce.pixeldata != null)
+            {                
+                canvasStack.Attributes.SetBytes("vc_pixeldata",
+                    TextureUtil.WriteCompressedPixelData(pixeldata));
+            }
+            if (ce != null && ce.canvasId != null)
+            {
+                canvasStack.Attributes.SetInt("canvasid", (int)id);
+            }
+            return canvasStack;
         }
         public override void OnModifiedInInventorySlot(IWorldAccessor world, ItemSlot slot, ItemStack extractedStack = null)
         {
             //Only reliable way I could find of guaranteeing an ID check trigger whenever you obtain a canvas.
             if (extractedStack != null)
             {
-                if (extractedStack.Attributes.GetString("canvasid") == null && api.Side == EnumAppSide.Server)
+                if (!extractedStack.Attributes.HasAttribute("canvasid") && api.Side == EnumAppSide.Server)
                 {
                     int Id = IdRegistry.getCanvasId();
                     extractedStack.Attributes.SetInt("canvasid", Id);
                     slot.MarkDirty();
                 }
             }
-            base.OnModifiedInInventorySlot(world, slot, extractedStack);                  
-        }
-        public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos)
-        {
-            ItemStack canvasStack = base.OnPickBlock(world, pos);
-            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
-            if (ce != null && ce.pixeldata != null)
-            {               
-                canvasStack.Attributes.SetBytes("vc_pixeldata",
-                    TextureUtil.Compress(SerializerUtil.Serialize(ce.pixeldata)));
-            }
-            if (ce != null)
-            {
-                canvasStack.Attributes.SetInt("canvasid", (int)ce.canvasId);
-            }
-            return canvasStack;
+            base.OnModifiedInInventorySlot(world, slot, extractedStack);
         }
 
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
         {
+            if (blockSel == null)
+            {
+                api.World.Logger.Debug("Block selection failed during placement");
+                return;
+            }
+
             if (blockSel.Block.Code.PathStartsWith("easel"))
             {
                 return;
@@ -78,7 +93,7 @@ namespace VintageCanvas.src.Blocks
         {
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
             BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityCanvas;
-            if (ce != null)
+            if (ce != null && held != null)
             {
                 ce.AddFrame(held);
             }
@@ -87,26 +102,21 @@ namespace VintageCanvas.src.Blocks
 
         public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
         {
-            int canvasSize = 32;
-            if(this is BlockLargeCanvas)
-            {
-                canvasSize = 64;
-            }
             int? canvasId = itemstack.Attributes.TryGetInt("canvasid");
             if(canvasId == null) { return; }
             if (!MeshRefDict.ContainsKey((int)canvasId) && itemstack.Attributes.HasAttribute("vc_pixeldata")) {                
                 //Create renderinfo
 
                 int[] pixeldata = 
-                    SerializerUtil.Deserialize<int[]>(TextureUtil.Decompress(
-                    itemstack.Attributes.GetBytes("vc_pixeldata")));
+                    TextureUtil.ReadCompressedPixelData(
+                    itemstack.Attributes.GetBytes("vc_pixeldata"));
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", canvasId.ToString());
 
                 Block block = api.World.GetBlock(BlockId);
 
                 MeshData m = TextureUtil.SwapPaintingTexture(
                     pixeldata,
-                    canvasSize,
+                    itemstack.Collectible.Attributes["canvassize"].AsInt(),
                     texLoc,
                     capi.Tesselator.GetTextureSource(block),
                     block.Code,
@@ -124,6 +134,14 @@ namespace VintageCanvas.src.Blocks
                 renderinfo.ModelRef = MeshRefDict[(int)canvasId];
                 return;
             }            
-        }        
+        }
+
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+            if (inSlot.Itemstack.Attributes.HasAttribute("canvasid")) {
+                dsc.AppendLine($"Canvas ID: { inSlot.Itemstack.Attributes.GetInt("canvasid").ToString() }");                 
+            }            
+        }
     }
 }

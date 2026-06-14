@@ -42,17 +42,22 @@ namespace VintageCanvas.src.Entities
                 RegisterDelayedCallback(dt =>
                 {
                     UpdateTexture();
-                }, 1);
+                }, 100);
             }
         }
 
         public override void OnBlockPlaced(ItemStack byItemStack = null)
         {         
-            if (byItemStack == null)
-            {
+            if (byItemStack == null)            {
                 base.OnBlockPlaced(byItemStack);
+                
+                RegisterDelayedCallback(dt =>
+                {
+                    UpdateTexture();
+                }, 10);
                 return;
             }
+
             canvasId = byItemStack.Attributes.TryGetInt("canvasid");
             if (Api.Side == EnumAppSide.Client)
             {
@@ -60,7 +65,7 @@ namespace VintageCanvas.src.Entities
                 if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
                 {
                     byte[] serialisedpixeldata = byItemStack.Attributes.GetBytes("vc_pixeldata");
-                    pixeldata = TextureUtil.ReadPixelData(serialisedpixeldata);
+                    pixeldata = TextureUtil.ReadCompressedPixelData(serialisedpixeldata);
                 }
                 //Else, initialise pixeldata as canvas default
                 else
@@ -68,16 +73,19 @@ namespace VintageCanvas.src.Entities
                     BitmapRef bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/" + textureName)).ToBitmap(capi);
                     pixeldata = bmp.Pixels;
                 }
+                RegisterDelayedCallback(dt =>
+                {
+                    SynchroniseTexture();
+                }, 100);
             }
 
             MarkDirty(true);
-
             if (byItemStack.Attributes.HasAttribute("vc_pixeldata"))
             {
                 RegisterDelayedCallback(dt =>
                 {
                     UpdateTexture();
-                }, 200);
+                }, 10);
             }
 
             base.OnBlockPlaced(byItemStack);
@@ -98,14 +106,21 @@ namespace VintageCanvas.src.Entities
             MarkDirty(true);
         }
 
+
+        private void SynchroniseTexture()
+        {
+            if (capi != null)
+            {
+                BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WriteCompressedPixelData(pixeldata));
+                MarkDirty(true);
+            }
+        }
         private void UpdateTexture()
         {
             if (Api.Side == EnumAppSide.Client)
             {
-                //send pixeldata to server
-                BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WritePixelData(pixeldata));
-
+                //send pixeldata to server              
 
                 ClientMain main = capi.World as ClientMain;
 
@@ -148,13 +163,11 @@ namespace VintageCanvas.src.Entities
                 );
 
                 clientMesh = mesh;                
-
-                MarkDirty(true);
             }
         }
         public void UpdatePixelData(int[] pixeldata)
         {
-            this.pixeldata = pixeldata;
+            this.pixeldata = (pixeldata);
         }
 
         public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
@@ -179,7 +192,7 @@ namespace VintageCanvas.src.Entities
                 }
                 if (pixeldata != null)
                 {
-                    tree.SetBytes("vc_pixeldata", TextureUtil.WritePixelData(pixeldata));
+                    tree.SetBytes("vc_pixeldata", TextureUtil.WriteCompressedPixelData(pixeldata));
                 }
             }
             catch
@@ -194,7 +207,7 @@ namespace VintageCanvas.src.Entities
                 canvasId = tree.GetInt("canvasid");
                 if (tree.HasAttribute("vc_pixeldata"))
                 {
-                    pixeldata = TextureUtil.ReadPixelData(tree.GetBytes("vc_pixeldata"));
+                    pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));
                 }                   
         }
 

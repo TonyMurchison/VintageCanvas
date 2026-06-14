@@ -84,7 +84,8 @@
         "z": 0
       },
       "scale": 0.99
-    }
+    },
+    "canvassize": 32
   },
   "behaviors": [
     { "name": "HorizontalAttachable" },
