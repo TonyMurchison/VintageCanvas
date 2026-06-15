@@ -165,9 +165,12 @@ namespace VintageCanvas.src.Entities
                 clientMesh = mesh;                
             }
         }
+
+        //only triggers serverside, after receiving pixeldata packet
         public void UpdatePixelData(int[] pixeldata)
         {
             this.pixeldata = (pixeldata);
+            MarkDirty(true);            
         }
 
         public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tessThreadTesselator)
@@ -201,14 +204,18 @@ namespace VintageCanvas.src.Entities
             }
         }
         public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving)
-        {
-            
-                base.FromTreeAttributes(tree, worldForResolving);
-                canvasId = tree.GetInt("canvasid");
-                if (tree.HasAttribute("vc_pixeldata"))
+        {            
+            base.FromTreeAttributes(tree, worldForResolving);
+            canvasId = tree.GetInt("canvasid");
+            if (tree.HasAttribute("vc_pixeldata"))
+            {
+                pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));                    
+                if(capi != null)
                 {
-                    pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));
-                }                   
+                    UpdateTexture();
+                }
+            }                   
+
         }
 
         public void UpdateFrame(ItemStack held, string frametype)

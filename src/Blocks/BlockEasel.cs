@@ -63,6 +63,17 @@ namespace VintageCanvas.src.Blocks
             capi = api as ICoreClientAPI;
         }
 
+        public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
+        {
+            if(cancelReason != EnumItemUseCancelReason.MovedAway)
+            {
+                BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+                ee.SynchroniseTexture();
+            }
+               
+            return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
+        }
+
         public override bool OnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {            
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;

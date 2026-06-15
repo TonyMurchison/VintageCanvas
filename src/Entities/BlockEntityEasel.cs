@@ -35,6 +35,7 @@ namespace VintageCanvas.src.Entities
         public string textureName = "canvas.png";
         public string allowedCanvas = "canvas";
         private MeshData clientMesh;
+        DateTime textureTimer = new DateTime();
 
 
         public override void Initialize(ICoreAPI api)
@@ -75,6 +76,7 @@ namespace VintageCanvas.src.Entities
             {
                 RegisterDelayedCallback(dt =>
                 {
+                    SynchroniseTexture();
                     UpdateTexture();
                 }, 200);
             }
@@ -105,11 +107,13 @@ namespace VintageCanvas.src.Entities
                 {
                     byte[] serialisedpixeldata = canvas.Attributes.GetBytes("vc_pixeldata");
                     pixeldata = TextureUtil.ReadCompressedPixelData(serialisedpixeldata);
+                    SynchroniseTexture();
                 }
                 //Else, initialise pixeldata as canvas default
                 else
                 {                    
                     pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/") + textureName).ToBitmap(capi).Pixels;
+                    SynchroniseTexture();
                 }
             }
 
@@ -141,8 +145,8 @@ namespace VintageCanvas.src.Entities
             canvasinventory[0].MarkDirty();
             canvasId = null;
             clientMesh = null;
-            UpdateShape();
             pixeldata = null;
+            UpdateShape();
             MarkDirty(true);            
         }
 
@@ -164,7 +168,7 @@ namespace VintageCanvas.src.Entities
                 Api.World.BlockAccessor.ExchangeBlock(newBlock.Id, Pos);
             }
 
-            MarkDirty(true);
+            //MarkDirty(true);
         }
 
         public void PaintPixels(int[] pixelindices, int color, float alpha)
@@ -182,7 +186,20 @@ namespace VintageCanvas.src.Entities
                     }
                 }
             }
+
+            TimeSpan lastTextureUpdate = DateTime.Now.Subtract(textureTimer);            
             UpdateTexture();
+        }
+
+        //Pushes textures from client side to server side, then forces texture update through FromTree
+        public void SynchroniseTexture()
+        {
+            if (capi != null)
+            {
+                BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WriteCompressedPixelData(pixeldata));
+                MarkDirty(true);
+            }
         }
 
         //Convert pixeldata to bitmap, push into texture atlas location, tesselate custom mesh with rerouted "painting" texture target
@@ -190,20 +207,8 @@ namespace VintageCanvas.src.Entities
         {
             if (Api.Side == EnumAppSide.Client)
             {
-                if(CanvasSlot.Itemstack == null)
+                if(CanvasSlot.Itemstack == null || pixeldata == null || canvasId == null)
                 {
-                    return;
-                }
-                //send pixeldata to server
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WriteCompressedPixelData(pixeldata));
-                if(pixeldata == null)
-                {
-                    return;
-                }        
-                
-                if (canvasId == null)
-                {
-                    Api.World.Logger.Error("Easel canvas tried to update without canvasId");
                     return;
                 }
 
@@ -217,9 +222,9 @@ namespace VintageCanvas.src.Entities
                     Block.Code,
                     Block.Shape,
                     capi
-                    );                
-                
-                MarkDirty(true);
+                    );
+
+                textureTimer = DateTime.Now;
             }
         }
 
@@ -271,13 +276,25 @@ namespace VintageCanvas.src.Entities
                     canvasId = tree.GetAsInt("canvasid");
                 }
                 cachedTree = tree.Clone();
-                if (tree.HasAttribute("vc_pixeldata"))
-                {
-                    pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));
-                }
+
                 canvasinventory?.FromTreeAttributes(tree);
                 canvasinventory?.ResolveBlocksOrItems();
 
+                if (capi != null)
+                {
+                    UpdateShape();
+                }
+
+                if (tree.HasAttribute("vc_pixeldata"))
+                {
+                    pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));                    
+                    if(capi != null) {  //&& lastTextureUpdate.TotalMilliseconds > 100)
+                                        //{                        
+                        UpdateTexture();
+                        
+                    }
+                }
+                
             }
             catch
             {
@@ -288,6 +305,7 @@ namespace VintageCanvas.src.Entities
         public void UpdatePixelData(int[] pixeldata)
         {
             this.pixeldata = pixeldata;
+            MarkDirty(true);
         }
 
         public override void OnBlockUnloaded()
