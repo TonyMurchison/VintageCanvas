@@ -299,9 +299,13 @@ namespace VintageCanvas.src.Blocks
                 }
             }
             if (held.Collectible.Code.BeginsWith("game", "charcoal")){
-                Random rnd = new Random();
 
                 ee.PaintPixels([ypixel * canvasSize + xpixel], -16119286, 0.5f);
+            }
+
+            if (held.Collectible.Code.EndVariant() == "limestone" || held.Collectible.Code.EndVariant() == "chalk")
+            {
+                ee.PaintPixels([ypixel * canvasSize + xpixel], 936298687, 0.9f);
             }
         }
     }

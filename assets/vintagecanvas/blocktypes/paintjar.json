@@ -30,7 +30,14 @@
   "attributes": {
     "mediums": [
       { "medium": "game:oilportion-flax" },
-      { "medium": "game:oilportion-olive" }
+      { "medium": "game:oilportion-olive" },
+      { "medium": "expandedfoods:foodoilportion-flax" },
+      { "medium": "expandedfoods:foodoilportion-rice" },
+      { "medium": "expandedfoods:foodoilportion-seed" },
+      { "medium": "expandedfoods:foodoilportion-soy" },
+      { "medium": "expandedfoods:foodoilportion-sunflower" },
+      { "medium": "expandedfoods:foodoilportion-peanut" },
+      { "medium": "expandedfoods:foodoilportion-olive" }
     ],
 
     "pigmentrecipes": [

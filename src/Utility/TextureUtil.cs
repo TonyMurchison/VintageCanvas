@@ -18,6 +18,8 @@ namespace VintageCanvas.src.Utility
         //items which trigger ee.PaintPixels() when right-clicked
         static public string[] paintingTools = [
                 "game:charcoal",
+                "game:stone-limestone",
+                "game:stone-chalk",
                 "vintagecanvas:brush-small",
                 "vintagecanvas:brush-medium",
                 "vintagecanvas:brush-large"
