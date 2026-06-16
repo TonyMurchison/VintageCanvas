@@ -65,12 +65,24 @@ namespace VintageCanvas.src.Blocks
 
         public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
         {
+
+            //Only send a server update for the pixels at the end of a stroke
+            //Not counting transitions between multiblock parts as a stroke end
             if(cancelReason != EnumItemUseCancelReason.MovedAway)
             {
                 BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
                 ee.SynchroniseTexture();
             }
-               
+
+            else
+            {
+                if (!(byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("easel") || byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("heasel")))
+                {
+                    BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+                    ee.SynchroniseTexture(); 
+                }
+            }
+
             return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
         }
 
