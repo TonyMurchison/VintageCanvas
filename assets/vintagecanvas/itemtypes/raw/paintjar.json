@@ -132,7 +132,7 @@
   },
 
   "textures": {
-    "mat": { "base": "game:block/clay/{color}clay" }
+    "clay": { "base": "game:block/clay/{color}clay" }
   },
 
   "shape": {

@@ -14,6 +14,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+using Vintagestory.Client;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
@@ -63,7 +64,6 @@ namespace VintageCanvas.src.Blocks
             base.OnLoaded(api);
             capi = api as ICoreClientAPI;
         }
-
         public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
         {
 

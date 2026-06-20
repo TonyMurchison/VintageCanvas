@@ -85,11 +85,25 @@ namespace VintageCanvas.src.Items
             }
         }
 
-        public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
+        /*
+        public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)
         {
-            base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
-        }       
-        
+            if(blockSel == null)
+            {
+                base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handling);
+                return;
+            }
+
+            if (blockSel.Block.Code.PathStartsWith("multiblock"))
+            {
+                handling = EnumHandHandling.PreventDefault;
+                BlockEasel be = blockSel.Block as BlockEasel;
+                var byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
+                be.OnBlockInteractStart(api.World, byPlayer, blockSel);
+                return;
+            }           
+        }
+        */
 
         public override SkillItem[] GetToolModes(ItemSlot slot, IClientPlayer forPlayer, BlockSelection blockSel)
         {

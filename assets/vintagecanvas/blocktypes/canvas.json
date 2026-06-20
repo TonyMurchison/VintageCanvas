@@ -73,6 +73,9 @@
   "sidesolid": {
     "all": false
   },
+  "emitsideao": {
+    "all": false
+  },
   "heldTpIdleAnimation": "holdbothhands",
   "maxstacksize": 1,
   "attributes": {

@@ -73,6 +73,9 @@
   "sidesolid": {
     "all": false
   },
+  "emitsideao": {
+    "all": false
+  },
   "heldTpIdleAnimation": "holdbothhands",
   "maxstacksize": 1,
   "attributes": {
@@ -88,7 +91,7 @@
     "canvassize": 64
   },
   "behaviors": [
-    { "name": "HorizontalAttachable" },   
+    { "name": "HorizontalAttachable" },
     { "name": "RightClickPickup" },
     {
       "name": "Multiblock",

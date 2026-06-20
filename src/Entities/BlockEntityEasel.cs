@@ -37,7 +37,11 @@ namespace VintageCanvas.src.Entities
         private MeshData clientMesh;
         DateTime textureTimer = new DateTime();
 
-
+        public override void OnBlockBroken(IPlayer byPlayer = null)
+        {
+            //TODO make the easel drop any canvas in its inventory.
+            base.OnBlockBroken(byPlayer);
+        }
         public override void Initialize(ICoreAPI api)
         {
             base.Initialize(api);

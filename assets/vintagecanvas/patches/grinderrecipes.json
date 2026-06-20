@@ -51,6 +51,18 @@
 
   {
     "op": "add",
+    "path": "/grindingProps",
+    "file": "game:itemtypes/resource/crushed/bonemeal.json",
+    "value": {
+      "groundStack": {
+        "type": "item",
+        "code": "vintagecanvas:pigment-chalkwhite"
+      }
+    }
+  },
+
+  {
+    "op": "add",
     "path": "/grindingPropsByType",
     "file": "game:itemtypes/resource/crushed/crushed.json",
     "value": {

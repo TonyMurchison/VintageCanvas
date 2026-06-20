@@ -143,6 +143,7 @@
       "capacityLitres": 1,
       "transferSizeLitres": 0.1,
       "emptyShapeLoc": "shapes/item/paintjar",
+      "opaqueContentShapeLoc": "shapes/item/paintjar-contents",
       "liquidContentShapeLoc": "shapes/item/paintjar-contents",
       "liquidMaxYTranslate": 0.19
     }
@@ -160,7 +161,7 @@
   ],
 
   "textures": {
-    "mat": { "base": "game:block/clay/hardened/{color}" }
+    "clay": { "base": "game:block/clay/hardened/{color}" }
   },
 
   "shape": {
