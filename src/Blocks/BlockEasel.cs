@@ -67,6 +67,11 @@ namespace VintageCanvas.src.Blocks
         public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
         {
 
+            if (byPlayer.CurrentBlockSelection == null)
+            {
+                EndStroke(world, blockSel);
+                return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
+            }
             //Consider a stroke finished if cancelled for reasons other than moving within the easel multiblock
             if (cancelReason != EnumItemUseCancelReason.MovedAway ||
                !(byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("easel")
@@ -145,16 +150,15 @@ namespace VintageCanvas.src.Blocks
                     return true;
                 }
 
-                //start a new paint stroke if the last one ended >.1 seconds ago
-                
+                //Superceded by EndStroke()                
                 if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {                    
                     if (clearingClock != null)
                     {
                         TimeSpan diff = DateTime.Now.Subtract(clearingClock);
-                        if( diff.TotalMilliseconds > 100)
+                        if( diff.TotalMilliseconds > 300)
                         {
-                            ee.changedpixels.Clear();
+                            //ee.changedpixels.Clear();
                         }
                     }
                     else
@@ -354,7 +358,16 @@ namespace VintageCanvas.src.Blocks
             }
 
             Vec2d stroke = currentUV - lastUV;
-            int divisionCount = (int)Math.Ceiling(stroke.Length() * 32f);
+            int divisionCount = (int)Math.Ceiling(stroke.Length() * 50f);
+
+            //Safeguard against messing up during laggy strokes / failed stroke termination
+            if (divisionCount > 20) 
+            {
+                int xpixel = (int)((currentUV.X + UVoffset.X) * 32);
+                int ypixel = (int)(-(currentUV.Y + UVoffset.Y) * 32);
+
+                return [new Vec2i(xpixel, ypixel)];
+            }
 
             double increment = stroke.Length() / divisionCount;
 

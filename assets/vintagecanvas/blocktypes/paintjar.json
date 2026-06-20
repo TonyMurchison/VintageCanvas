@@ -28,6 +28,7 @@
   ],
 
   "attributes": {
+
     "mediums": [
       { "medium": "game:oilportion-flax" },
       { "medium": "game:oilportion-olive" },
@@ -139,6 +140,9 @@
       "ignoreCreativeInvStacks": true,
       "groupBy": [ "paintjar-*" ]
     },
+
+    "messmaterial": "woad",
+
     "liquidContainerProps": {
       "capacityLitres": 1,
       "transferSizeLitres": 0.1,
@@ -161,7 +165,8 @@
   ],
 
   "textures": {
-    "clay": { "base": "game:block/clay/hardened/{color}" }
+    "clay": { "base": "game:block/clay/hardened/{color}" },
+    "mess": { "base":  "vintagecanvas:liquid/woad"}
   },
 
   "shape": {

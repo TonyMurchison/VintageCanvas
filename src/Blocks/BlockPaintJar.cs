@@ -1,6 +1,9 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using Vintagestory.API.Client;
@@ -12,15 +15,21 @@ using Vintagestory.ServerMods.WorldEdit;
 
 namespace VintageCanvas.src.Blocks
 {
-    public class BlockPaintJar : BlockLiquidContainerTopOpened, IContainedInteractable
+    public class BlockPaintJar : BlockLiquidContainerTopOpened, IContainedInteractable, IContainedMeshSource
     {
+        private Dictionary<int, MultiTextureMeshRef> meshrefs = new();
         //Pull paint recipes and paint mediums from blocktypes/paintjar.json
         private Dictionary<string, AssetLocation> pigmentRecipes = new();
         private Dictionary<string, int> paintColors = new();
         private List<string> mediums = new();
+
+        ICoreClientAPI capi;
+
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
+            capi = api as ICoreClientAPI;
+
             Vintagestory.API.Datastructures.JsonObject[] recipes = this.Attributes["pigmentrecipes"].AsArray();
             foreach (Vintagestory.API.Datastructures.JsonObject recipe in recipes){
                 pigmentRecipes[recipe["input"].AsString()] = new AssetLocation(recipe["output"].AsString());
@@ -38,7 +47,116 @@ namespace VintageCanvas.src.Blocks
             {
                 paintColors[color["input"].AsString()] = color["output"].AsInt();
             }
+        }
 
+        public MeshData GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos blockPos)
+        {            
+            MeshData baseMesh = base.GenMesh(capi, GetContent(slot.Itemstack), blockPos);
+
+            if (GetContent(slot.Itemstack) == null) return baseMesh;
+            string? painttype = GetContent(slot.Itemstack).Collectible.Variant["color"];
+            if (painttype == null) return baseMesh;
+
+            Shape shape = api.Assets.Get("vintagecanvas:shapes/item/paintjar-mess.json")?.ToObject<Shape>();
+            Block block = api.World.GetBlock(BlockId);
+
+            capi.BlockTextureAtlas.GetOrInsertTexture(
+                new AssetLocation("vintagecanvas:liquid/" + painttype),
+                out int _,
+                out TextureAtlasPosition texPos,
+                null
+                );
+            MessTexSource mts = new MessTexSource(capi.Tesselator.GetTextureSource(block), texPos, capi.BlockTextureAtlas.Size);
+
+            capi.Tesselator.TesselateShape(
+                    "jar",
+                    shape,
+                    out MeshData mesh,
+                    mts
+                );
+
+            baseMesh.AddMeshData(mesh);
+            return baseMesh;
+        }
+
+        public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
+        {
+            base.OnBeforeRender(capi, itemstack, target, ref renderinfo);
+
+            //Check if contentStack already rendered
+            ItemStack contentStack = GetContent(itemstack);
+
+            if (contentStack == null) return;
+
+            string? painttype = contentStack.Collectible.Variant["color"];
+            if (painttype == null) return;
+
+            int hashcode = GetStackCacheHashCode(contentStack);
+
+
+            //Else, run the base render, then append mess mesh to dictionary
+            if (!meshrefs.TryGetValue(hashcode, out MultiTextureMeshRef meshRef))
+            {
+                Shape shape = api.Assets.Get("vintagecanvas:shapes/item/paintjar-mess.json")?.ToObject<Shape>();
+                Block block = api.World.GetBlock(BlockId);
+
+                capi.BlockTextureAtlas.GetOrInsertTexture(
+                    new AssetLocation("vintagecanvas:liquid/" + painttype),
+                    out int _,
+                    out TextureAtlasPosition texPos,
+                    null
+                    );
+                MessTexSource mts = new MessTexSource(capi.Tesselator.GetTextureSource(block), texPos, capi.BlockTextureAtlas.Size);
+
+                capi.Tesselator.TesselateShape(
+                        "jar",
+                        shape,
+                        out MeshData mesh,
+                        mts
+                    );
+
+                MeshData basemesh = base.GenMesh(capi, GetContent(itemstack));
+                basemesh.AddMeshData(mesh);
+                renderinfo.ModelRef = capi.Render.UploadMultiTextureMesh(basemesh);
+                meshrefs[hashcode] = renderinfo.ModelRef;
+            }      
+            else
+            {
+                renderinfo.ModelRef = meshrefs[hashcode];
+            }
+        }
+
+        public string GetMeshCacheKey(ItemSlot slot)
+        {
+            string key = GetContent(slot.Itemstack)?.Collectible.Variant["color"] ?? "empty";
+            key += Code.ToShortString();
+            if(GetContent(slot.Itemstack) != null)
+            {
+                key += GetContent(slot.Itemstack).StackSize;
+            }
+            return key;
+        }
+
+        public class MessTexSource : ITexPositionSource
+        {
+            private readonly ITexPositionSource defaultSrc;
+            private readonly TextureAtlasPosition messPos;
+            private readonly Size2i atlasSize;
+
+            public MessTexSource(
+                ITexPositionSource defaultSrc,
+                TextureAtlasPosition messPos,
+                Size2i atlasSize)
+            {
+                this.defaultSrc = defaultSrc;
+                this.messPos = messPos;
+                this.atlasSize = atlasSize;
+            }
+
+            public TextureAtlasPosition this[string textureCode] =>
+                textureCode == "mess" ? messPos : defaultSrc[textureCode];
+
+            public Size2i AtlasSize => atlasSize;
         }
 
         bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
@@ -65,6 +183,8 @@ namespace VintageCanvas.src.Blocks
                             jarcontent.Id = api.World.GetItem(recipeOutput).Id;
                             slot.MarkDirty();
                             be.MarkDirty(true);
+
+                            //ItemStack.
 
                             byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
                             if (heldStack.StackSize < 1)
