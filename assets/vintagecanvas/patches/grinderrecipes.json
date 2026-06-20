@@ -62,7 +62,7 @@
   },
 
   {
-    "op": "add",
+    "op": "addmerge",
     "path": "/grindingPropsByType",
     "file": "game:itemtypes/resource/crushed/crushed.json",
     "value": {

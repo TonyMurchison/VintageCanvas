@@ -4,6 +4,7 @@
     "general": [ "*" ],
     "vintagecanvas": [ "*" ]
   },
+  "blockmaterial": "Ceramic",
 
   "classByType": {
     "*-fired": "BlockPaintJar"
@@ -166,7 +167,7 @@
 
   "textures": {
     "clay": { "base": "game:block/clay/hardened/{color}" },
-    "mess": { "base":  "vintagecanvas:liquid/woad"}
+    "mess": { "base": "vintagecanvas:liquid/woad" }
   },
 
   "shape": {

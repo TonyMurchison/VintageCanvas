@@ -8,6 +8,7 @@
 
   "class": "BlockLargeCanvas",
   "entityClass": "BlockEntityLargeCanvas",
+  "blockmaterial": "Wood",
 
   "variantgroups": [
     {

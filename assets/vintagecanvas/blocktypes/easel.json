@@ -2,8 +2,9 @@
   "code": "easel",
   "entityclass": "EaselEntity",
   "class": "BlockEasel",
+  "blockmaterial": "Wood",
 
-  
+
 
   "variantgroups": [
     {
@@ -143,7 +144,8 @@
   },
 
   "selectionBoxes": [
-    { "x1": 0,
+    {
+      "x1": 0,
       "y1": 0,
       "z1": 0,
       "x2": 1,

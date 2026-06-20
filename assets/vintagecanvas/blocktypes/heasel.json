@@ -1,7 +1,8 @@
 {
   "code": "heasel",
   "entityclass": "BlockEntityEaselH",
-  "class": "BlockEaselH",  
+  "class": "BlockEaselH",
+  "blockmaterial": "Wood",
 
   "variantgroups": [
     {
