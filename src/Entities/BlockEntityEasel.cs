@@ -1,8 +1,11 @@
-﻿using Cairo.Freetype;
+﻿using Cairo;
+using Cairo.Freetype;
+using Newtonsoft.Json.Linq;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -19,6 +22,7 @@ using Vintagestory.Common;
 using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 using Vintagestory.Server;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VintageCanvas.src.Entities
 {
@@ -171,8 +175,6 @@ namespace VintageCanvas.src.Entities
             {
                 Api.World.BlockAccessor.ExchangeBlock(newBlock.Id, Pos);
             }
-
-            //MarkDirty(true);
         }
 
         public void PaintPixels(int[] pixelindices, int color, float alpha)
@@ -191,8 +193,78 @@ namespace VintageCanvas.src.Entities
                 }
             }
 
-            TimeSpan lastTextureUpdate = DateTime.Now.Subtract(textureTimer);            
+            //TimeSpan lastTextureUpdate = DateTime.Now.Subtract(textureTimer);            
             UpdateTexture();
+        }
+
+        public void BlendPixels(int[] pixelindices)
+        {
+            if (pixeldata == null) { Api.World.Logger.Error("Canvas pixel data not initiated"); return; }
+            //TODO for every pixel, 
+
+            List<int> blendedColors = new();
+            List<int> blendedIndices = new();
+            for (int i = 0; i < pixelindices.Length; i++)
+            {
+                if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
+                {
+                    if (!changedpixels.Contains(pixelindices[i]))
+                    {
+                        //test a radius(start with 2 ?), create an average rgb value for all those pixels, then BlendColor the pixel with that value
+                        List<int> nearbypixels = new();
+                        for (int j = -2; j < 3; j++)
+                        {
+                            for (int k = -2; k < 3; k++)
+                            {
+                                int p = pixelindices[i] + j + (k * canvasSize);
+                                if (p > 0 && p < Math.Pow(canvasSize, 2) &&
+                                    Math.Abs(p % canvasSize - pixelindices[i] % canvasSize) < 8)
+                                {
+                                    nearbypixels.Add(p);
+                                }
+                            }
+                        }
+
+                        blendedIndices.Add(pixelindices[i]);
+                        blendedColors.Add(AverageColors(nearbypixels.ToArray()));
+                        changedpixels.Add(pixelindices[i]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < blendedIndices.Count; i++)
+            {
+                try
+                {
+                    int newColor = TextureUtil.BlendColor(pixeldata[blendedIndices[i]], blendedColors[i], 0.5f);
+                    pixeldata[blendedIndices[i]] = newColor;
+                }
+                catch
+                {
+                    Api.Logger.Debug("Insufficient blendedColors generated: pixelindices " + pixelindices.Length + ", blendedColors: " + blendedColors.Count);
+                }
+            }
+
+            UpdateTexture();
+        }
+
+        private int AverageColors(int[] nearbypixels)
+        {
+            if(nearbypixels.Length == 0)
+            {
+                return 0;
+            }
+            int r = 0; int g = 0; int b = 0;
+            foreach(int pixel in nearbypixels)
+            {
+                r += (pixeldata[pixel] >> 16) & 0xFF;
+                g += (pixeldata[pixel] >> 8) & 0xFF;
+                b += (pixeldata[pixel]) & 0xFF;
+            }
+            r = r / nearbypixels.Length; g = g / nearbypixels.Length; b = b / nearbypixels.Length;
+
+            return (255 << 24) | (r << 16) | (g << 8) | b;
+
         }
 
         //Pushes textures from client side to server side, then forces texture update through FromTree

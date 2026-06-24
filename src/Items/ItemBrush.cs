@@ -24,6 +24,7 @@ namespace VintageCanvas.src.Items
         SkillItem[] toolModes;
         ICoreClientAPI capi;
         int brushHash = 0;
+        int neutralColor = -8819893;
 
         public override void OnModifiedInInventorySlot(IWorldAccessor world, ItemSlot slot, ItemStack extractedStack = null)
         {
@@ -47,7 +48,9 @@ namespace VintageCanvas.src.Items
 
             //update brush mesh either when it has never been tesselated, or if the color doesn't match to the registered one
             if (!MeshRefDict.ContainsKey((int)brushId) && itemstack.Attributes.HasAttribute("paintcolor")) { updateMesh = true; }
-            if (MeshRefDict.ContainsKey((int)brushId) && itemstack.Attributes.TryGetInt("paintcolor") != ColorDict[(int)brushId]) { updateMesh = true; }
+            if (MeshRefDict.ContainsKey((int)brushId) 
+                && itemstack.Attributes.TryGetInt("paintcolor") != ColorDict[(int)brushId]
+                ) { updateMesh = true; }
             
             if (updateMesh)                 
             {
@@ -55,6 +58,15 @@ namespace VintageCanvas.src.Items
 
                 //Create renderinfo
                 int paintcolor = itemstack.Attributes.GetInt("paintcolor");
+                if(paintcolor == 0)
+                {
+                    paintcolor = neutralColor;
+                    if (MeshRefDict.ContainsKey((int)brushId) && ColorDict[(int)brushId] == neutralColor)
+                    {
+                        renderinfo.ModelRef = MeshRefDict[(int)brushId];
+                        return;
+                    }
+                }
                 int varietycolor = TextureUtil.BlendColor(-16119286, paintcolor, 0.15f);
                 int[] pixeldata = [paintcolor, varietycolor, varietycolor, paintcolor];
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", brushId.ToString());

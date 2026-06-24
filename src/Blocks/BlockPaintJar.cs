@@ -76,6 +76,7 @@ namespace VintageCanvas.src.Blocks
                 );
 
             baseMesh.AddMeshData(mesh);
+            mesh.Dispose();
             return baseMesh;
         }
 
@@ -119,6 +120,8 @@ namespace VintageCanvas.src.Blocks
                 basemesh.AddMeshData(mesh);
                 renderinfo.ModelRef = capi.Render.UploadMultiTextureMesh(basemesh);
                 meshrefs[hashcode] = renderinfo.ModelRef;
+
+                mesh.Dispose();
             }      
             else
             {
@@ -199,9 +202,18 @@ namespace VintageCanvas.src.Blocks
                 if (heldCode.StartsWith("brush"))
                     {
                         //Incrementally decrease opacity when clicking on a turpentine jar
+                        //When holding shift, fully clean the brush
                         if (jarcontent.Collectible.Code.PathStartsWith("turpentine")){
-                            float curOpacity = heldStack.Attributes.GetFloat("opacity", 1f);
-                            heldStack.Attributes.SetFloat("opacity", 0.66f * curOpacity);
+                            if (byPlayer.Entity.Controls.ShiftKey)
+                            {
+                                heldStack.Attributes.SetInt("paintcolor", 0);
+                                heldStack.Attributes.SetFloat("opacity", 0);
+                            }
+                            else
+                            {
+                                float curOpacity = heldStack.Attributes.GetFloat("opacity", 1f);
+                                heldStack.Attributes.SetFloat("opacity", 0.66f * curOpacity);
+                            }
                         }
 
                         if (jarcontent.Collectible.Code.PathStartsWith("paint"))

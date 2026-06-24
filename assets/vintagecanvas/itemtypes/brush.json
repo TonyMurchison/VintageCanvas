@@ -6,6 +6,9 @@
       "states": [ "small", "medium", "large" ]
     }
   ],
+  "behaviors": [
+    { "name": "CollectibleBehaviorPaintTool" }
+  ],
 
   "class": "ItemBrush",
   "tags": [ "tool" ],

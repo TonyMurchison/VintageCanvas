@@ -1,0 +1,330 @@
+{
+  "editor": {
+    "allAngles": true,
+    "entityTextureMode": true,
+    "backdrops": [
+      {
+        "shapeFilepath": "F:/Games/VSDEV/assets/game/shapes/entity/humanoid/seraph",
+        "opacity": 1.0,
+        "enabled": true
+      }
+    ],
+    "attachments": [],
+    "backDropShape": "F:/Games/VSDEV/assets/game/shapes/entity/humanoid/seraph"
+  },
+  "textures": {
+    "hat": "entity/humanoid/seraphclothes/head/beret1"
+  },
+  "elements": [
+    {
+      "name": "hidehat",
+      "from":[-0.55,1.6,-0.55],
+      "to":[6.15,5.6,5.55],
+      "faces": {},
+      "rotationOrigin":[1.85,5.67,2.8],
+      "rotationZ": 1.0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "scaleZ": 1.0,
+      "renderPass": 1,
+      "children": [
+        {
+          "name": "main",
+          "from":[0.0,3.0,-0.10000000149011612],
+          "to":[6.7,5.0,5.9999999985098835],
+          "faces": {
+            "north": {
+              "texture": "#hat",
+              "uv":[0.5,7.0,7.0,9.0]
+            },
+            "east": {
+              "texture": "#hat",
+              "uv":[6.0,9.5,12.0,11.5]
+            },
+            "south": {
+              "texture": "#hat",
+              "uv":[2.0,8.0,8.5,10.0],
+              "windMode": [
+                -1,
+                -1,
+                -1,
+                -1
+              ],
+              "windData": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            "west": {
+              "texture": "#hat",
+              "uv":[3.0,8.0,9.0,10.0]
+            },
+            "up": {
+              "texture": "#hat",
+              "uv":[0.0,0.5,6.5,6.5]
+            },
+            "down": {
+              "texture": "#hat",
+              "uv":[0.0,0.5,6.5,6.5]
+            }
+          },
+          "rotationOrigin":[3.5,3.0,2.8999999985098839],
+          "rotationX": 10.0,
+          "rotationY": 10.0,
+          "scaleX": 1.0,
+          "scaleY": 1.0,
+          "scaleZ": 1.0,
+          "children": [
+            {
+              "name": "BrimS",
+              "from":[-0.19999998807907104,-0.30540725588798523,1.0607692003250122],
+              "to":[6.800000011920929,2.6945927441120148,6.5607692003250122],
+              "faces": {
+                "north": {
+                  "texture": "#hat",
+                  "uv":[0.5,7.5,7.5,10.5]
+                },
+                "east": {
+                  "texture": "#hat",
+                  "uv":[5.0,9.0,10.5,12.0]
+                },
+                "south": {
+                  "texture": "#hat",
+                  "uv":[4.5,7.5,11.5,10.5],
+                  "windMode": [
+                    -1,
+                    -1,
+                    -1,
+                    -1
+                  ],
+                  "windData": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                "west": {
+                  "texture": "#hat",
+                  "uv":[2.5,7.0,8.0,10.0]
+                },
+                "up": {
+                  "texture": "#hat",
+                  "uv":[3.5,3.5,10.5,9.0]
+                }
+              },
+              "rotationOrigin":[4.0000000119209291,0.19459274411201477,2.0607692003250122],
+              "rotationX": 10.0,
+              "scaleX": 1.0,
+              "scaleY": 1.0,
+              "scaleZ": 1.0,
+              "autoUnwrap": false,
+              "uv":[0.0,7.5]
+            },
+            {
+              "name": "BrimS (2)",
+              "from":[-0.25,-0.29603487253189087,3.9262112975120544],
+              "to":[6.75,1.7039651274681091,7.9262112975120544],
+              "faces": {
+                "north": {
+                  "texture": "#hat",
+                  "uv":[0.0,8.5,7.0,10.5]
+                },
+                "east": {
+                  "texture": "#hat",
+                  "uv":[8.0,9.0,12.0,11.0]
+                },
+                "south": {
+                  "texture": "#hat",
+                  "uv":[4.0,7.5,11.0,9.5],
+                  "windMode": [
+                    -1,
+                    -1,
+                    -1,
+                    -1
+                  ],
+                  "windData": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                "west": {
+                  "texture": "#hat",
+                  "uv":[5.0,8.0,9.0,10.0]
+                },
+                "up": {
+                  "texture": "#hat",
+                  "uv":[0.0,6.5,7.0,10.5]
+                }
+              },
+              "rotationOrigin":[3.95,0.20396512746810913,4.9262112975120544],
+              "rotationX": 34.0,
+              "scaleX": 1.0,
+              "scaleY": 1.0,
+              "scaleZ": 1.0,
+              "autoUnwrap": false,
+              "uv":[0.0,7.5]
+            },
+            {
+              "name": "BrimS (3)",
+              "from":[2.8,1.8093158304691315,3.4645051062107086],
+              "to":[3.8,2.8093158304691315,4.4645051062107086],
+              "faces": {
+                "north": {
+                  "texture": "#hat",
+                  "uv":[0.0,9.5,1.0,10.5]
+                },
+                "east": {
+                  "texture": "#hat",
+                  "uv":[8.0,9.5,9.0,10.5]
+                },
+                "south": {
+                  "texture": "#hat",
+                  "uv":[4.0,9.5,5.0,10.5],
+                  "windMode": [
+                    -1,
+                    -1,
+                    -1,
+                    -1
+                  ],
+                  "windData": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                "west": {
+                  "texture": "#hat",
+                  "uv":[4.0,11.0,5.0,12.0]
+                },
+                "up": {
+                  "texture": "#hat",
+                  "uv":[0.0,7.5,1.0,8.5]
+                },
+                "down": {
+                  "texture": "#hat",
+                  "uv":[4.0,7.5,5.0,8.5]
+                }
+              },
+              "rotationOrigin":[7.0,2.3093158304691315,4.4645051062107086],
+              "rotationX": 10.0,
+              "scaleX": 1.0,
+              "scaleY": 1.0,
+              "scaleZ": 1.0,
+              "autoUnwrap": false,
+              "uv":[0.0,7.5]
+            },
+            {
+              "name": "BrimS (2) (2)",
+              "from":[-0.24000000953674316,-0.60000002384185791,4.3151906132698059],
+              "to":[6.7599999904632568,2.3999999761581421,6.9151905179023743],
+              "faces": {
+                "north": {
+                  "texture": "#hat",
+                  "uv":[1.5,3.0,8.5,6.0]
+                },
+                "east": {
+                  "texture": "#hat",
+                  "uv":[8.0,9.0,10.5,12.0]
+                },
+                "south": {
+                  "texture": "#hat",
+                  "uv":[4.0,8.5,11.0,11.5],
+                  "windMode": [
+                    -1,
+                    -1,
+                    -1,
+                    -1
+                  ],
+                  "windData": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                "west": {
+                  "texture": "#hat",
+                  "uv":[4.5,7.5,7.0,10.5]
+                },
+                "up": {
+                  "texture": "#hat",
+                  "uv":[0.0,7.5,7.0,10.0]
+                }
+              },
+              "rotationOrigin":[3.959999990463257,-0.10000002384185791,5.3151906132698059],
+              "rotationX": 61.0,
+              "scaleX": 1.0,
+              "scaleY": 1.0,
+              "scaleZ": 1.0,
+              "autoUnwrap": false,
+              "uv":[0.0,7.5]
+            },
+            {
+              "name": "BrimS (4)",
+              "from":[0.30099999904632568,0.71604443714022636,0.95721238851547241],
+              "to":[6.3009999990463257,2.7160444371402264,2.6572124361991882],
+              "faces": {
+                "east": {
+                  "texture": "#hat",
+                  "uv":[5.0,9.0,6.5,11.0]
+                },
+                "south": {
+                  "texture": "#hat",
+                  "uv":[4.5,9.0,10.5,11.0],
+                  "windMode": [
+                    -1,
+                    -1,
+                    -1,
+                    -1
+                  ],
+                  "windData": [
+                    1,
+                    1,
+                    1,
+                    1
+                  ]
+                },
+                "west": {
+                  "texture": "#hat",
+                  "uv":[1.5,9.0,3.0,11.0]
+                },
+                "up": {
+                  "texture": "#hat",
+                  "uv":[4.5,2.0,10.5,3.5]
+                }
+              },
+              "rotationOrigin":[4.5009999990463259,1.2160444371402264,1.9572123885154724],
+              "rotationX": -40.0,
+              "scaleX": 1.0,
+              "scaleY": 1.0,
+              "scaleZ": 1.0,
+              "autoUnwrap": false,
+              "uv":[0.0,7.5]
+            }
+          ],
+          "autoUnwrap": false,
+          "uv":[0.5,0.5]
+        }
+      ],
+      "stepParentName": "Head",
+      "autoUnwrap": false,
+      "uv":[0.5,0.5],
+      "unwrapMode": 4
+    }
+  ],
+  "animations": [],
+  "textureWidth": 12,
+  "textureHeight": 12,
+  "textureSizes": {
+    "hat": [
+      12,
+      12
+    ]
+  }
+}

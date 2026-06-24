@@ -1,0 +1,51 @@
+[
+  {
+    "ingredientPattern": "CSC",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "tags": [ "tool-shears" ],
+        "isTool": true
+      },
+      "C": {
+        "type": "item",
+        "code": "game:cloth-red",
+        "name": "cloth",
+        "quantity": 1
+      }
+    },
+    "name": "beret",
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "clothes-beret",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "CSC",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "tags": [ "tool-shears" ],
+        "isTool": true
+      },
+      "C": {
+        "type": "item",
+        "code": "game:hide-pelt-fox-red",
+        "name": "pelt",
+        "quantity": 1
+      }
+    },
+    "name": "beret",
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "clothes-beret",
+      "quantity": 1
+    }
+  }
+]

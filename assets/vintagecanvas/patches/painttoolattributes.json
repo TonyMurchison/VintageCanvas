@@ -1,0 +1,28 @@
+[
+  {
+    "op": "addmerge",
+    "path": "/behaviors",
+    "file": "game:itemtypes/resource/charcoal",
+    "value": [
+      { "name": "CollectibleBehaviorPaintTool" }
+    ]
+  },
+
+  {
+    "op": "addmerge",
+    "path": "/behaviorsByType/stone-chalk",
+    "file": "game:itemtypes/resource/stone.json",
+    "value": [
+      { "name": "CollectibleBehaviorPaintTool" }
+    ]
+  },
+
+  {
+    "op": "addmerge",
+    "path": "/behaviorsByType/stone-limestone",
+    "file": "game:itemtypes/resource/stone.json",
+    "value": [
+      { "name": "CollectibleBehaviorPaintTool" }
+    ]
+  }
+]

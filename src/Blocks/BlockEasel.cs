@@ -10,6 +10,7 @@ using VintageCanvas.src.Entities;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -104,7 +105,7 @@ namespace VintageCanvas.src.Blocks
                 }
             }
 
-            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            BlockEntityEasel ee = getEaselEntity(blockSel, world);
             if (ee == null) {return false;}
             
 
@@ -125,7 +126,7 @@ namespace VintageCanvas.src.Blocks
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
-            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            BlockEntityEasel ee = getEaselEntity(blockSel, world);
             if (ee == null) return false;
             ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
 
@@ -178,7 +179,7 @@ namespace VintageCanvas.src.Blocks
         private void EndStroke(IWorldAccessor world, BlockSelection blockSel)
         {
             previousUV = null;
-            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            BlockEntityEasel ee = getEaselEntity(blockSel, world);
             ee.SynchroniseTexture();
             ee.changedpixels.Clear();
         }
@@ -192,7 +193,6 @@ namespace VintageCanvas.src.Blocks
             var pru = new PickingRayUtil();
             ClientMain mainworld = capi.World as ClientMain;
             Ray playerray = pru.GetPickingRayByMouseCoordinates(mainworld);
-            //api.World.Logger.Event("Click coordinates: " + blockSel.HitPosition.X + ", " + blockSel.HitPosition.Y + ", " + blockSel.HitPosition.Z);
 
             Vec3d raystart = playerray.origin;
             Vec3d raydir = playerray.dir;
@@ -207,7 +207,7 @@ namespace VintageCanvas.src.Blocks
             origin.Y = origin.Y + Attributes["originheight"].AsFloat();
             origin.Z = origin.Z + 0.5;
 
-            //Predefined normal vectors for 15 degree planes
+            //Predefined normal vectors for 'canvasangle' degree planes
             float anglerad = Attributes["canvasangle"].AsFloat() * (float)Math.PI / 180f;
             Vec3d canvasNormal = new Vec3d(0.0, Math.Sin(anglerad), 0.0);
             Variant.TryGetValue("side", out string side);
@@ -289,18 +289,17 @@ namespace VintageCanvas.src.Blocks
             
 
             //Then, update the canvas texture according to whatever brush settings required
+
             if (held.Collectible.Code.BeginsWith("vintagecanvas", "brush"))
             {
+
                 int? brushPaint = held.Attributes.GetAsInt("paintcolor");
                 Random rnd = new Random();
-                if (brushPaint != 0)
-                {
-                    //int basepixel = ypixel * canvasSize + xpixel;
+                Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
 
-                    //List<int> pixels = new List<int>();
-                    HashSet<int> pixels = new HashSet<int>();
-                    
-                    Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
+                //if (brushPaint != 0)
+                //{
+                    HashSet<int> pixels = new HashSet<int>();                                      
 
                     foreach (Vec2i basepixelvec in basepixels)
                     {
@@ -322,9 +321,18 @@ namespace VintageCanvas.src.Blocks
                     if (held.Attributes.HasAttribute("opacity")){
                         opacity = held.Attributes.GetFloat("opacity"); }
 
-                    ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity);
-                }
+                    if (brushPaint != 0)
+                    {
+                        ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity);
+                    }
+                    else
+                    {
+                        ee.BlendPixels(pixels.ToArray());
+                    }
+                //}
+                
             }
+
             int[] pixelints = new int[basepixels.Length];
             for(int i = 0; i < basepixels.Length; i++)
             {
@@ -379,10 +387,29 @@ namespace VintageCanvas.src.Blocks
                 int xpixel = (int)((UV.X + UVoffset.X) * 32); //Not canvasSize! This is the pixel width of a block, not of the whole canvas.
                 int ypixel = (int)(-(UV.Y + UVoffset.Y) * 32);
                 pixels[i] = new Vec2i(xpixel, ypixel);
-            }
-            
+            }          
 
             return pixels;
+        }
+
+        private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
+        {
+            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            if( ee != null) { return ee;  }
+            
+            if (blockSel.Block is BlockMultiblock)
+            {
+                BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
+                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
+                ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
+            }
+
+            if (blockSel.Block is BlockEasel)
+            {
+                ee = blockSel.Block.GetBlockEntity<BlockEntityEasel>(blockSel);
+            }
+
+            return ee;
         }
     }
 }

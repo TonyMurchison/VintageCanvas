@@ -9,6 +9,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
+using Vintagestory.GameContent;
 using static VintageCanvas.src.Entities.BlockEntityEasel;
 
 namespace VintageCanvas.src.Utility
@@ -51,10 +52,10 @@ namespace VintageCanvas.src.Utility
                     {"leadwhite", -1184275 }
                 };
 
-        public static int BlendColor(int src, int dst, float alpha)
+        public static int BlendColor(int basepixel, int overlaypixel, float alpha)
         {
-            int sr = (src >> 16) & 0xFF, sg = (src >> 8) & 0xFF, sb = src & 0xFF;
-            int dr = (dst >> 16) & 0xFF, dg = (dst >> 8) & 0xFF, db = dst & 0xFF;
+            int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
+            int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
             int r = (int)(sr * alpha + dr * (1 - alpha));
             int g = (int)(sg * alpha + dg * (1 - alpha));
             int b = (int)(sb * alpha + db * (1 - alpha));
