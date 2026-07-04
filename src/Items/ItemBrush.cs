@@ -26,6 +26,16 @@ namespace VintageCanvas.src.Items
         int brushHash = 0;
         int neutralColor = -8819893;
 
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            if (VintageCanvasModSystem.config.PaintDepletion)
+            {
+                float paintamount = inSlot.Itemstack.Attributes.GetInt("paintamount") / (float)VintageCanvasModSystem.config.PixelsPerPaintUnit * 0.01f;
+                dsc.AppendLine("Paint on brush: " + Math.Abs(Math.Round(paintamount, 2)) + "L");
+            }
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+        }
+
         public override void OnModifiedInInventorySlot(IWorldAccessor world, ItemSlot slot, ItemStack extractedStack = null)
         {
             //Only reliable way I could find of guaranteeing an ID check trigger whenever you obtain a canvas.
@@ -97,26 +107,6 @@ namespace VintageCanvas.src.Items
             }
         }
 
-        /*
-        public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)
-        {
-            if(blockSel == null)
-            {
-                base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handling);
-                return;
-            }
-
-            if (blockSel.Block.Code.PathStartsWith("multiblock"))
-            {
-                handling = EnumHandHandling.PreventDefault;
-                BlockEasel be = blockSel.Block as BlockEasel;
-                var byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
-                be.OnBlockInteractStart(api.World, byPlayer, blockSel);
-                return;
-            }           
-        }
-        */
-
         public override SkillItem[] GetToolModes(ItemSlot slot, IClientPlayer forPlayer, BlockSelection blockSel)
         {
             ItemStack offhandStack = forPlayer.InventoryManager.OffhandHotbarSlot.Itemstack;
@@ -172,6 +162,44 @@ namespace VintageCanvas.src.Items
 
             slot.Itemstack.Attributes.SetInt("paintcolor", paintcolor);
             slot.Itemstack.Attributes.SetFloat("opacity", 1f);
+
+            if (VintageCanvasModSystem.config.PaintDepletion)
+            {
+                string brushsize = slot.Itemstack.Item.Variant["size"];
+                int pickupcount = (brushsize) switch
+                {
+                    ("small") => 1,
+                    ("medium") => 2,
+                    ("large") => 4
+                };
+
+                if (slots[toolMode].paintColor == slot.Itemstack.Attributes.GetInt("paintcolor"))
+                {
+                    int curpaint = slot.Itemstack.Attributes.GetInt("paintamount");
+                    slot.Itemstack.Attributes.SetInt("paintamount", VintageCanvasModSystem.config.PixelsPerPaintUnit * pickupcount + curpaint);
+                }
+                else
+                {
+                    slot.Itemstack.Attributes.SetInt("paintamount", VintageCanvasModSystem.config.PixelsPerPaintUnit * pickupcount);
+
+                }
+                slot.Itemstack.Attributes.SetInt("paintcolor", slots[toolMode].paintColor);
+
+                slots[toolMode].fullness -= pickupcount;
+
+                    
+                
+                if (slots[toolMode].fullness <= 0)
+                {
+                    slots[toolMode].ClearSlot();
+                }
+                slotdata = SerializerUtil.Serialize(slots);
+                byPlayer.InventoryManager.OffhandHotbarSlot.Itemstack.Attributes.SetBytes("slots", slotdata);
+
+                byPlayer.InventoryManager.OffhandHotbarSlot.Itemstack.Attributes.SetInt("colorhash", BlockPalette.HashSlotColors(slots));
+                
+            }
+            
             return;
         }
         public override void OnLoaded(ICoreAPI api)

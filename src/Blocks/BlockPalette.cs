@@ -21,6 +21,25 @@ namespace VintageCanvas.src.Blocks
     {
         private Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
         private Dictionary<int, int> ColorHashDict = new();
+
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string baseDescription = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            StringBuilder sb = new StringBuilder();
+
+            if (VintageCanvasModSystem.config.PaintDepletion)
+            {
+                BlockEntityPalette bep = GetBlockEntity<BlockEntityPalette>(pos);
+                if (bep == null) return sb.ToString().TrimEnd();
+                int paletteindex = bep.PaletteIndex(forPlayer.CurrentBlockSelection);
+                int paintamount = bep.slots[paletteindex].fullness;
+
+                sb.Append(baseDescription);
+                sb.AppendLine("Paint in slot: " + Math.Round(paintamount * 0.01f, 2) + "L");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             var pe = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityPalette;

@@ -18,6 +18,7 @@ namespace VintageCanvas
         ICoreServerAPI sapi;
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
+        public static VintageCanvasConfig config;
 
         public static CanvasNetworkHandler NetworkHandler {  get; private set; }
 
@@ -42,6 +43,28 @@ namespace VintageCanvas
 
             NetworkHandler = new CanvasNetworkHandler(api);
             NetworkHandler.RegisterChannel();
+
+            TryToLoadConfig(api);
+        }
+
+        private void TryToLoadConfig(ICoreAPI api)
+        {
+            try
+            {
+                config = api.LoadModConfig<VintageCanvasConfig>("VintageCanvasConfig.json");
+                if (config == null)
+                {
+                    config = new VintageCanvasConfig();
+                }
+
+                api.StoreModConfig<VintageCanvasConfig>(config, "VintageCanvasConfig.json");
+            }
+
+            catch
+            {
+                Mod.Logger.Error("Could not load config. Using default settings instead.");
+                config = new VintageCanvasConfig();
+            }
         }
 
         public override void StartServerSide(ICoreServerAPI api)

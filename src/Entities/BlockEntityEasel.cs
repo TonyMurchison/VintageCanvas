@@ -177,9 +177,17 @@ namespace VintageCanvas.src.Entities
             }
         }
 
-        public void PaintPixels(int[] pixelindices, int color, float alpha)
+        public void PaintPixels(int[] pixelindices, int color, float alpha, IPlayer byPlayer)
         {
             if (pixeldata == null) { Api.World.Logger.Error("Canvas pixel data not initiated"); return; }
+            if (VintageCanvasModSystem.config.PaintDepletion && byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount") <= 0) {
+                return;
+            }
+
+            byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
+
+            int pixelspainted = 0;
+
             for (int i = 0; i < pixelindices.Length; i++)
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
@@ -189,11 +197,18 @@ namespace VintageCanvas.src.Entities
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;
                         changedpixels.Add(pixelindices[i]);
+                        pixelspainted++;
                     }
                 }
             }
 
-            //TimeSpan lastTextureUpdate = DateTime.Now.Subtract(textureTimer);            
+            //Reduce brush quantity when toggled on
+            if (VintageCanvasModSystem.config.PaintDepletion && byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.HasAttribute("paintamount"))
+            {
+                int pa = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
+                byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintamount", pa - pixelspainted);         
+            }
+
             UpdateTexture();
         }
 

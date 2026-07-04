@@ -70,7 +70,7 @@ namespace VintageCanvas.src.Blocks
 
             if (byPlayer.CurrentBlockSelection == null)
             {
-                EndStroke(world, blockSel);
+                EndStroke(world, blockSel, byPlayer);
                 return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
             }
             //Consider a stroke finished if cancelled for reasons other than moving within the easel multiblock
@@ -79,7 +79,7 @@ namespace VintageCanvas.src.Blocks
                  || byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("heasel")
                  || byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("multiblock")))
             {
-                EndStroke(world, blockSel);
+                EndStroke(world, blockSel, byPlayer);
             }
 
             return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
@@ -176,12 +176,18 @@ namespace VintageCanvas.src.Blocks
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
-        private void EndStroke(IWorldAccessor world, BlockSelection blockSel)
+        private void EndStroke(IWorldAccessor world, BlockSelection blockSel, IPlayer byPlayer)
         {
             previousUV = null;
             BlockEntityEasel ee = getEaselEntity(blockSel, world);
             ee.SynchroniseTexture();
             ee.changedpixels.Clear();
+
+            int pa =  byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
+            if (pa <= 0)
+            {
+                byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintcolor", 0);
+            }
         }
 
         public Vec2d CanvasAngleRaycast(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
@@ -323,7 +329,7 @@ namespace VintageCanvas.src.Blocks
 
                     if (brushPaint != 0)
                     {
-                        ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity);
+                        ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, byPlayer);
                     }
                     else
                     {
@@ -341,12 +347,12 @@ namespace VintageCanvas.src.Blocks
 
             if (held.Collectible.Code.BeginsWith("game", "charcoal")){
 
-                ee.PaintPixels(pixelints, -16119286, 0.5f);
+                ee.PaintPixels(pixelints, -16119286, 0.5f, byPlayer);
             }
 
             if (held.Collectible.Code.EndVariant() == "limestone" || held.Collectible.Code.EndVariant() == "chalk")
             {
-                ee.PaintPixels(pixelints, 936298687, 0.9f);
+                ee.PaintPixels(pixelints, 936298687, 0.9f, byPlayer);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
@@ -53,6 +54,7 @@ namespace VintageCanvas.src.Blocks
         {            
             MeshData baseMesh = base.GenMesh(capi, GetContent(slot.Itemstack), blockPos);
 
+            
             if (GetContent(slot.Itemstack) == null) return baseMesh;
             string? painttype = GetContent(slot.Itemstack).Collectible.Variant["color"];
             if (painttype == null) return baseMesh;
@@ -77,6 +79,7 @@ namespace VintageCanvas.src.Blocks
 
             baseMesh.AddMeshData(mesh);
             mesh.Dispose();
+            
             return baseMesh;
         }
 
@@ -208,11 +211,25 @@ namespace VintageCanvas.src.Blocks
                             {
                                 heldStack.Attributes.SetInt("paintcolor", 0);
                                 heldStack.Attributes.SetFloat("opacity", 0);
+
+                                if (VintageCanvasModSystem.config.PaintDepletion)
+                                {
+                                    heldStack.Attributes.SetInt("paintamount", 0);
+                                }
                             }
                             else
-                            {
+                            {                                
+
                                 float curOpacity = heldStack.Attributes.GetFloat("opacity", 1f);
                                 heldStack.Attributes.SetFloat("opacity", 0.66f * curOpacity);
+                                if (VintageCanvasModSystem.config.PaintDepletion && heldStack.Attributes.HasAttribute("paintamount"))
+                                {
+                                    heldStack.Attributes.SetInt("paintamount", heldStack.Attributes.GetInt("paintamount") + VintageCanvasModSystem.config.PixelsPerPaintUnit);
+                                    this.TryTakeLiquid(jarstack, 0.01f);
+                                    DoLiquidMovedEffects(byPlayer, jarcontent, 1, EnumLiquidDirection.Pour);
+                                    be.MarkDirty();
+                                    return true;
+                                }
                             }
                         }
 
@@ -221,10 +238,36 @@ namespace VintageCanvas.src.Blocks
                             
                             string paintcode = jarcontent.Collectible.Code.ToString();
                             int paintcolor = paintColors[paintcode];
+                            int curpaint = heldStack.Attributes.GetInt("paintcolor");
                             if (paintcolor != 0)
                             {
                                 heldStack.Attributes.SetInt("paintcolor", paintcolor);
                                 heldStack.Attributes.SetFloat("opacity", 1f);
+
+                                string brushsize = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Item.Variant["size"];
+                                int pickupcount = (brushsize) switch
+                                {
+                                    ("small") => 1,
+                                    ("medium") => 2,
+                                    ("large") => 4
+                                };
+
+                                if (VintageCanvasModSystem.config.PaintDepletion)
+                                {
+                                    if (heldStack.Attributes.GetInt("paintcolor") == curpaint)
+                                    {
+                                        int curamount = heldStack.Attributes.GetInt("paintamount");
+                                        heldStack.Attributes.SetInt("paintamount", heldStack.Attributes.GetInt("paintamount") + (pickupcount * VintageCanvasModSystem.config.PixelsPerPaintUnit));
+                                    }
+                                    else
+                                    {
+                                        heldStack.Attributes.SetInt("paintamount", pickupcount * VintageCanvasModSystem.config.PixelsPerPaintUnit);
+                                    }
+                                    this.TryTakeLiquid(jarstack, pickupcount * 0.01f);
+                                    DoLiquidMovedEffects(byPlayer, jarcontent, 1, EnumLiquidDirection.Pour);
+                                    be.MarkDirty();
+                                    return true;
+                                }
                             }
                         }
                     }

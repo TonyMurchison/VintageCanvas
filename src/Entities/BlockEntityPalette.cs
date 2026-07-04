@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VintageCanvas.src.Blocks;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -55,7 +56,7 @@ namespace VintageCanvas.src.Entities
         }
 
         //Returns index of the specific slot clicked on
-        private int PaletteIndex(BlockSelection blockSel)
+        public int PaletteIndex(BlockSelection blockSel)
         {
             Vec3d clicked = blockSel.HitPosition;
 
@@ -79,8 +80,39 @@ namespace VintageCanvas.src.Entities
         public void BrushInteract(ItemStack playerStack, BlockSelection blockSel)
         {
             int slotindex = PaletteIndex(blockSel);
-            playerStack.Attributes.SetInt("paintcolor", slots[slotindex].paintColor);
             playerStack.Attributes.SetFloat("opacity", 1f);
+
+            if (VintageCanvasModSystem.config.PaintDepletion)
+            {
+                string brushsize = playerStack.Item.Variant["size"];
+                int pickupcount = (brushsize) switch
+                {
+                    ("small") => 1,
+                    ("medium") => 2,
+                    ("large") => 4
+                };
+
+                if (slots[slotindex].paintColor == playerStack.Attributes.GetInt("paintcolor")) {
+                    int curpaint = playerStack.Attributes.GetInt("paintamount");
+                    playerStack.Attributes.SetInt("paintamount", VintageCanvasModSystem.config.PixelsPerPaintUnit * pickupcount + curpaint);
+                }
+                else
+                {
+                    playerStack.Attributes.SetInt("paintamount", VintageCanvasModSystem.config.PixelsPerPaintUnit * pickupcount);
+
+                }
+                playerStack.Attributes.SetInt("paintcolor", slots[slotindex].paintColor);
+
+                slots[slotindex].fullness -= pickupcount;
+                if (slots[slotindex].fullness <= 0)
+                {
+                    slots[slotindex].ClearSlot();
+                    UpdateTexture();
+                }
+            }
+            else {
+                playerStack.Attributes.SetInt("paintcolor", slots[slotindex].paintColor);
+            }
         }
 
         public void PaintJarInteract(ItemStack jarStack, BlockSelection blockSel, IPlayer byPlayer)
@@ -101,11 +133,23 @@ namespace VintageCanvas.src.Entities
                     string paintName = content.Collectible.Code.EndVariant();
                     int color = TextureUtil.PaintColors[paintName];
                     slots[slotindex].AddPaint(color);
+
+                    if (VintageCanvasModSystem.config.PaintDepletion)
+                    {
+                        BlockPaintJar jar = jarStack.Collectible as BlockPaintJar;
+                        jar.TryTakeLiquid(jarStack, 0.01f);
+                    }
                 }
                 if (content.Collectible.Code.PathStartsWith("turpentine"))
                 {
                     //if(byPlayer.)
                     slots[slotindex].ClearSlot();
+
+                    if (VintageCanvasModSystem.config.PaintDepletion)
+                    {
+                        BlockPaintJar jar = jarStack.Collectible as BlockPaintJar;
+                        jar.TryTakeLiquid(jarStack, 0.01f);
+                    }
                 }
             }
 
@@ -143,18 +187,6 @@ namespace VintageCanvas.src.Entities
                     };
 
                     int slotindex = x + (3 * z);
-
-                    /*
-                    bool left = (j % 16 < 8);
-                    bool top = (j < pixeldata.Length / 2);
-
-                    int slotindex = (left, top) switch
-                    {
-                        (true, true) => 0,
-                        (false, true) => 1,
-                        (true, false) => 2,
-                        (false, false) => 3
-                    }; */
 
                     int targetcolor = (int)slots[slotindex].paintColor;
                     int variation = rnd.Next(10);
