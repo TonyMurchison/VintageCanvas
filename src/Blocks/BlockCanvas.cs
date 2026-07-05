@@ -95,7 +95,7 @@ namespace VintageCanvas.src.Blocks
             BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityCanvas;
             if (ce != null && held != null)
             {
-                ce.AddFrame(held);
+                ce.AddFrame(held, byPlayer);
             }
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }

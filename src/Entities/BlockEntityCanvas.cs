@@ -91,7 +91,7 @@ namespace VintageCanvas.src.Entities
             base.OnBlockPlaced(byItemStack);
         }
 
-        public void AddFrame(ItemStack held)
+        public void AddFrame(ItemStack held, IPlayer byPlayer)
         {
             if (held == null)
             {
@@ -99,9 +99,20 @@ namespace VintageCanvas.src.Entities
             }
 
             string frame = Block.Variant["frameshape"];
-
             UpdateFrame(held, FrameSequence[frame]);
             VintageCanvasModSystem.NetworkHandler.SendFrameData(Pos, FrameSequence[frame]);
+
+            if (frame != "fancy")
+            {
+                byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
+                if (held.StackSize < 1)
+                {
+                    held = null;
+                }
+
+                byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
+            }    
+            
             UpdateTexture();            
             MarkDirty(true);
         }

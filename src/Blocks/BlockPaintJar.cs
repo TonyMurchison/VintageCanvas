@@ -202,6 +202,22 @@ namespace VintageCanvas.src.Blocks
                         }                        
                     }
 
+                    //Make tempera medium
+                    if (jarcontent.Item.Code.BeginsWith("game", "water") && heldStack.Collectible.Code.BeginsWith("game", "egg")) 
+                    {
+                        jarcontent.Id = api.World.GetItem("vintagecanvas:tempera").Id;
+                        slot.MarkDirty();
+                        be.MarkDirty(true);
+
+                        byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
+                        if (heldStack.StackSize < 1)
+                        {
+                            heldStack = null;
+                        }
+
+                        byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
+                    } 
+
                 if (heldCode.StartsWith("brush"))
                     {
                         //Incrementally decrease opacity when clicking on a turpentine jar
