@@ -76,6 +76,20 @@
   },
 
   {
+    "op": "addmerge",
+    "path": "/grindingPropsByType",
+    "file": "game:itemtypes/resource/crushed/crushed.json",
+    "value": {
+      "*-sphalerite": {
+        "groundStack": {
+          "type": "item",
+          "code": "vintagecanvas:pigment-leadwhite"
+        }
+      }
+    }
+  },
+
+  {
     "op": "add",
     "path": "/grindingProps",
     "file": "game:itemtypes/resource/crushed/lime.json",
