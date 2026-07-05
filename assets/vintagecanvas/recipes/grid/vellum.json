@@ -1,0 +1,106 @@
+[
+  {
+    "ingredientPattern": "PKJ",
+    "ingredients": {
+      "P": {
+        "type": "item",
+        "code": "game:hide-pelt-medium"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "paint-chalkwhite*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "vellum",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "PKJ",
+    "ingredients": {
+      "P": {
+        "type": "item",
+        "code": "game:hide-pelt-large"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "paint-chalkwhite*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "vellum",
+      "quantity": 2
+    }
+  },
+
+  {
+    "ingredientPattern": "PKJ",
+    "ingredients": {
+      "P": {
+        "type": "item",
+        "code": "game:hide-pelt-huge"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "paint-chalkwhite*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "vellum",
+      "quantity": 4
+    }
+  }
+]

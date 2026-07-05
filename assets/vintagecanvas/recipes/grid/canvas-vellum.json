@@ -1,0 +1,135 @@
+[
+  {
+    "ingredientPattern": "SLS,SLS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum"
+      }
+    },
+    "name": "Portrait Canvas",
+    "width": 3,
+    "height": 2,
+    "output": {
+      "type": "block",
+      "code": "canvas-portrait-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "SLS,SLS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:plank-*"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum"
+      }
+    },
+    "name": "Portrait Canvas",
+    "width": 3,
+    "height": 2,
+    "output": {
+      "type": "block",
+      "code": "canvas-portrait-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "SS,LL,SS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum"
+      }
+    },
+    "name": "Landscape Canvas",
+    "width": 2,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-landscape-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "SS,LL,SS",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:plank-*"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum"
+      }
+    },
+    "name": "Landscape Canvas",
+    "width": 2,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-landscape-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "_S_,SLS,_S_",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:stick"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum",
+        "quantity": 2
+      }
+    },
+    "name": "Square Canvas",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-square-none-oak-north",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "_S_,SLS,_S_",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "game:plank-*"
+      },
+      "L": {
+        "type": "item",
+        "code": "vellum",
+        "quantity": 2
+      }
+    },
+    "name": "Square Canvas",
+    "width": 3,
+    "height": 3,
+    "output": {
+      "type": "block",
+      "code": "canvas-square-none-oak-north",
+      "quantity": 1
+    }
+  }
+]
