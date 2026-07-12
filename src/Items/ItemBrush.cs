@@ -81,7 +81,7 @@ namespace VintageCanvas.src.Items
                 int[] pixeldata = [paintcolor, varietycolor, varietycolor, paintcolor];
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", brushId.ToString());
 
-                MeshData mesh = TextureUtil.SwapPaintingTexture(
+                MeshData mesh = TextureUtil.SwapPaintingTextureMesh(
                     pixeldata,
                     2,
                     texLoc,

@@ -305,7 +305,7 @@ namespace VintageCanvas.src.Entities
 
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", canvasId.ToString());
 
-                clientMesh = TextureUtil.SwapPaintingTexture(
+                clientMesh = TextureUtil.SwapPaintingTextureMesh(
                     pixeldata,
                     canvasSize,
                     texLoc,

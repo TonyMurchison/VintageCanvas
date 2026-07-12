@@ -72,7 +72,49 @@ namespace VintageCanvas.src.Utility
             return rgba;
         }
 
-        public static MeshData SwapPaintingTexture(int[] pixeldata, int textureSize, AssetLocation texLoc, ITexPositionSource defaultSrc, AssetLocation code, CompositeShape shape, ICoreClientAPI capi)
+        public static TextureAtlasPosition SwapPaintingTexture(int[] pixeldata, int textureSize, AssetLocation texLoc, ICoreClientAPI capi)
+        {
+            TextureAtlasPosition TexPos = new TextureAtlasPosition();
+            ClientMain main = capi.World as ClientMain;
+            ClientPlatformAbstract platform = main.Platform;
+
+            bool textureCreated = false;
+            capi.BlockTextureAtlas.GetOrInsertTexture(
+                        texLoc,
+                        out int _,
+                        out TexPos,
+                        () =>
+                        {
+                            textureCreated = true;
+                            return platform.CreateBitmapFromPixels(pixeldata, textureSize, textureSize);
+                        }, 0.005f
+                    );
+
+            if (!textureCreated)
+            {
+                capi.Event.EnqueueMainThreadTask(() =>
+                {
+                    LoadedTexture loadedTex = new LoadedTexture(capi);
+                    loadedTex.Width = textureSize;
+                    loadedTex.Height = textureSize;
+                    capi.Render.LoadTexture(platform.CreateBitmapFromPixels(pixeldata, textureSize, textureSize), ref loadedTex);
+
+                    capi.BlockTextureAtlas.RenderTextureIntoAtlas(
+                        capi.BlockTextureAtlas.AtlasTextures[TexPos.atlasNumber].TextureId,
+                        loadedTex,
+                        0, 0, textureSize, textureSize,
+                        TexPos.x1 * capi.BlockTextureAtlas.Size.Width,
+                        TexPos.y1 * capi.BlockTextureAtlas.Size.Height,
+                        -1f
+                        );
+                    loadedTex.Dispose();
+                }, "canvasatlasupdater");
+            }
+
+            return TexPos;
+        }
+
+        public static MeshData SwapPaintingTextureMesh(int[] pixeldata, int textureSize, AssetLocation texLoc, ITexPositionSource defaultSrc, AssetLocation code, CompositeShape shape, ICoreClientAPI capi)
         {
             TextureAtlasPosition TexPos = new TextureAtlasPosition();
             ClientMain main = capi.World as ClientMain;

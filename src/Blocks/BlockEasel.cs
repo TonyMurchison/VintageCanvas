@@ -300,43 +300,38 @@ namespace VintageCanvas.src.Blocks
             {
 
                 int? brushPaint = held.Attributes.GetAsInt("paintcolor");
-                Random rnd = new Random();
                 Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
 
-                //if (brushPaint != 0)
-                //{
-                    HashSet<int> pixels = new HashSet<int>();                                      
+                HashSet<int> pixels = new HashSet<int>();                                      
 
-                    foreach (Vec2i basepixelvec in basepixels)
+                foreach (Vec2i basepixelvec in basepixels)
+                {
+                    int basepixel = basepixelvec.Y * canvasSize + basepixelvec.X;
+                    foreach (Vec2i shift in brushPattern)
                     {
-                        int basepixel = basepixelvec.Y * canvasSize + basepixelvec.X;
-                        foreach (Vec2i shift in brushPattern)
+                        //Check if X coordinate is not on other side of canvas
+                        int x1 = basepixel % canvasSize;
+                        int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
+
+                        if (Math.Abs(x2 - x1) < 16)
                         {
-                            //Check if X coordinate is not on other side of canvas
-                            int x1 = basepixel % canvasSize;
-                            int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
-
-                            if (Math.Abs(x2 - x1) < 16)
-                            {
-                                pixels.Add(basepixel + shift[0] + (shift[1] * canvasSize));
-                            }
+                            pixels.Add(basepixel + shift[0] + (shift[1] * canvasSize));
                         }
-                    }                 
-
-                    float opacity = 1;
-                    if (held.Attributes.HasAttribute("opacity")){
-                        opacity = held.Attributes.GetFloat("opacity"); }
-
-                    if (brushPaint != 0)
-                    {
-                        ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, byPlayer);
                     }
-                    else
-                    {
-                        ee.BlendPixels(pixels.ToArray());
-                    }
-                //}
-                
+                }                 
+
+                float opacity = 1;
+                if (held.Attributes.HasAttribute("opacity")){
+                    opacity = held.Attributes.GetFloat("opacity"); }
+
+                if (brushPaint != 0)
+                {
+                    ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, byPlayer);
+                }
+                else
+                {
+                    ee.BlendPixels(pixels.ToArray());
+                }                
             }
 
             int[] pixelints = new int[basepixels.Length];

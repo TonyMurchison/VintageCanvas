@@ -201,7 +201,7 @@ namespace VintageCanvas.src.Entities
                 VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata));
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", "palette" + paletteId.ToString());
 
-                 paintMesh = TextureUtil.SwapPaintingTexture(
+                 paintMesh = TextureUtil.SwapPaintingTextureMesh(
                     pixeldata,
                     16,
                     texLoc,

@@ -114,7 +114,7 @@ namespace VintageCanvas.src.Blocks
 
                 Block block = api.World.GetBlock(BlockId);
 
-                MeshData m = TextureUtil.SwapPaintingTexture(
+                MeshData m = TextureUtil.SwapPaintingTextureMesh(
                     pixeldata,
                     itemstack.Collectible.Attributes["canvassize"].AsInt(),
                     texLoc,
