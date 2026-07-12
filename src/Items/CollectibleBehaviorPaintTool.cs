@@ -188,7 +188,8 @@ namespace VintageCanvas.src.Items
 
             if (FrescoStore.Data.TryGetValue(blockID, out int[] pixeldata))
             {
-                ApplyFrescoTool(slot.Itemstack, blockID, pixeldata, blockSel);
+
+                FrescoStore.Data[blockID] = ApplyTool(slot.Itemstack, blockID, pixeldata, blockSel);
                 bemb.MarkDirty(true);
                 bemb.MarkMeshDirty();
             }
@@ -247,6 +248,7 @@ namespace VintageCanvas.src.Items
             }
         }
 
+        //Hashing pixel indices with their block coordinates, so that they don't overlap between blocks
         private int hashBlockPixel(BlockSelection blockSel, int pixel)
         {
             int hash = unchecked(pixel);
@@ -339,7 +341,7 @@ namespace VintageCanvas.src.Items
             return pixeldata;
         }
 
-        private void ApplyFrescoTool(ItemStack tool, string id, int[] pixeldata, BlockSelection blockSel)
+        private int[] ApplyTool(ItemStack tool, string id, int[] pixeldata, BlockSelection blockSel)
         {
             Random rnd = new();
 
@@ -348,27 +350,6 @@ namespace VintageCanvas.src.Items
             double y = blockSel.HitPosition.Y;
             double z = blockSel.HitPosition.Z;
             int facing = blockSel.Face.Index;
-
-            int xpixel = (facing) switch
-            {
-                (0) => 32 - (int)Math.Ceiling(-1 * x * 32),
-                (1) => 32 - (int)Math.Ceiling(-1 * z * 32),
-                (2) => 32 - (int)Math.Ceiling(x * 32),
-                (3) => 32 - (int)Math.Ceiling(z * 32),
-                (4) => (int)Math.Floor(x * 32),
-                (5) => (int)Math.Floor(x * 32)
-            };
-
-            //Genuinely no idea why these first two facings have a one-pixel Y offset. Don't think about it too hard.
-            int ypixel = (facing) switch
-            {
-                (0) => 32 - (int)Math.Ceiling(y * 32) - 1,
-                (1) => 32 - (int)Math.Ceiling(y * 32) - 1,
-                (2) => 32 - (int)Math.Ceiling(y * 32),
-                (3) => 32 - (int)Math.Ceiling(y * 32),
-                (4) => 32 - (int)Math.Ceiling(z * 32),
-                (5) => (int)Math.Floor(z * 32),
-            };
 
             double xcoord = (facing) switch
             {
@@ -414,7 +395,8 @@ namespace VintageCanvas.src.Items
                 pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, 32, blockSel);
             }
 
-            FrescoStore.Data[id] = pixeldata;
+            return pixeldata;
+            //FrescoStore.Data[id] = pixeldata;
         }
 
         private int AverageColors(int[] nearbypixels, int[] pixeldata)

@@ -62,7 +62,7 @@ namespace VintageCanvas.src.Utility
 
                 if (!FrescoStore.Data.ContainsKey(frescoId))
                 {
-                    int[] pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/canvas.png")).ToBitmap(capi).Pixels;
+                    int[] pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/fresco.png")).ToBitmap(capi).Pixels;
                     FrescoStore.Data.Add(frescoId, pixeldata);
                 }
                 
