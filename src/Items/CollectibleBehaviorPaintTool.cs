@@ -208,7 +208,7 @@ namespace VintageCanvas.src.Items
 
         #region ToolApplications
         
-        public int[] ApplyBrush(ItemStack held, int[] pixeldata, Vec2i[] basepixels, int canvasSize)
+        public int[] ApplyBrush(ItemStack held, int[] pixeldata, Vec2i[] basepixels, int canvasSize, BlockSelection blockSel)
         {
             int? brushPaint = held.Attributes.GetAsInt("paintcolor");
             Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
@@ -239,15 +239,24 @@ namespace VintageCanvas.src.Items
 
             if (brushPaint != 0)
             {
-                return PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, held, pixeldata, canvasSize);
+                return PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, held, pixeldata, canvasSize, blockSel);
             }
             else
             {
-                return BlendPixels(pixels.ToArray(), held, pixeldata, canvasSize);
+                return BlendPixels(pixels.ToArray(), held, pixeldata, canvasSize, blockSel);
             }
         }
 
-        private int[] PaintPixels(int[] pixelindices, int color, float alpha, ItemStack held, int[] pixeldata, int canvasSize)
+        private int hashBlockPixel(BlockSelection blockSel, int pixel)
+        {
+            int hash = unchecked(pixel);
+            hash += unchecked(blockSel.Position.X * 10000);
+            hash += unchecked(blockSel.Position.Y * 1000000);
+            hash += unchecked(blockSel.Position.Z * 100000000);
+            return hash;
+        }
+
+        private int[] PaintPixels(int[] pixelindices, int color, float alpha, ItemStack held, int[] pixeldata, int canvasSize, BlockSelection blockSel)
         {
             if (VintageCanvasModSystem.config.PaintDepletion && held.Attributes.GetInt("paintamount") <= 0
                 && held.Collectible.Code.PathStartsWith("brush"))
@@ -263,11 +272,14 @@ namespace VintageCanvas.src.Items
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
-                    if (!changedpixels.Contains(pixelindices[i]))
+                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
                     {
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;
-                        changedpixels.Add(pixelindices[i]);
+
+                        //TODO add blockPos to changedpixels for continuity
+                        blockSel.Position.ToString();
+                        changedpixels.Add(hashBlockPixel(blockSel, pixelindices[i]));
                         pixelspainted++;
                     }
                 }
@@ -283,7 +295,7 @@ namespace VintageCanvas.src.Items
             return pixeldata;
         }
 
-        private int[] BlendPixels(int[] pixelindices, ItemStack held, int[] pixeldata, int canvasSize)
+        private int[] BlendPixels(int[] pixelindices, ItemStack held, int[] pixeldata, int canvasSize, BlockSelection blockSel)
         {
             if (pixeldata == null) return pixeldata;
             //TODO for every pixel, 
@@ -294,7 +306,7 @@ namespace VintageCanvas.src.Items
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
-                    if (!changedpixels.Contains(pixelindices[i]))
+                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
                     {
                         //test a radius(start with 2 ?), create an average rgb value for all those pixels, then BlendColor the pixel with that value
                         List<int> nearbypixels = new();
@@ -313,7 +325,7 @@ namespace VintageCanvas.src.Items
 
                         blendedIndices.Add(pixelindices[i]);
                         blendedColors.Add(AverageColors(nearbypixels.ToArray(), pixeldata));
-                        changedpixels.Add(pixelindices[i]);
+                        changedpixels.Add(hashBlockPixel(blockSel, pixelindices[i]));
                     }
                 }
             }
@@ -381,7 +393,7 @@ namespace VintageCanvas.src.Items
 
             if (tool.Collectible.Code.PathStartsWith("brush"))
             {
-                pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, 32);
+                pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, 32, blockSel);
             }
             if (tool.Collectible.Code.PathStartsWith("charcoal"))
             {
@@ -390,7 +402,7 @@ namespace VintageCanvas.src.Items
                 {
                     pixelcoords.Add(pixel[0] + 32 * pixel[1]);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, 32);
+                pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, 32, blockSel);
             }
             if (tool.Collectible.Code.EndVariant() == "limestone" || tool.Collectible.Code.EndVariant() == "chalk")
             {
@@ -399,7 +411,7 @@ namespace VintageCanvas.src.Items
                 {
                     pixelcoords.Add(pixel[0] + 32 * pixel[1]);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, 32);
+                pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, 32, blockSel);
             }
 
             FrescoStore.Data[id] = pixeldata;
