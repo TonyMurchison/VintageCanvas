@@ -43,7 +43,8 @@
   "attributes": {
     "canvasangle": "15",
     "uvyoffset": "0.3898",
-    "originheight": "2.1137"
+    "originheight": "2.1137",
+    "canvassize": "32"
   },
 
   "textures": {

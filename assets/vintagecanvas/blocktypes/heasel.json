@@ -72,22 +72,26 @@
     "*-landscape-*": {
       "canvasangle": "7.5",
       "uvyoffset": "0.83",
-      "originheight": "3.075"
+      "originheight": "3.075",
+      "canvassize": "64"
     },
     "*-portrait-*": {
       "canvasangle": "7.5",
       "uvyoffset": "0.58",
-      "originheight": "3.075"
+      "originheight": "3.075",
+      "canvassize": "64"
     },
     "*-square-*": {
       "canvasangle": "7.5",
       "uvyoffset": "0.58",
-      "originheight": "3.075"
+      "originheight": "3.075",
+      "canvassize": "64"
     },
     "*-none-*": {
       "canvasangle": "7.5",
       "uvyoffset": "0.58",
-      "originheight": "3.075"
+      "originheight": "3.075",
+      "canvassize": "64"
     }
   },
 

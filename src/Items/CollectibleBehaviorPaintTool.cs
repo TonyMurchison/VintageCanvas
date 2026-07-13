@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using VintageCanvas.src.Blocks;
+using VintageCanvas.src.Entities;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -18,6 +20,7 @@ namespace VintageCanvas.src.Items
     {
         private HashSet<int> changedpixels = new HashSet<int>();
         private Vec2d previousUV = null;
+        private float paintFrequency = 20f;
         public CollectibleBehaviorPaintTool(CollectibleObject collObj) : base(collObj) { }
 
         //All painting happens during OnHeldInteractStep. Attack steps redirect to their Interact equivalent
@@ -168,33 +171,110 @@ namespace VintageCanvas.src.Items
             handHandling = EnumHandHandling.PreventDefault;
             handling = EnumHandling.PreventDefault;
             base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handHandling, ref handling);
-
         }
 
         public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandling handling)
         {
+            /*
             if (blockSel == null || blockSel.Block is not BlockMicroBlock)
             {                
                 return base.OnHeldInteractStep(secondsUsed, slot, byEntity, blockSel, entitySel, ref handling);
             }
 
-            BlockMicroBlock bmb = blockSel.Block as BlockMicroBlock;
-            BlockEntityMicroBlock bemb = (BlockEntityMicroBlock)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
+            //frequency limiter: only allow edits if the last edit was > 1/paintfrequency ago
+            
+            if (!FrequencyTest(slot.Itemstack, secondsUsed))
+                {
+                return true;
+            }
+            */
 
-            //TEMP
-            int i = blockSel.Face.Index;
-            string blockID = "vintagecanvasfresco" + blockSel.Position.ToString() + "-" + i;
+            IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
 
-
-            if (FrescoStore.Data.TryGetValue(blockID, out int[] pixeldata))
+            if (blockSel.Block is BlockEasel || blockSel.Block is BlockMultiblock)
             {
-
-                FrescoStore.Data[blockID] = ApplyTool(slot.Itemstack, blockID, pixeldata, blockSel);
-                bemb.MarkDirty(true);
-                bemb.MarkMeshDirty();
+                BlockEntityEasel bee = getEaselEntity(blockSel, byPlayer.Entity.World);
+                if (bee != null)
+                {
+                    bee.pixeldata = ApplyTool(slot.Itemstack, bee.pixeldata, blockSel, byPlayer);
+                    bee.UpdateTexture();
+                }
             }
 
-            handling = EnumHandling.Handled;
+            if (blockSel.Block is BlockMicroBlock)
+            {
+                BlockMicroBlock bmb = blockSel.Block as BlockMicroBlock;
+                BlockEntityMicroBlock bemb = (BlockEntityMicroBlock)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
+            
+                //TEMP
+                int i = blockSel.Face.Index;
+                string blockID = "vintagecanvasfresco" + blockSel.Position.ToString() + "-" + i;
+
+
+                if (FrescoStore.Data.TryGetValue(blockID, out int[] pixeldata))
+                {
+                    FrescoStore.Data[blockID] = ApplyTool(slot.Itemstack, pixeldata, blockSel, byPlayer);
+                    bemb.MarkDirty(true);
+                    bemb.MarkMeshDirty();
+                }
+
+                handling = EnumHandling.Handled;
+            }
+            return true;
+        }
+
+        private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
+        {
+            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+            if (ee != null) { return ee; }
+
+            if (blockSel.Block is BlockMultiblock)
+            {
+                BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
+                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
+                ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
+            }
+
+            if (blockSel.Block is BlockEasel)
+            {
+                ee = blockSel.Block.GetBlockEntity<BlockEntityEasel>(blockSel);
+            }
+
+            return ee;
+        }
+
+        private static BlockEasel getEasel(BlockSelection blockSel, IWorldAccessor world)
+        {
+            BlockEasel ee = world.BlockAccessor.GetBlock(blockSel.Position) as BlockEasel;
+            if (ee != null) { return ee; }
+
+            if (blockSel.Block is BlockMultiblock)
+            {
+                BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
+                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
+                ee = (BlockEasel)world.BlockAccessor.GetBlock(bp);
+            }
+
+            if (blockSel.Block is BlockEasel)
+            {
+                ee = (BlockEasel)blockSel.Block;
+            }
+
+            return ee;
+        }
+
+        private bool FrequencyTest(ItemStack tool, float secondsUsed)
+        {
+            float? timestamp = tool.Attributes.TryGetFloat("timestamp");
+            if (timestamp != null)
+            {
+                float timelapse = secondsUsed - (float)timestamp;
+                if (timelapse > (1f / paintFrequency))
+                {
+                    return true;
+                }
+                else return false;
+            }
             return true;
         }
 
@@ -341,62 +421,82 @@ namespace VintageCanvas.src.Items
             return pixeldata;
         }
 
-        private int[] ApplyTool(ItemStack tool, string id, int[] pixeldata, BlockSelection blockSel)
+        private int[] ApplyTool(ItemStack tool, int[] pixeldata, BlockSelection blockSel, IPlayer byPlayer)
         {
-            Random rnd = new();
+            Vec2i[] interpolatedPixels = [];
+            int canvasSize = 32;
 
-            //offset by half a pixel to improve accuracy
-            double x = blockSel.HitPosition.X;
-            double y = blockSel.HitPosition.Y;
-            double z = blockSel.HitPosition.Z;
-            int facing = blockSel.Face.Index;
-
-            double xcoord = (facing) switch
+            if (blockSel.Block is BlockMicroBlock)
             {
-                (0) => 1 + x,
-                (1) => 1 + z,
-                (2) => 1 - x,
-                (3) => 1 - z,
-                (4) => x,
-                (5) => x
-            };
-            double ycoord = (facing) switch
-            {
-                (0) => y - 1,
-                (1) => y - 1,
-                (2) => y - 1,
-                (3) => y - 1,
-                (4) => z - 1,
-                (5) => -z
-            };
+                double x = blockSel.HitPosition.X;
+                double y = blockSel.HitPosition.Y;
+                double z = blockSel.HitPosition.Z;
+                int facing = blockSel.Face.Index;
 
-            Vec2i[] interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0.5 / 32));
+                double xcoord = (facing) switch
+                {
+                    (0) => 1 + x,
+                    (1) => 1 + z,
+                    (2) => 1 - x,
+                    (3) => 1 - z,
+                    (4) => x,
+                    (5) => x
+                };
+                double ycoord = (facing) switch
+                {
+                    (0) => y - 1,
+                    (1) => y - 1,
+                    (2) => y - 1,
+                    (3) => y - 1,
+                    (4) => z - 1,
+                    (5) => -z
+                };
+
+                //Offset by 0.5 pixel
+                interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0.5 / 32));
+
+            }
+
+            if (blockSel.Block is BlockEasel ||
+                blockSel.Block is BlockMultiblock)
+            {
+                BlockEasel be = getEasel(blockSel, byPlayer.Entity.World);
+                Vec2d UV = be.CanvasAngleRaycast(byPlayer.Entity.World, byPlayer, blockSel);
+                
+                float yoffset = be.Attributes["uvyoffset"].AsFloat();
+                Vec2d UVoffset = new Vec2d(0.5f, 1 + yoffset);
+
+                interpolatedPixels = InterpolatePixels(previousUV, UV, UVoffset);
+                canvasSize = be.Attributes["canvassize"].AsInt();
+            }
+
+
 
             if (tool.Collectible.Code.PathStartsWith("brush"))
             {
-                pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, 32, blockSel);
+                pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, canvasSize, blockSel);
             }
             if (tool.Collectible.Code.PathStartsWith("charcoal"))
             {
                 List<int> pixelcoords = new();
                 foreach (Vec2i pixel in interpolatedPixels)
                 {
-                    pixelcoords.Add(pixel[0] + 32 * pixel[1]);
+                    pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, 32, blockSel);
+                pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, canvasSize, blockSel);
             }
             if (tool.Collectible.Code.EndVariant() == "limestone" || tool.Collectible.Code.EndVariant() == "chalk")
             {
                 List<int> pixelcoords = new();
                 foreach (Vec2i pixel in interpolatedPixels)
                 {
-                    pixelcoords.Add(pixel[0] + 32 * pixel[1]);
+                    pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, 32, blockSel);
+                pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, canvasSize, blockSel);
             }
 
+            tool.Attributes.SetFloat("timestamp", -10f);
             return pixeldata;
-            //FrescoStore.Data[id] = pixeldata;
         }
 
         private int AverageColors(int[] nearbypixels, int[] pixeldata)

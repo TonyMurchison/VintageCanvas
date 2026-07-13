@@ -65,6 +65,8 @@ namespace VintageCanvas.src.Blocks
             base.OnLoaded(api);
             capi = api as ICoreClientAPI;
         }
+
+        /*
         public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
         {
 
@@ -84,6 +86,7 @@ namespace VintageCanvas.src.Blocks
 
             return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
         }
+        
 
         public override bool OnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {            
@@ -123,6 +126,7 @@ namespace VintageCanvas.src.Blocks
             return base.OnBlockInteractStep(secondsUsed, world, byPlayer, blockSel);
         }
 
+        */
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
@@ -151,6 +155,7 @@ namespace VintageCanvas.src.Blocks
                     return true;
                 }
 
+                /*
                 //Superceded by EndStroke()                
                 if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
                 {                    
@@ -169,12 +174,14 @@ namespace VintageCanvas.src.Blocks
                     held.Attributes.SetFloat("timestamp", -10f);
                     
                     return true;
-                }
+                }*/
                 
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
+
+        
 
         private void EndStroke(IWorldAccessor world, BlockSelection blockSel, IPlayer byPlayer)
         {
@@ -270,6 +277,7 @@ namespace VintageCanvas.src.Blocks
             return;
         }
 
+        /*
         private void applyPaintingTool(IWorldAccessor world, IPlayer byPlayer, ItemStack held, BlockSelection blockSel, BlockEntityEasel ee, Vec2d? previousUV = null)
         {
             //Return 
@@ -393,7 +401,7 @@ namespace VintageCanvas.src.Blocks
 
             return pixels;
         }
-
+        */
         private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
         {
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;

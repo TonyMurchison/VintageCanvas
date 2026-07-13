@@ -176,7 +176,7 @@ namespace VintageCanvas.src.Entities
                 Api.World.BlockAccessor.ExchangeBlock(newBlock.Id, Pos);
             }
         }
-
+        /*
         public void PaintPixels(int[] pixelindices, int color, float alpha, IPlayer byPlayer)
         {
             if (pixeldata == null) { Api.World.Logger.Error("Canvas pixel data not initiated"); return; }
@@ -281,7 +281,7 @@ namespace VintageCanvas.src.Entities
             return (255 << 24) | (r << 16) | (g << 8) | b;
 
         }
-
+        */
         //Pushes textures from client side to server side, then forces texture update through FromTree
         public void SynchroniseTexture()
         {
@@ -294,7 +294,7 @@ namespace VintageCanvas.src.Entities
         }
 
         //Convert pixeldata to bitmap, push into texture atlas location, tesselate custom mesh with rerouted "painting" texture target
-        private void UpdateTexture()
+        public void UpdateTexture()
         {
             if (Api.Side == EnumAppSide.Client)
             {
