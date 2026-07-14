@@ -2,13 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 using Vintagestory.API.Client;
+using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
 namespace VintageCanvas.src.Utility
 {
-    public static class FrescoStore
+    public class FrescoStore : ModSystem
     {
         public static Dictionary<string, int[]> Data = new();
+
+        public override void StartServerSide(ICoreServerAPI api)
+        {
+            api.Event.GameWorldSave += () => api.WorldManager.SaveGame.StoreData("frescoData", SerializerUtil.Serialize(Data));
+            byte[] data = api.WorldManager.SaveGame.GetData("frescoData");
+            if (data != null)
+            {
+                api.Event.SaveGameLoaded += () => Data = SerializerUtil.Deserialize<Dictionary<string, int[]>>(data);
+            }
+
+        }        
     }
 }
+
+    

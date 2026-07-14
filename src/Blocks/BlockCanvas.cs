@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using System.Text;
 using VintageCanvas.src.Entities;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Common.Entities;
-using Vintagestory.API.Config;
-using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Util;
-using Vintagestory.Client;
-using Vintagestory.Client.NoObf;
-using Vintagestory.GameContent;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static VintageCanvas.src.Entities.BlockEntityEasel;
 
 namespace VintageCanvas.src.Blocks
 {

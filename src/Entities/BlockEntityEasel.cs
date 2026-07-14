@@ -274,10 +274,8 @@ namespace VintageCanvas.src.Entities
                 if (tree.HasAttribute("vc_pixeldata"))
                 {
                     pixeldata = TextureUtil.ReadCompressedPixelData(tree.GetBytes("vc_pixeldata"));                    
-                    if(capi != null) {  //&& lastTextureUpdate.TotalMilliseconds > 100)
-                                        //{                        
+                    if(capi != null) { 
                         UpdateTexture();
-                        
                     }
                 }
                 

@@ -133,6 +133,13 @@ namespace VintageCanvas.src.Items
             return true;
         }
 
+        public override bool OnHeldInteractCancel(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, EnumItemUseCancelReason cancelReason, ref EnumHandling handled)
+        {
+            IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
+            EndStroke(byEntity.World, blockSel, byPlayer);
+            return base.OnHeldInteractCancel(secondsUsed, slot, byEntity, blockSel, entitySel, cancelReason, ref handled);
+        }
+
         private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
         {
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
@@ -186,14 +193,7 @@ namespace VintageCanvas.src.Items
                 else return false;
             }
             return true;
-        }
-
-        public override bool OnHeldInteractCancel(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, EnumItemUseCancelReason cancelReason, ref EnumHandling handled)
-        {
-            changedpixels.Clear();
-            previousUV = null;
-            return base.OnHeldInteractCancel(secondsUsed, slot, byEntity, blockSel, entitySel, cancelReason, ref handled);
-        }
+        }        
 
         #endregion
 
@@ -247,6 +247,25 @@ namespace VintageCanvas.src.Items
             hash += unchecked(blockSel.Position.Z * 100000000);
             return hash;
         }
+
+        private void EndStroke(IWorldAccessor world, BlockSelection blockSel, IPlayer byPlayer)
+        {
+            previousUV = null;
+            changedpixels.Clear();
+
+            if (IsPaintTarget(blockSel, world) && blockSel.Block is not BlockMicroBlock)
+            {
+                BlockEntityEasel ee = getEaselEntity(blockSel, world);
+                if (world.Side == EnumAppSide.Client) ee.SynchroniseTexture();
+            }
+
+            int pa = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
+            if (pa <= 0)
+            {
+                byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintcolor", 0);
+            }
+        }
+
 
         private int[] PaintPixels(int[] pixelindices, int color, float alpha, ItemStack held, int[] pixeldata, int canvasSize, BlockSelection blockSel)
         {

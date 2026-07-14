@@ -98,22 +98,6 @@ namespace VintageCanvas.src.Blocks
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
         }
 
-        
-
-        private void EndStroke(IWorldAccessor world, BlockSelection blockSel, IPlayer byPlayer)
-        {
-            previousUV = null;
-            BlockEntityEasel ee = getEaselEntity(blockSel, world);
-            ee.SynchroniseTexture();
-            ee.changedpixels.Clear();
-
-            int pa =  byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
-            if (pa <= 0)
-            {
-                byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintcolor", 0);
-            }
-        }
-
         public Vec2d CanvasAngleRaycast(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //returns the raycast intersection with the canvas plane. Normalised to a UV space centred around x 0.5, z0

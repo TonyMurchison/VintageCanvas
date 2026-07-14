@@ -1,0 +1,71 @@
+[
+  {
+    "ingredientPattern": "QJS",
+    "ingredients": {
+      "Q": {
+        "type": "item",
+        "code": "game:quicklime"
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      },
+      "S": {
+        "type": "block",
+        "code": "game:sand*"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "paint-chalkwhite*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "frescoplaster-white",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "QJS",
+    "ingredients": {
+      "Q": {
+        "type": "item",
+        "code": "game:quicklime"
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      },
+      "S": {
+        "type": "block",
+        "code": "game:sand*"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "paint-leadwhite*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "frescoplaster-white",
+      "quantity": 1
+    }
+  }
+]

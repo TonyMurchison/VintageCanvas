@@ -9,6 +9,7 @@
       }
     }
   ],
+
   "variantgroups": [
     {
       "code": "type",
@@ -24,7 +25,7 @@
   },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "blockmaterial": "Cloth",
+  "blockmaterial": "Stone",
   "creativeinventory": {
     "general": [ "*" ],
     "decorative": [ "*" ]
