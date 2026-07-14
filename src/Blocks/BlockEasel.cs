@@ -23,7 +23,7 @@ namespace VintageCanvas.src.Blocks
 {
 
     //Responsibilities:
-    //Track player interactions, perform raycasting, calculate paint intersections
+    //Perform raycasting, calculate paint intersections
     public class BlockEasel : Block
     {
         float paintFrequency = 20f;
@@ -66,67 +66,6 @@ namespace VintageCanvas.src.Blocks
             capi = api as ICoreClientAPI;
         }
 
-        /*
-        public override bool OnBlockInteractCancel(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, EnumItemUseCancelReason cancelReason)
-        {
-
-            if (byPlayer.CurrentBlockSelection == null)
-            {
-                EndStroke(world, blockSel, byPlayer);
-                return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
-            }
-            //Consider a stroke finished if cancelled for reasons other than moving within the easel multiblock
-            if (cancelReason != EnumItemUseCancelReason.MovedAway ||
-               !(byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("easel")
-                 || byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("heasel")
-                 || byPlayer.CurrentBlockSelection.Block.Code.PathStartsWith("multiblock")))
-            {
-                EndStroke(world, blockSel, byPlayer);
-            }
-
-            return base.OnBlockInteractCancel(secondsUsed, world, byPlayer, blockSel, cancelReason);
-        }
-        
-
-        public override bool OnBlockInteractStep(float secondsUsed, IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
-        {            
-            ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
-
-            if(held == null)
-            {
-                return false;
-            }
-
-            //frequency limiter: only allow edits if the last edit was > 1/paintfrequency ago
-            float? timestamp = held.Attributes.TryGetFloat("timestamp");            
-            if (timestamp != null)
-            {
-                float timelapse = secondsUsed - (float)timestamp;
-                if (timelapse < (1f / paintFrequency))
-                {
-                    return true;
-                }
-            }
-
-            BlockEntityEasel ee = getEaselEntity(blockSel, world);
-            if (ee == null) {return false;}
-            
-
-
-            if (held != null)
-            {
-                if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
-                {
-                    applyPaintingTool(world, byPlayer, held, blockSel, ee, previousUV);
-                    held.Attributes.SetFloat("timestamp", secondsUsed);
-                    clearingClock = DateTime.Now;
-                    return true;
-                }
-            }
-            return base.OnBlockInteractStep(secondsUsed, world, byPlayer, blockSel);
-        }
-
-        */
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             //world.Logger.Debug("Easel click location: " + blockSel.HitPosition);
@@ -153,29 +92,7 @@ namespace VintageCanvas.src.Blocks
                     string hint = Lang.Get("vintagecanvas:canvas-size");
                     (world.Api as ICoreClientAPI)?.TriggerIngameError(this, "wrongsize", hint);
                     return true;
-                }
-
-                /*
-                //Superceded by EndStroke()                
-                if (TextureUtil.paintingTools.Contains<string>(held.Collectible.Code) && !ee.CanvasSlot.Empty)
-                {                    
-                    if (clearingClock != null)
-                    {
-                        TimeSpan diff = DateTime.Now.Subtract(clearingClock);
-                        if( diff.TotalMilliseconds > 300)
-                        {
-                            //ee.changedpixels.Clear();
-                        }
-                    }
-                    else
-                    {
-                        ee.changedpixels.Clear();
-                    }
-                    held.Attributes.SetFloat("timestamp", -10f);
-                    
-                    return true;
-                }*/
-                
+                }                
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -211,7 +128,16 @@ namespace VintageCanvas.src.Blocks
             Vec3d raydir = playerray.dir;
 
             //plane normal and origin
-            Vec3d origin = blockSel.Position.ToVec3d();
+
+            BlockPos bp = blockSel.Position;
+
+            if (blockSel.Block is BlockMultiblock)
+            {
+                BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
+                bp = blockSel.Clone().Position.Add(bm.OffsetInv);
+            }
+
+            Vec3d origin = bp.ToVec3d();
             BlockFacing blockFace = blockSel.Face;
             Vec3d faceNormal = blockSel.Face.Normald;
 
@@ -277,131 +203,7 @@ namespace VintageCanvas.src.Blocks
             return;
         }
 
-        /*
-        private void applyPaintingTool(IWorldAccessor world, IPlayer byPlayer, ItemStack held, BlockSelection blockSel, BlockEntityEasel ee, Vec2d? previousUV = null)
-        {
-            //Return 
-            if (blockSel.Face.IsVertical || world.Side == EnumAppSide.Server)
-            {
-                return;
-            }
-            Vec2d canvasIntersect = CanvasAngleRaycast(world, byPlayer, blockSel);
-            //world.Logger.Debug("UV intersection point: " + canvasIntersect.X + ", " + canvasIntersect.Y);
-
-            float yoffset = Attributes["uvyoffset"].AsFloat();
-            Vec2f UVoffset = new Vec2f(0.5f, yoffset);
-
-            //Square canvas covers approx u[-0.5, 0.5], v[-0.3898, -1.3898]
-            int xpixel = (int)((canvasIntersect.X + UVoffset.X) * 32); //Not canvasSize! This is the pixel width of a block, not of the whole canvas.
-            int ypixel = (int)(-(canvasIntersect.Y + UVoffset.Y) * 32);
-
-            if (xpixel < 0 || ypixel < 0 || xpixel > canvasSize || ypixel > canvasSize) {
-                return;
-            }
- 
-            Vec2i[] basepixels = InterpolatePixels(previousUV, canvasIntersect);
-            
-
-            //Then, update the canvas texture according to whatever brush settings required
-
-            if (held.Collectible.Code.BeginsWith("vintagecanvas", "brush"))
-            {
-
-                int? brushPaint = held.Attributes.GetAsInt("paintcolor");
-                Vec2i[] brushPattern = TextureUtil.brushPatterns[held.Collectible.Variant["size"].ToString()];
-
-                HashSet<int> pixels = new HashSet<int>();                                      
-
-                foreach (Vec2i basepixelvec in basepixels)
-                {
-                    int basepixel = basepixelvec.Y * canvasSize + basepixelvec.X;
-                    foreach (Vec2i shift in brushPattern)
-                    {
-                        //Check if X coordinate is not on other side of canvas
-                        int x1 = basepixel % canvasSize;
-                        int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
-
-                        if (Math.Abs(x2 - x1) < 16)
-                        {
-                            pixels.Add(basepixel + shift[0] + (shift[1] * canvasSize));
-                        }
-                    }
-                }                 
-
-                float opacity = 1;
-                if (held.Attributes.HasAttribute("opacity")){
-                    opacity = held.Attributes.GetFloat("opacity"); }
-
-                if (brushPaint != 0)
-                {
-                    ee.PaintPixels(pixels.ToArray(), (int)brushPaint, opacity, byPlayer);
-                }
-                else
-                {
-                    ee.BlendPixels(pixels.ToArray());
-                }                
-            }
-
-            int[] pixelints = new int[basepixels.Length];
-            for(int i = 0; i < basepixels.Length; i++)
-            {
-                pixelints[i] = basepixels[i].Y * canvasSize + basepixels[i].X;
-            }
-
-            if (held.Collectible.Code.BeginsWith("game", "charcoal")){
-
-
-                ee.PaintPixels(pixelints, -16119286, 0.5f, byPlayer);
-            }
-
-            if (held.Collectible.Code.EndVariant() == "limestone" || held.Collectible.Code.EndVariant() == "chalk")
-            {
-                ee.PaintPixels(pixelints, 936298687, 0.9f, byPlayer);
-            }
-        }
-
-        //When the player is drawing faster than OnStep can tick, interpolate between the current tick and the last
-        private Vec2i[] InterpolatePixels(Vec2d? lastUV, Vec2d currentUV)
-        {
-            previousUV = currentUV;
-            float yoffset = Attributes["uvyoffset"].AsFloat();
-            Vec2f UVoffset = new Vec2f(0.5f, yoffset);
-
-            if (lastUV == null)
-            {
-                int xpixel = (int)((currentUV.X + UVoffset.X) * 32);
-                int ypixel = (int)(-(currentUV.Y + UVoffset.Y) * 32);
-
-                return [new Vec2i(xpixel, ypixel)];
-            }
-
-            Vec2d stroke = currentUV - lastUV;
-            int divisionCount = (int)Math.Ceiling(stroke.Length() * 50f);
-
-            //Safeguard against messing up during laggy strokes / failed stroke termination
-            if (divisionCount > 20) 
-            {
-                int xpixel = (int)((currentUV.X + UVoffset.X) * 32);
-                int ypixel = (int)(-(currentUV.Y + UVoffset.Y) * 32);
-
-                return [new Vec2i(xpixel, ypixel)];
-            }
-
-            double increment = stroke.Length() / divisionCount;
-
-            Vec2i[] pixels = new Vec2i[divisionCount];
-            for (int i = 0; i < divisionCount; i++)
-            {
-                Vec2d UV = lastUV + (stroke * ((float)i / (divisionCount + 1)));                
-
-                int xpixel = (int)((UV.X + UVoffset.X) * 32); //Not canvasSize! This is the pixel width of a block, not of the whole canvas.
-                int ypixel = (int)(-(UV.Y + UVoffset.Y) * 32);
-                pixels[i] = new Vec2i(xpixel, ypixel);
-            }          
-
-            return pixels;
-        }
-        */
+        
         private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
         {
             BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;

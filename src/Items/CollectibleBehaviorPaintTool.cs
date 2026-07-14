@@ -26,56 +26,17 @@ namespace VintageCanvas.src.Items
         //All painting happens during OnHeldInteractStep. Attack steps redirect to their Interact equivalent
         #region ClickResponses
 
-        //When something is tagged with this behaviour, redirect any attack on an easel to Easel.OnBlockInteractX();
+        //When something is tagged with this behaviour, redirect any attack on an easel/microblock to Easel.OnBlockInteractX();
         public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
             if (blockSel != null) {
-                if(blockSel.Block is BlockMicroBlock)
+                if (IsPaintTarget(blockSel, byEntity.World))
                 {
                     this.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, true, ref handHandling, ref handling);
                     handling = EnumHandling.PreventDefault;
                     handHandling = EnumHandHandling.PreventDefault;
                     return;
-                }
-
-                BlockEasel be;
-                if (blockSel.Block is BlockMultiblock)
-                {
-                    BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
-                    BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
-                    be = (BlockEasel)byEntity.World.BlockAccessor.GetBlock(bp);
-
-                    blockSel = blockSel.Clone();
-                    blockSel.Position = bp;
-                }
-                else if (blockSel.Block is BlockEasel)
-                {
-                    be = (BlockEasel)blockSel.Block;
-                }
-                else
-                {
-                    be = null;
-                }
-
-                if (be != null)
-                {
-                    IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
-                    be.OnBlockInteractStart(byEntity.World, byPlayer, blockSel);
-                    handling = EnumHandling.PreventDefault;
-                    handHandling = EnumHandHandling.PreventDefault;
-                    return;
-                }
-
-                //Copy OnContainedInteract() for paint jars
-                if (blockSel.Block is BlockGroundStorage)
-                {
-                    BlockEntityGroundStorage bgse = (BlockEntityGroundStorage)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
-                    IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
-                    bgse.OnPlayerInteractStart(byPlayer, blockSel);
-                    handling = EnumHandling.PreventDefault;
-                    handHandling = EnumHandHandling.PreventDefault;
-                    return;
-                }
+                }                
             }
             base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handHandling, ref handling);
         }
@@ -84,39 +45,12 @@ namespace VintageCanvas.src.Items
         {
             if (blockSel != null)
             {
-                if (blockSel.Block is BlockMicroBlock)
+                if (IsPaintTarget(blockSel, byEntity.World))
                 {
                     this.OnHeldInteractStep(secondsPassed, slot, byEntity, blockSel, entitySel, ref handling);
                     handling = EnumHandling.PreventDefault;
                     return true;
-                }
-
-                BlockEasel be = new();
-                if (blockSel.Block is BlockMultiblock)
-                {
-                    BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
-                    BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
-                    be = (BlockEasel)byEntity.World.BlockAccessor.GetBlock(bp);
-
-                    blockSel = blockSel.Clone();
-                    blockSel.Position = bp;
-                }
-                else if (blockSel.Block is BlockEasel)
-                {
-                    be = (BlockEasel)blockSel.Block;
-                }
-                else
-                {
-                    be = null;
-                }
-
-                if (be != null)
-                {
-                    IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
-                    handling = EnumHandling.PreventDefault;
-                    be.OnBlockInteractStep(secondsPassed, byEntity.World, byPlayer, blockSel);
-                    return true;
-                }
+                }                
             }
 
             return base.OnHeldAttackStep(secondsPassed, slot, byEntity, blockSel, entitySel, ref handling);
@@ -126,7 +60,7 @@ namespace VintageCanvas.src.Items
         {
             if (blockSel != null)
             {
-                if (blockSel.Block is BlockMicroBlock)
+                if (IsPaintTarget(blockSel, byEntity.World))
                 {
                     handling = EnumHandling.Handled;
                     OnHeldInteractCancel(secondsPassed, slot, byEntity, blockSel, entitySel, 0, ref handling);
@@ -134,32 +68,6 @@ namespace VintageCanvas.src.Items
 
                     handling = EnumHandling.PreventSubsequent;
                     return true;
-                }
-
-                BlockEasel be = new();
-                if (blockSel.Block is BlockMultiblock)
-                {
-                    BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
-                    BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
-                    be = (BlockEasel)byEntity.World.BlockAccessor.GetBlock(bp);
-
-                    blockSel = blockSel.Clone();
-                    blockSel.Position = bp;
-                }
-                else if (blockSel.Block is BlockEasel)
-                {
-                    be = (BlockEasel)blockSel.Block;
-                }
-                else
-                {
-                    be = null;
-                }
-
-                if (be != null)
-                {
-                    IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
-                    handling = EnumHandling.PreventDefault;
-                    return be.OnBlockInteractCancel(secondsPassed, byEntity.World, byPlayer, blockSel, cancelReason);
                 }
             }
 
@@ -175,21 +83,21 @@ namespace VintageCanvas.src.Items
 
         public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandling handling)
         {
-            /*
-            if (blockSel == null || blockSel.Block is not BlockMicroBlock)
-            {                
-                return base.OnHeldInteractStep(secondsUsed, slot, byEntity, blockSel, entitySel, ref handling);
-            }
-
             //frequency limiter: only allow edits if the last edit was > 1/paintfrequency ago
             
             if (!FrequencyTest(slot.Itemstack, secondsUsed))
                 {
                 return true;
             }
-            */
+            
 
+            handling = EnumHandling.Handled;
             IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
+
+            if (blockSel == null)
+            {
+                return base.OnHeldInteractStep(secondsUsed, slot, byEntity, blockSel, entitySel, ref handling); ;
+            }
 
             if (blockSel.Block is BlockEasel || blockSel.Block is BlockMultiblock)
             {
@@ -199,6 +107,8 @@ namespace VintageCanvas.src.Items
                     bee.pixeldata = ApplyTool(slot.Itemstack, bee.pixeldata, blockSel, byPlayer);
                     bee.UpdateTexture();
                 }
+
+                handling = EnumHandling.Handled;
             }
 
             if (blockSel.Block is BlockMicroBlock)
@@ -453,7 +363,7 @@ namespace VintageCanvas.src.Items
                 };
 
                 //Offset by 0.5 pixel
-                interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0.5 / 32));
+                interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0.5 / 32), canvasSize);
 
             }
 
@@ -464,9 +374,9 @@ namespace VintageCanvas.src.Items
                 Vec2d UV = be.CanvasAngleRaycast(byPlayer.Entity.World, byPlayer, blockSel);
                 
                 float yoffset = be.Attributes["uvyoffset"].AsFloat();
-                Vec2d UVoffset = new Vec2d(0.5f, 1 + yoffset);
+                Vec2d UVoffset = new Vec2d(0.5f, yoffset);
 
-                interpolatedPixels = InterpolatePixels(previousUV, UV, UVoffset);
+                interpolatedPixels = InterpolatePixels(previousUV, UV, UVoffset, canvasSize);
                 canvasSize = be.Attributes["canvassize"].AsInt();
             }
 
@@ -481,7 +391,11 @@ namespace VintageCanvas.src.Items
                 List<int> pixelcoords = new();
                 foreach (Vec2i pixel in interpolatedPixels)
                 {
-                    pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                    if (pixel.X < canvasSize && pixel.Y < canvasSize
+                        && pixel.X > 0 && pixel.Y > 0)
+                    {
+                        pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                    }
                 }
                 pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, canvasSize, blockSel);
             }
@@ -490,7 +404,11 @@ namespace VintageCanvas.src.Items
                 List<int> pixelcoords = new();
                 foreach (Vec2i pixel in interpolatedPixels)
                 {
-                    pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                    if (pixel.X < canvasSize && pixel.Y < canvasSize
+                        && pixel.X > 0 && pixel.Y > 0)
+                    {
+                        pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                    }
                 }
                 pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, canvasSize, blockSel);
             }
@@ -518,7 +436,7 @@ namespace VintageCanvas.src.Items
 
         }
 
-        private Vec2i[] InterpolatePixels(Vec2d? lastUV, Vec2d currentUV, Vec2d UVoffset)
+        private Vec2i[] InterpolatePixels(Vec2d? lastUV, Vec2d currentUV, Vec2d UVoffset, int canvasSize)
         {
             previousUV = currentUV;
             //float yoffset = Attributes["uvyoffset"].AsFloat();
@@ -577,6 +495,25 @@ namespace VintageCanvas.src.Items
             }
 
             return base.GetHeldTpHitAnimation(slot, byEntity, ref bhHandling);
+        }
+
+        private bool IsPaintTarget(BlockSelection blockSel, IWorldAccessor world)
+        {
+            if (blockSel.Block is BlockEasel ||
+                blockSel.Block is BlockMicroBlock)
+            {
+                return true;
+            }
+
+            if (blockSel.Block is BlockMultiblock)
+            {
+                BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
+                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);                
+                BlockEntityEasel ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
+                return ee != null;
+            }
+
+            return false;
         }
 
         #endregion
