@@ -1,6 +1,9 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Channels;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
@@ -22,9 +25,21 @@ namespace VintageCanvas.src.Utility
             {
                 api.Event.SaveGameLoaded += () => Data = SerializerUtil.Deserialize<Dictionary<string, int[]>>(data);
             }
+        }  
+        
+        public static string compileFrescoID(BlockPos pos, int face)
+        {
+            return "vintagecanvasfresco" + pos.ToString() + "-" + face;
+        }
+    }
 
-        }        
+    [ProtoContract]
+    public class FrescoRequestPacket
+    {
+        [ProtoMember(1)] public string FrescoId;
+        [ProtoMember(2)] public int PosX;
+        [ProtoMember(3)] public int PosY;
+        [ProtoMember(4)] public int PosZ;
+        [ProtoMember(2)] public int Face;
     }
 }
-
-    

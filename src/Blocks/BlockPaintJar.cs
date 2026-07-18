@@ -173,7 +173,7 @@ namespace VintageCanvas.src.Blocks
                 return base.OnContainedInteractStart(be, slot, byPlayer, blockSel);
             }
             else
-            {              
+            {             
                 ItemStack jarstack = slot.Itemstack;
                 ItemStack jarcontent = this.GetContent(jarstack);
 

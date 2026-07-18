@@ -1,4 +1,5 @@
 ﻿
+using Cairo.Freetype;
 using ProtoBuf;
 using VintageCanvas.src.Blocks;
 using VintageCanvas.src.Entities;
@@ -7,6 +8,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+using Vintagestory.GameContent;
 
 namespace VintageCanvas.src.Utility
     {
@@ -32,18 +34,65 @@ namespace VintageCanvas.src.Utility
                     .RegisterMessageType<PaletteSavePacket>()
                     .SetMessageHandler<PaletteSavePacket>(OnServerReceivePaletteSave)
                     .RegisterMessageType<FrameSavePacket>()
-                    .SetMessageHandler<FrameSavePacket>(OnServerReceiveFrameSave); ;
-
+                    .SetMessageHandler<FrameSavePacket>(OnServerReceiveFrameSave)
+                    .RegisterMessageType<FrescoRequestPacket>()
+                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest)
+                    .RegisterMessageType<FrescoPushPacket>();                  
             }
                 else
                 {
                 ((ICoreClientAPI)api).Network
                     .RegisterChannel(ChannelId)
                     .RegisterMessageType<PaintSavePacket>()
-                    .RegisterMessageType<PaletteSavePacket>() 
-                    .RegisterMessageType<FrameSavePacket>();
+                    .RegisterMessageType<PaletteSavePacket>()
+                    .RegisterMessageType<FrameSavePacket>()
+                    .RegisterMessageType<FrescoPushPacket>()
+                    .SetMessageHandler<FrescoPushPacket>(OnClientReceiveFrescoPush);
                 }
             }
+
+        private void OnClientReceiveFrescoPush(FrescoPushPacket packet)
+        {
+            var capi = (ICoreClientAPI)api;
+            BlockPos pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
+            string id = FrescoStore.compileFrescoID(pos, packet.face);
+
+            FrescoStore.Data[id] = packet.pixels;
+
+            var bem = capi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+            if (bem != null)
+            {
+                bem.MarkMeshDirty();
+            }
+        }
+
+        private void OnServerReceiveFrescoRequest(IServerPlayer fromPlayer, FrescoRequestPacket packet)
+        {
+            var sapi = (ICoreServerAPI)api;
+            var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
+
+            string id = FrescoStore.compileFrescoID(pos, packet.Face);
+
+            if (FrescoStore.Data.ContainsKey(id))
+            {
+                sapi.Network.GetChannel(ChannelId).SendPacket(new FrescoPushPacket
+                {
+                    PosX = pos.X,
+                    PosY = pos.Y,
+                    PosZ = pos.Z,
+                    pixels = FrescoStore.Data[id],
+                    face = packet.Face
+                }, fromPlayer);
+            }
+
+            /*
+            var bem = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+            if (bem != null)
+            {
+                bem.MarkMeshDirty();
+            }
+            */
+        }
 
         private void OnServerReceiveFrameSave(IServerPlayer fromPlayer, FrameSavePacket packet)
         {
@@ -77,33 +126,43 @@ namespace VintageCanvas.src.Utility
         }
 
         private void OnServerReceiveSave(IServerPlayer fromPlayer, PaintSavePacket packet)
+        {
+            var sapi = (ICoreServerAPI)api;
+            var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
+
+            
+            var ee = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
+            var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
+            var pe = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityPalette;
+
+            if (sapi.World.BlockAccessor.GetBlock(pos) is BlockMicroBlock)
             {
-                var sapi = (ICoreServerAPI)api;
-                var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
+                var mbe = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+                string id = FrescoStore.compileFrescoID(pos, packet.Face);
 
-                var ee = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
-                var ce = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
-                var pe = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityPalette;
-                
-                if (ee != null)
+                FrescoStore.Data[id] = TextureUtil.ReadCompressedPixelData(packet.PixelData);
+                return;
+            }
+            else if (ee != null)
+            {
+                ee.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
+            }
+            else if (ce != null)
+            {
+                ce.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
+            }
+            else if (pe != null)
+            {
+                pe.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
+            }
+            else
                 {
-                    ee.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
+                    api.World.Logger.Warning("No pixel-receiving entity found.");
                 }
-                else if (ce != null)
-                {
-                    ce.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
-                }
-                else if (pe != null)
-                {
-                    pe.UpdatePixelData(TextureUtil.ReadCompressedPixelData(packet.PixelData));
-                }
-                else
-                    {
-                        api.World.Logger.Warning("No pixel-receiving entity found.");
-                    }
-                }
+            }
 
-        public void SendPixelData(BlockPos pos, byte[] pixelData)
+        /*
+        public void requestFrescoData(BlockPos pos, byte[] pixelData, int face)
         {
             if (api.Side != EnumAppSide.Client) return;
             ((ICoreClientAPI)api).Network.GetChannel(ChannelId).SendPacket(new PaintSavePacket
@@ -111,7 +170,21 @@ namespace VintageCanvas.src.Utility
                 PosX = pos.X,
                 PosY = pos.Y,
                 PosZ = pos.Z,
-                PixelData = pixelData
+                PixelData = pixelData,
+                Face = face
+            });
+        } */
+
+        public void SendPixelData(BlockPos pos, byte[] pixelData, int face)
+        {
+            if (api.Side != EnumAppSide.Client) return;
+            ((ICoreClientAPI)api).Network.GetChannel(ChannelId).SendPacket(new PaintSavePacket
+            {
+                PosX = pos.X,
+                PosY = pos.Y,
+                PosZ = pos.Z,
+                PixelData = pixelData,
+                Face = face
             });
         }
 
@@ -138,12 +211,7 @@ namespace VintageCanvas.src.Utility
                 FrameType = frametype
             });
         }
-
-
-    }   
-
-    
-
+    }    
 }
 
 

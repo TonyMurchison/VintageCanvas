@@ -13,6 +13,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.Common;
 using Vintagestory.GameContent;
+using static Vintagestory.GameContent.BlockLiquidContainerBase;
 
 namespace VintageCanvas.src.Items
 {
@@ -30,13 +31,14 @@ namespace VintageCanvas.src.Items
         public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
             if (blockSel != null) {
-                if (IsPaintTarget(blockSel, byEntity.World))
+                if (IsPaintTarget(blockSel, byEntity.World) || 
+                    IsPaintContainer(blockSel, byEntity.World))
                 {
                     this.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, true, ref handHandling, ref handling);
                     handling = EnumHandling.PreventDefault;
                     handHandling = EnumHandHandling.PreventDefault;
                     return;
-                }                
+                }  
             }
             base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handHandling, ref handling);
         }
@@ -78,6 +80,12 @@ namespace VintageCanvas.src.Items
         {
             handHandling = EnumHandHandling.PreventDefault;
             handling = EnumHandling.PreventDefault;
+
+            if (IsPaintContainer(blockSel, byEntity.World) && slot.Itemstack.Collectible.Code.PathStartsWith("brush"))
+            {
+                
+            }
+
             base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handHandling, ref handling);
         }
 
@@ -124,6 +132,7 @@ namespace VintageCanvas.src.Items
                 if (FrescoStore.Data.TryGetValue(blockID, out int[] pixeldata))
                 {
                     FrescoStore.Data[blockID] = ApplyTool(slot.Itemstack, pixeldata, blockSel, byPlayer);
+                    SynchroniseFrescoTexture(pixeldata, blockSel.Position, blockSel.Face.Index, byEntity.World);
                     bemb.MarkDirty(true);
                     bemb.MarkMeshDirty();
                 }
@@ -333,7 +342,6 @@ namespace VintageCanvas.src.Items
                                 }
                             }
                         }
-
                         blendedIndices.Add(pixelindices[i]);
                         blendedColors.Add(AverageColors(nearbypixels.ToArray(), pixeldata));
                         changedpixels.Add(hashBlockPixel(blockSel, pixelindices[i]));
@@ -533,6 +541,35 @@ namespace VintageCanvas.src.Items
             }
 
             return false;
+        }
+
+        private bool IsPaintContainer(BlockSelection blockSel, IWorldAccessor world){
+            if (blockSel.Block is BlockPalette)
+            {
+                return true;
+            }
+
+            if (blockSel.Block is BlockGroundStorage)
+            {
+                BlockEntityGroundStorage bgs = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
+                ItemStack groundcontents = bgs.GetSlotAt(blockSel).Itemstack;
+                if(groundcontents.Collectible is BlockPaintJar)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void SynchroniseFrescoTexture(int[] pixeldata, BlockPos pos, int face, IWorldAccessor world)
+        {
+            if (world.BlockAccessor.GetBlock(pos) is BlockMicroBlock)
+            {
+                BlockEntity be = world.BlockAccessor.GetBlockEntity(pos);
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(pos, TextureUtil.WriteCompressedPixelData(pixeldata), face);
+                be.MarkDirty(true);
+            }
         }
 
         #endregion

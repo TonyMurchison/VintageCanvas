@@ -7,7 +7,7 @@
         "Tony Murchison"
     ],
     "description": "In-world painting mod",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "dependencies": {
         "game": "1.22.0"
     }

@@ -123,7 +123,7 @@ namespace VintageCanvas.src.Entities
             if (capi != null)
             {
                 BlockEntity be = capi.World.BlockAccessor.GetBlockEntity(Pos);
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WriteCompressedPixelData(pixeldata));
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, TextureUtil.WriteCompressedPixelData(pixeldata), 0);
                 MarkDirty(true);
             }
         }

@@ -198,7 +198,7 @@ namespace VintageCanvas.src.Entities
                 }                
 
                 //send pixeldata to server
-                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata));
+                VintageCanvasModSystem.NetworkHandler.SendPixelData(Pos, SerializerUtil.Serialize(pixeldata), 0);
                 AssetLocation texLoc = new AssetLocation("vintagecanvas", "palette" + paletteId.ToString());
 
                  paintMesh = TextureUtil.SwapPaintingTextureMesh(

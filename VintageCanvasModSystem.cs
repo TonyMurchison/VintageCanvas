@@ -101,6 +101,7 @@ namespace VintageCanvas
         [ProtoMember(2)] public int PosY { get; set; }
         [ProtoMember(3)] public int PosZ { get; set; }
         [ProtoMember(4)] public byte[] PixelData { get; set; }
+        [ProtoMember(5)] public int Face { get; set; }
     }
 
     [ProtoContract]
@@ -119,5 +120,24 @@ namespace VintageCanvas
         [ProtoMember(2)] public int PosY { get; set; }
         [ProtoMember(3)] public int PosZ { get; set; }
         [ProtoMember(4)] public string FrameType { get; set; }
+    }
+
+    [ProtoContract]
+    public class FrescoPushPacket
+    {
+        [ProtoMember(1)] public int PosX { get; set; }
+        [ProtoMember(2)] public int PosY { get; set; }
+        [ProtoMember(3)] public int PosZ { get; set; }
+        [ProtoMember(4)] public int face { get; set; }
+        [ProtoMember(5)] public int[] pixels { get; set; }
+    }
+
+    [ProtoContract]
+    public class FrescoRequestPacket
+    {
+        [ProtoMember(1)] public int PosX { get; set; }
+        [ProtoMember(2)] public int PosY { get; set; }
+        [ProtoMember(3)] public int PosZ { get; set; }
+        [ProtoMember(4)] public int face { get; set; }
     }
 }

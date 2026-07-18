@@ -3,6 +3,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -49,7 +50,12 @@ namespace VintageCanvas.src.Utility
             if (__result == null || decorIds == null) return;
 
             Block frescoBlock = capi.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white"));
-            //TODO check if data in FrescoStore 
+
+            //TODO synchronise data from FrescoStore 
+            
+            //Send message to request update
+
+
             for (int i = 0; i < __result.Count; i++)
             {
                 if (decorIds[i] != frescoBlock.BlockId)
@@ -68,9 +74,7 @@ namespace VintageCanvas.src.Utility
                     FrescoStore.Data.Add(frescoId, pixeldata);
                 }
                 
-                AssetLocation texLoc = new AssetLocation(frescoId);
-
-                
+                AssetLocation texLoc = new AssetLocation(frescoId);                
 
                 Block block = capi.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white"));
                 VoxelMaterial vm = VoxelMaterial.FromBlock(capi, block, pos, false);
@@ -85,8 +89,7 @@ namespace VintageCanvas.src.Utility
                     }
                 }
 
-                __result[i] = vm;
-                
+                __result[i] = vm;                
             }
         }
     }
@@ -107,4 +110,34 @@ namespace VintageCanvas.src.Utility
             }   
         }
     }
+
+    
+    [HarmonyPatch(typeof(BlockEntityMicroBlock), "FromTreeAttributes")]
+    public static class FrescoFromTreePatch
+    {
+        static void Postfix(BlockEntityMicroBlock __instance, ITreeAttribute tree, IWorldAccessor worldAccessForResolve)
+        {
+            if (worldAccessForResolve.Api.Side == EnumAppSide.Client) {
+                int[] dids = __instance.DecorIds;
+                int frescoid = worldAccessForResolve.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white")).Id;
+
+                for (int i = 0; i < dids.Length; i++)
+                {
+                    if (dids[i] == frescoid)
+                    {
+                        BlockPos Pos = __instance.Pos;
+                        string id = FrescoStore.compileFrescoID(Pos, i);
+                        ((ICoreClientAPI)worldAccessForResolve.Api).Network.GetChannel("vintagecanvas").SendPacket(new FrescoRequestPacket
+                        {
+                            PosX = Pos.X,
+                            PosY = Pos.Y,
+                            PosZ = Pos.Z,
+                            Face = i
+                        });
+                    }
+                } 
+            }
+        }
+    }
+    
 }

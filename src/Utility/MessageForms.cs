@@ -14,6 +14,7 @@ namespace VintageCanvas.src.Utility
             [ProtoMember(2)] public int PosY { get; set; }
             [ProtoMember(3)] public int PosZ { get; set; }
             [ProtoMember(4)] public byte[] PixelData { get; set; }
+            [ProtoMember(5)] public int face { get; set; }
         }
     }
 }
