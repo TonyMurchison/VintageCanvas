@@ -51,10 +51,6 @@ namespace VintageCanvas.src.Utility
 
             Block frescoBlock = capi.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white"));
 
-            //TODO synchronise data from FrescoStore 
-            
-            //Send message to request update
-
 
             for (int i = 0; i < __result.Count; i++)
             {
@@ -134,6 +130,7 @@ namespace VintageCanvas.src.Utility
                             PosZ = Pos.Z,
                             Face = i
                         });
+                        worldAccessForResolve.Api.Logger.Debug($"[Fresco pipeline] Requesting painting update at {Pos}, face {i}");
                     }
                 } 
             }

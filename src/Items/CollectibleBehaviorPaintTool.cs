@@ -23,6 +23,7 @@ namespace VintageCanvas.src.Items
         private Vec2d previousUV = null;
         private float paintFrequency = 20f;
         public CollectibleBehaviorPaintTool(CollectibleObject collObj) : base(collObj) { }
+        private HashSet<FrescoLocation> blockPainted = new();
 
         //All painting happens during OnHeldInteractStep. Attack steps redirect to their Interact equivalent
         #region ClickResponses
@@ -120,7 +121,7 @@ namespace VintageCanvas.src.Items
             }
 
             if (blockSel.Block is BlockMicroBlock)
-            {
+            {                
                 BlockMicroBlock bmb = blockSel.Block as BlockMicroBlock;
                 BlockEntityMicroBlock bemb = (BlockEntityMicroBlock)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
             
@@ -128,11 +129,10 @@ namespace VintageCanvas.src.Items
                 int i = blockSel.Face.Index;
                 string blockID = "vintagecanvasfresco" + blockSel.Position.ToString() + "-" + i;
 
-
                 if (FrescoStore.Data.TryGetValue(blockID, out int[] pixeldata))
                 {
                     FrescoStore.Data[blockID] = ApplyTool(slot.Itemstack, pixeldata, blockSel, byPlayer);
-                    SynchroniseFrescoTexture(pixeldata, blockSel.Position, blockSel.Face.Index, byEntity.World);
+                    blockPainted.Add(new FrescoLocation(i, blockSel.Position));
                     bemb.MarkDirty(true);
                     bemb.MarkMeshDirty();
                 }
@@ -140,6 +140,17 @@ namespace VintageCanvas.src.Items
                 handling = EnumHandling.Handled;
             }
             return true;
+        }
+
+        private class FrescoLocation
+        {
+            public int Face;
+            public BlockPos Position;
+
+            public FrescoLocation(int f, BlockPos pos) {
+                Face = f;
+                Position = pos;
+            }
         }
 
         public override bool OnHeldInteractCancel(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, EnumItemUseCancelReason cancelReason, ref EnumHandling handled)
@@ -261,6 +272,18 @@ namespace VintageCanvas.src.Items
         {
             previousUV = null;
             changedpixels.Clear();
+
+            //Transfer each changed pixeldata to the serverside data store
+            foreach(FrescoLocation fl in blockPainted)
+            {
+                BlockEntityMicroBlock bemb = world.BlockAccessor.GetBlockEntity(fl.Position) as BlockEntityMicroBlock;
+                if (bemb != null)
+                {
+                    string id = FrescoStore.compileFrescoID(fl.Position, fl.Face);
+                    SynchroniseFrescoTexture(FrescoStore.Data[id], fl.Position, fl.Face, byPlayer.Entity.World);
+                }
+            }
+            blockPainted.Clear();
 
             if (IsPaintTarget(blockSel, world) && blockSel.Block is not BlockMicroBlock)
             {

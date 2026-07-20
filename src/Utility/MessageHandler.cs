@@ -5,6 +5,7 @@ using VintageCanvas.src.Blocks;
 using VintageCanvas.src.Entities;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -47,7 +48,9 @@ namespace VintageCanvas.src.Utility
                     .RegisterMessageType<PaletteSavePacket>()
                     .RegisterMessageType<FrameSavePacket>()
                     .RegisterMessageType<FrescoPushPacket>()
-                    .SetMessageHandler<FrescoPushPacket>(OnClientReceiveFrescoPush);
+                    .SetMessageHandler<FrescoPushPacket>(OnClientReceiveFrescoPush)
+                    .RegisterMessageType<FrescoRequestPacket>();
+
                 }
             }
 
@@ -84,6 +87,8 @@ namespace VintageCanvas.src.Utility
                     face = packet.Face
                 }, fromPlayer);
             }
+
+            //sapi.Logger.Debug($"[Fresco pipeline] Sent pixels to {pos}, face {}");
 
             /*
             var bem = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
@@ -137,10 +142,12 @@ namespace VintageCanvas.src.Utility
 
             if (sapi.World.BlockAccessor.GetBlock(pos) is BlockMicroBlock)
             {
-                var mbe = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+                var bemb = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
                 string id = FrescoStore.compileFrescoID(pos, packet.Face);
 
                 FrescoStore.Data[id] = TextureUtil.ReadCompressedPixelData(packet.PixelData);
+                bemb.MarkDirty(true);
+
                 return;
             }
             else if (ee != null)
