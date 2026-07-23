@@ -6,7 +6,7 @@ namespace VintageCanvas.src.Utility
 {
     public class VintageCanvasConfig
     {
-        public bool PaintDepletion = true;
+        public bool PaintDepletion = false;
         public int PixelsPerPaintUnit = 300;
     }
 }

@@ -36,9 +36,9 @@ namespace VintageCanvas.src.Utility
                     .SetMessageHandler<PaletteSavePacket>(OnServerReceivePaletteSave)
                     .RegisterMessageType<FrameSavePacket>()
                     .SetMessageHandler<FrameSavePacket>(OnServerReceiveFrameSave)
+                    .RegisterMessageType<FrescoPushPacket>()
                     .RegisterMessageType<FrescoRequestPacket>()
-                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest)
-                    .RegisterMessageType<FrescoPushPacket>();                  
+                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest);             
             }
                 else
                 {
@@ -65,6 +65,7 @@ namespace VintageCanvas.src.Utility
             var bem = capi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
             if (bem != null)
             {
+                bem.MarkDirty();
                 bem.MarkMeshDirty();
             }
         }
@@ -87,16 +88,6 @@ namespace VintageCanvas.src.Utility
                     face = packet.Face
                 }, fromPlayer);
             }
-
-            //sapi.Logger.Debug($"[Fresco pipeline] Sent pixels to {pos}, face {}");
-
-            /*
-            var bem = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
-            if (bem != null)
-            {
-                bem.MarkMeshDirty();
-            }
-            */
         }
 
         private void OnServerReceiveFrameSave(IServerPlayer fromPlayer, FrameSavePacket packet)
@@ -146,7 +137,8 @@ namespace VintageCanvas.src.Utility
                 string id = FrescoStore.compileFrescoID(pos, packet.Face);
 
                 FrescoStore.Data[id] = TextureUtil.ReadCompressedPixelData(packet.PixelData);
-                bemb.MarkDirty(true);
+                bemb.MarkDirty(true, fromPlayer);
+                bemb.MarkMeshDirty();
 
                 return;
             }
@@ -168,19 +160,25 @@ namespace VintageCanvas.src.Utility
                 }
             }
 
-        /*
-        public void requestFrescoData(BlockPos pos, byte[] pixelData, int face)
+        public void SendFrescoRequest(BlockPos pos, int face)
         {
             if (api.Side != EnumAppSide.Client) return;
-            ((ICoreClientAPI)api).Network.GetChannel(ChannelId).SendPacket(new PaintSavePacket
+            try
             {
-                PosX = pos.X,
-                PosY = pos.Y,
-                PosZ = pos.Z,
-                PixelData = pixelData,
-                Face = face
-            });
-        } */
+                ((ICoreClientAPI)api).Network.GetChannel(ChannelId).SendPacket(new FrescoRequestPacket
+                {
+                    PosX = pos.X,
+                    PosY = pos.Y,
+                    PosZ = pos.Z,
+                    Face = face
+                });
+                api.Logger.Debug("Packet sent");
+            }
+            catch
+            {
+                api.Logger.Debug("Packet failed to send");
+            }
+        }
 
         public void SendPixelData(BlockPos pos, byte[] pixelData, int face)
         {

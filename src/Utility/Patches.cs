@@ -116,25 +116,23 @@ namespace VintageCanvas.src.Utility
             if (worldAccessForResolve.Api.Side == EnumAppSide.Client) {
                 int[] dids = __instance.DecorIds;
                 int frescoid = worldAccessForResolve.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white")).Id;
+                var facelist = BlockFacing.ALLFACES;
 
-                for (int i = 0; i < dids.Length; i++)
+                foreach(BlockFacing face in facelist)
                 {
-                    if (dids[i] == frescoid)
+                    int did = __instance.GetDecor(face);
+                    if (did != null && did == frescoid)
                     {
                         BlockPos Pos = __instance.Pos;
-                        string id = FrescoStore.compileFrescoID(Pos, i);
-                        ((ICoreClientAPI)worldAccessForResolve.Api).Network.GetChannel("vintagecanvas").SendPacket(new FrescoRequestPacket
+                        string id = FrescoStore.compileFrescoID(Pos, face.Index);
+
+                        ((ICoreClientAPI)worldAccessForResolve.Api).Event.EnqueueMainThreadTask(() =>
                         {
-                            PosX = Pos.X,
-                            PosY = Pos.Y,
-                            PosZ = Pos.Z,
-                            Face = i
-                        });
-                        worldAccessForResolve.Api.Logger.Debug($"[Fresco pipeline] Requesting painting update at {Pos}, face {i}");
-                    }
-                } 
+                            VintageCanvasModSystem.NetworkHandler.SendFrescoRequest(Pos, face.Index);
+                        }, "frescoRequestSend");
+                    }                        
+                }
             }
         }
-    }
-    
+    }    
 }

@@ -558,15 +558,19 @@ namespace VintageCanvas.src.Items
             if (blockSel.Block is BlockMultiblock)
             {
                 BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
-                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);                
+                BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
+                return (world.BlockAccessor.GetBlockEntity(bp) is BlockEntityEasel);
+                /*
                 BlockEntityEasel ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
                 return ee != null;
+                */
             }
 
             return false;
         }
 
         private bool IsPaintContainer(BlockSelection blockSel, IWorldAccessor world){
+            if (blockSel == null) return false;
             if (blockSel.Block is BlockPalette)
             {
                 return true;
@@ -576,7 +580,7 @@ namespace VintageCanvas.src.Items
             {
                 BlockEntityGroundStorage bgs = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
                 ItemStack groundcontents = bgs.GetSlotAt(blockSel).Itemstack;
-                if(groundcontents.Collectible is BlockPaintJar)
+                if(groundcontents != null && groundcontents.Collectible is BlockPaintJar)
                 {
                     return true;
                 }
