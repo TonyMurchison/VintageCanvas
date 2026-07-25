@@ -156,7 +156,7 @@ namespace VintageCanvas.src.Utility
             }
             else
                 {
-                    api.World.Logger.Warning("No pixel-receiving entity found.");
+                    //api.World.Logger.Warning("No pixel-receiving entity found.");
                 }
             }
 
@@ -172,7 +172,7 @@ namespace VintageCanvas.src.Utility
                     PosZ = pos.Z,
                     Face = face
                 });
-                api.Logger.Debug("Packet sent");
+                //api.Logger.Debug("Packet sent");
             }
             catch
             {

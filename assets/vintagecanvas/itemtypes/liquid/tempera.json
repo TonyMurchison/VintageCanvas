@@ -33,7 +33,7 @@
   "texture": { "base": "liquid/tempera" },
   "creativeinventoryStacks": [
     {
-      "tabs": [ "general", "liquids" ],
+      "tabs": [ "general", "liquids", "vintagecanvas" ],
       "stacks": [
         {
           "type": "block",

@@ -229,15 +229,17 @@ namespace VintageCanvas.src.Items
 
             foreach (Vec2i basepixelvec in basepixels)
             {
+                if (basepixelvec.Y >= canvasSize || basepixelvec.X >= canvasSize
+                    || basepixelvec.Y < 0 || basepixelvec.X < 0) continue;
                 int basepixel = basepixelvec.Y * canvasSize + basepixelvec.X;
                 foreach (Vec2i shift in brushPattern)
                 {
-                    //Check if X coordinate is not on other side of canvas
+                    //Check if it's not overflowing and
+                    //X coordinate is not on other side of canvas
                     int x1 = basepixel % canvasSize;
                     int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
 
                     int pixelindex = basepixel + shift[0] + (shift[1] * canvasSize);
-
                     if (Math.Abs(x2 - x1) < 16 && pixelindex < Math.Pow(canvasSize, 2))
                     {
                         pixels.Add(pixelindex);
@@ -321,8 +323,7 @@ namespace VintageCanvas.src.Items
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
-                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i]))
-                        && )
+                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
                     {
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;

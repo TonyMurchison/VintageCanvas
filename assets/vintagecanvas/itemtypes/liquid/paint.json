@@ -19,7 +19,7 @@
         "carbonblack"
       ]
     }
-  ],  
+  ],
 
   "attributes": {
     "handbook": {
@@ -51,7 +51,7 @@
   "texture": { "base": "liquid/{color}" },
   "creativeinventoryStacks": [
     {
-      "tabs": [ "general", "liquids" ],
+      "tabs": [ "general", "liquids", "vintagecanvas" ],
       "stacks": [
         {
           "type": "block",
