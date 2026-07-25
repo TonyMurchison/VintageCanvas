@@ -62,6 +62,7 @@ namespace VintageCanvas.src.Items
         public override bool OnHeldAttackCancel(float secondsPassed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, EnumItemUseCancelReason cancelReason, ref EnumHandling handling)
         {
             if (blockSel != null)
+                //This is a problem, isn't it? Should always perform EndStroke.
             {
                 if (IsPaintTarget(blockSel, byEntity.World))
                 {
@@ -79,12 +80,10 @@ namespace VintageCanvas.src.Items
 
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
-            handHandling = EnumHandHandling.PreventDefault;
-            handling = EnumHandling.PreventDefault;
-
-            if (IsPaintContainer(blockSel, byEntity.World) && slot.Itemstack.Collectible.Code.PathStartsWith("brush"))
-            {
-                
+            if (blockSel != null && IsPaintTarget(blockSel, byEntity.World)){
+                handHandling = EnumHandHandling.PreventDefault;
+                handling = EnumHandling.PreventDefault;
+                return;
             }
 
             base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handHandling, ref handling);
@@ -162,42 +161,44 @@ namespace VintageCanvas.src.Items
 
         private static BlockEntityEasel getEaselEntity(BlockSelection blockSel, IWorldAccessor world)
         {
-            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
-            if (ee != null) { return ee; }
+            if (blockSel.Block is BlockEasel)
+            {
+                BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityEasel;
+                return ee;
+            }
 
             if (blockSel.Block is BlockMultiblock)
             {
                 BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
                 BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
-                ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
+                if (world.BlockAccessor.GetBlock(bp) is BlockEasel)
+                {
+                    return (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
+                }
             }
 
-            if (blockSel.Block is BlockEasel)
-            {
-                ee = blockSel.Block.GetBlockEntity<BlockEntityEasel>(blockSel);
-            }
-
-            return ee;
+            return null;
         }
 
         private static BlockEasel getEasel(BlockSelection blockSel, IWorldAccessor world)
         {
-            BlockEasel ee = world.BlockAccessor.GetBlock(blockSel.Position) as BlockEasel;
-            if (ee != null) { return ee; }
+            if (blockSel.Block is BlockEasel)
+            {
+                BlockEasel ee = world.BlockAccessor.GetBlock(blockSel.Position) as BlockEasel;
+                return ee;
+            }
 
             if (blockSel.Block is BlockMultiblock)
             {
                 BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
                 BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
-                ee = (BlockEasel)world.BlockAccessor.GetBlock(bp);
+                if (world.BlockAccessor.GetBlock(bp) is BlockEasel)
+                {
+                    return (BlockEasel)world.BlockAccessor.GetBlock(bp);
+                }
             }
 
-            if (blockSel.Block is BlockEasel)
-            {
-                ee = (BlockEasel)blockSel.Block;
-            }
-
-            return ee;
+            return null;
         }
 
         private bool FrequencyTest(ItemStack tool, float secondsUsed)
@@ -235,9 +236,11 @@ namespace VintageCanvas.src.Items
                     int x1 = basepixel % canvasSize;
                     int x2 = (basepixel + shift[0] + (shift[1] * canvasSize)) % canvasSize;
 
-                    if (Math.Abs(x2 - x1) < 16)
+                    int pixelindex = basepixel + shift[0] + (shift[1] * canvasSize);
+
+                    if (Math.Abs(x2 - x1) < 16 && pixelindex < Math.Pow(canvasSize, 2))
                     {
-                        pixels.Add(basepixel + shift[0] + (shift[1] * canvasSize));
+                        pixels.Add(pixelindex);
                     }
                 }
             }
@@ -262,9 +265,12 @@ namespace VintageCanvas.src.Items
         private int hashBlockPixel(BlockSelection blockSel, int pixel)
         {
             int hash = unchecked(pixel);
-            hash += unchecked(blockSel.Position.X * 10000);
-            hash += unchecked(blockSel.Position.Y * 1000000);
-            hash += unchecked(blockSel.Position.Z * 100000000);
+            if (blockSel.Block is BlockMicroBlock)
+            {
+                hash += unchecked(blockSel.Position.X * 10000);
+                hash += unchecked(blockSel.Position.Y * 1000000);
+                hash += unchecked(blockSel.Position.Z * 100000000);
+            }
             return hash;
         }
 
@@ -292,7 +298,7 @@ namespace VintageCanvas.src.Items
             }
 
             int pa = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
-            if (pa <= 0)
+            if (pa <= 0 && VintageCanvasModSystem.config.PaintDepletion)
             {
                 byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintcolor", 0);
             }
@@ -315,7 +321,8 @@ namespace VintageCanvas.src.Items
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
-                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
+                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i]))
+                        && )
                     {
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;
@@ -549,6 +556,7 @@ namespace VintageCanvas.src.Items
 
         private bool IsPaintTarget(BlockSelection blockSel, IWorldAccessor world)
         {
+            if (blockSel == null) return false;
             if (blockSel.Block is BlockEasel ||
                 blockSel.Block is BlockMicroBlock)
             {
@@ -591,6 +599,7 @@ namespace VintageCanvas.src.Items
 
         public void SynchroniseFrescoTexture(int[] pixeldata, BlockPos pos, int face, IWorldAccessor world)
         {
+
             if (world.BlockAccessor.GetBlock(pos) is BlockMicroBlock)
             {
                 BlockEntity be = world.BlockAccessor.GetBlockEntity(pos);

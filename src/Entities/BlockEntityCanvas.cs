@@ -231,13 +231,15 @@ namespace VintageCanvas.src.Entities
 
         public void UpdateFrame(ItemStack held, string frametype)
         {
-            if (held.Collectible.Code.BeginsWith("game", "plank"))
+            if (held != null)
             {
-                string wood = held.Collectible.Variant["wood"];
-                string ratio = Block.Variant["ratio"];
-                string side = Block.Variant["side"];
+                if (held.Collectible.Code.BeginsWith("game", "plank"))
+                {
+                    string wood = held.Collectible.Variant["wood"];
+                    string ratio = Block.Variant["ratio"];
+                    string side = Block.Variant["side"];
 
-                Dictionary<string, string> canvasVariant = new Dictionary<string, string>
+                    Dictionary<string, string> canvasVariant = new Dictionary<string, string>
                 {
                     { "ratio", ratio },
                     { "frameshape", frametype },
@@ -245,8 +247,9 @@ namespace VintageCanvas.src.Entities
                     { "side", side }
                 };
 
-                Block newBlock = Api.World.GetBlock(Block.CodeWithVariants(canvasVariant));
-                Api.World.BlockAccessor.ExchangeBlock(newBlock.BlockId, Pos);
+                    Block newBlock = Api.World.GetBlock(Block.CodeWithVariants(canvasVariant));
+                    Api.World.BlockAccessor.ExchangeBlock(newBlock.BlockId, Pos);
+                }
             }
         }
 
