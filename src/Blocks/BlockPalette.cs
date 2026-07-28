@@ -79,10 +79,22 @@ namespace VintageCanvas.src.Blocks
             return paletteStack;
         }
 
+        public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
+        {
+            bool pb = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
+            if(byItemStack != null)
+            {
+                byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
+                byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
+            }
+
+            return pb;
+        }
+
         public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
         {
             int? paletteId = itemstack.Attributes.TryGetInt("paletteid");
-            if (paletteId == null) { return; }
+            if (paletteId == null) return; 
 
             //Only update the mesh either if a) the mesh has never been built before, or b) the checksum of the colours is different from the record.
             bool updateMesh = false;
@@ -158,8 +170,7 @@ namespace VintageCanvas.src.Blocks
 
         public override void OnModifiedInInventorySlot(IWorldAccessor world, ItemSlot slot, ItemStack extractedStack = null)
         {
-            //Only reliable way I could find of guaranteeing an ID check trigger whenever you obtain a canvas.
-            if (extractedStack != null)
+            if (extractedStack != null && extractedStack.StackSize != 0)
             {
                 if (!extractedStack.Attributes.HasAttribute("paletteid") && api.Side == EnumAppSide.Server)
                 {
@@ -168,6 +179,9 @@ namespace VintageCanvas.src.Blocks
                     slot.MarkDirty();
                 }
             }
+            if (extractedStack != null && extractedStack.StackSize == 0) slot.MarkDirty();
+
+
             base.OnModifiedInInventorySlot(world, slot, extractedStack);
         }
 

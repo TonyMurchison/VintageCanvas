@@ -8,6 +8,7 @@
   "entityClass": "BlockEntityPalette",
   "storageFlags": 257,
   "blockmaterial": "Wood",
+  "maxstacksize": 1,
 
   "handbook": {
     "ignoreCreativeInvStacks": true,
