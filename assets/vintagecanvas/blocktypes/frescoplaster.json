@@ -1,5 +1,6 @@
 {
   "code": "frescoplaster",
+  "class": "BlockFrescoPlaster",
   "behaviors": [
     {
       "name": "Decor",
@@ -28,7 +29,8 @@
   "blockmaterial": "Stone",
   "creativeinventory": {
     "general": [ "*" ],
-    "decorative": [ "*" ]
+    "decorative": [ "*" ],
+    "vintagecanvas":  [ "*" ]
   },
   "replaceable": 5500,
   "resistance": 0,

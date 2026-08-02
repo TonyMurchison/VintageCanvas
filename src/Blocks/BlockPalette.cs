@@ -82,7 +82,7 @@ namespace VintageCanvas.src.Blocks
         public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
         {
             bool pb = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
-            if(byItemStack != null)
+            if(byItemStack != null && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
                 byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
                 byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();

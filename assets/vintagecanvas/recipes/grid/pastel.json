@@ -1,0 +1,73 @@
+[
+  {
+    "ingredientPattern": "CK",
+    "ingredients": {
+      "C": {
+        "type": "item",
+        "code": "game:charcoal"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      }
+    },
+    "name": "Charcoal stick",
+    "width": 2,
+    "height": 1,
+    "shapeless": true,
+    "output": {
+      "type": "item",
+      "code": "pastel-carbonblack",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "CK",
+    "ingredients": {
+      "C": {
+        "type": "item",
+        "code": "game:stone-chalk"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      }
+    },
+    "name": "Chalk stick",
+    "width": 2,
+    "height": 1,
+    "shapeless": true,
+    "output": {
+      "type": "item",
+      "code": "pastel-chalkwhite",
+      "quantity": 1
+    }
+  },
+
+  {
+    "ingredientPattern": "CK",
+    "ingredients": {
+      "C": {
+        "type": "item",
+        "code": "game:stone-limestone"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      }
+    },
+    "name": "Chalk stick",
+    "width": 2,
+    "height": 1,
+    "shapeless": true,
+    "output": {
+      "type": "item",
+      "code": "pastel-chalkwhite",
+      "quantity": 1
+    }
+  }
+]

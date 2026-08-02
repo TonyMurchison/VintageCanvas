@@ -1,0 +1,108 @@
+{
+  "code": "pastel",
+  "variantgroups": [
+    {
+      "code": "type",
+      "states": [ "chalkwhite", "carbonblack" ]
+    }
+  ],
+
+  "behaviors": [
+    { "name": "CollectibleBehaviorPaintTool" }
+  ],
+
+  "shape": { "base": "item/pastel" },
+  "attributes": {
+    "rackable": true,
+    "toolrackTransform": {
+      "translation": {
+        "x": -0.1,
+        "y": 0.6,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": 45,
+        "z": -1
+      },
+      "origin": {
+        "x": 0.5,
+        "y": 0.8,
+        "z": 0.1
+      },
+      "scale": 1.25
+    },
+    "placeSound": "sounds/block/loosestick",
+    "groundStorageTransform": {
+      "rotation": {
+        "x": 0,
+        "y": -13,
+        "z": 0
+      }
+    }
+  },
+
+  "textureByType": {
+    "*": { "base": "liquid/{type}" }
+  },
+
+
+  "creativeinventory": {
+    "general": [ "*" ],
+    "items": [ "*" ],
+    "vintagecanvas": [ "*" ]
+  },
+  "maxstacksize": 64,
+  "storageFlags": 257,
+  "materialDensity": 450,
+
+  "guiTransform": {
+    "rotation": {
+      "x": -53,
+      "y": 91,
+      "z": -9
+    },
+    "origin": {
+      "x": 0.56,
+      "y": 0.4,
+      "z": 0.3
+    },
+    "scale": 2.1099
+  },
+  "tpHandTransform": {
+    "translation": {
+      "x": -1.22,
+      "y": 0.06,
+      "z": -0.89
+    },
+    "rotation": {
+      "x": -6,
+      "y": 30,
+      "z": 18
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 0.59
+  },
+  "groundTransform": {
+    "translation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 5
+  }
+}

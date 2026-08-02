@@ -58,15 +58,18 @@
 
   "vintagecanvas:item-vellum": "Vellum",
   "vintagecanvas:block-frescoplaster-white": "Fresco plaster",
+  "vintagecanvas:item-pastel-carbonblack": "Charcoal stick",
+  "vintagecanvas:item-pastel-chalkwhite": "Chalk stick",
 
   "game:tabname-vintagecanvas": "Vintage Canvas",
 
   "vintagecanvas:canvas-size": "This canvas will not fit onto an easel of this size",
+  "vintagecanvas:fresco-target": "Fresco plaster needs a chiselled surface to adhere to",
 
   "game: handbook-category-vintagecanvas": "Vintage Canvas",
   "handbook-category-vintagecanvas:category": "Vintage Canvas",
   "vintagecanvas:basics-title": "Getting started with Vintage Canvas",
-  "vintagecanvas:basics-text": "<i>Your first steps in Vintage Canvas</i>\n\nWelcome to Vintage Canvas! To begin your creative journey, you'll need a couple of things at minimum: an easel, any shape of canvas, and a piece of charcoal.\n\nPlace your easel in the world (ideally somewhere with good light). Place your canvas onto the easel using <icon>rightmousebutton</icon>. Then, hold your charcoal, and sketch away to your heart's content!\n\nTo show off your creation, take it out of the easel with an empty hand, and put it up on any wall. For some extra flair, you can use any wooden board to frame the canvas while it's hanging up!\n\n<i>Blending</i>\nIf your sketch is looking too coarse for your liking, consider crafting a <a href=\"handbooksearch://brush\">brush</a>. A brush without any paint serves as a blender, letting you create smooth gradients and lighter colours.",
+  "vintagecanvas:basics-text": "<i>Your first steps in Vintage Canvas</i>\n\nWelcome to Vintage Canvas! To begin your creative journey, you'll need a couple of things at minimum: an easel, any shape of canvas, and a charcoal stick.\n\nPlace your easel in the world (ideally somewhere with good light). Place your canvas onto the easel using <icon>rightmousebutton</icon>. Then, hold your charcoal stick, and sketch away to your heart's content!\n\nTo show off your creation, take it out of the easel with an empty hand, and put it up on any wall. For some extra flair, you can use any wooden board to frame the canvas while it's hanging up!\n\n<i>Blending</i>\nIf your sketch is looking too coarse for your liking, consider crafting a <a href=\"handbooksearch://brush\">brush</a>. A brush without any paint serves as a blender, letting you create smooth gradients and lighter colours. To correct mistakes, consider making a chalk stick.",
 
   "vintagecanvas:frescos-title": "Making wall paintings",
   "vintagecanvas:frescos-text": "<i>The simplest way to paint</i>\n\nAs an alternative to canvases, Vintage Canvas also supports fresco painting. To make a fresco, craft some <a href=\"handbooksearch://fresco plaster\">fresco plaster</a>. Apply this to a <i>chiselled</i> block (non-chiselled blocks are not currently supported), and use any of your painting tools to display your talents directly on the walls.\n\nNote that frescos are fragile, and can’t be picked up without being destroyed. To make portable art, you’ll need to use a canvas.",

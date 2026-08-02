@@ -300,7 +300,7 @@ namespace VintageCanvas.src.Items
             }
 
             int pa = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.GetInt("paintamount");
-            if (pa <= 0 && VintageCanvasModSystem.config.PaintDepletion)
+            if (pa <= 0 && VintageCanvasModSystem.config.PaintDepletion && pa != null)
             {
                 byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Attributes.SetInt("paintcolor", 0);
             }
@@ -444,34 +444,41 @@ namespace VintageCanvas.src.Items
             {
                 pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, canvasSize, blockSel);
             }
-            if (tool.Collectible.Code.PathStartsWith("charcoal"))
+            if (tool.Collectible.Code.PathStartsWith("pastel"))
             {
-                List<int> pixelcoords = new();
-                foreach (Vec2i pixel in interpolatedPixels)
+                if (tool.Collectible.Code.EndVariant() == "carbonblack")
                 {
-                    if (pixel.X < canvasSize && pixel.Y < canvasSize
-                        && pixel.X > 0 && pixel.Y > 0)
+
+                    List<int> pixelcoords = new();
+                    foreach (Vec2i pixel in interpolatedPixels)
                     {
-                        pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                        if (pixel.X < canvasSize && pixel.Y < canvasSize
+                            && pixel.X >= 0 && pixel.Y >= 0)
+                        {
+                            pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                        }
                     }
+                    pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, canvasSize, blockSel);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), TextureUtil.PaintColors["carbonblack"], 0.5f, tool, pixeldata, canvasSize, blockSel);
-            }
-            if (tool.Collectible.Code.EndVariant() == "limestone" || tool.Collectible.Code.EndVariant() == "chalk")
-            {
-                List<int> pixelcoords = new();
-                foreach (Vec2i pixel in interpolatedPixels)
+
+                if (tool.Collectible.Code.EndVariant() == "chalkwhite")
                 {
-                    if (pixel.X < canvasSize && pixel.Y < canvasSize
-                        && pixel.X > 0 && pixel.Y > 0)
+                    List<int> pixelcoords = new();
+                    foreach (Vec2i pixel in interpolatedPixels)
                     {
-                        pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                        if (pixel.X < canvasSize && pixel.Y < canvasSize
+                            && pixel.X >= 0 && pixel.Y >= 0)
+                        {
+                            pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
+                        }
                     }
+                    pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, canvasSize, blockSel);
                 }
-                pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, canvasSize, blockSel);
+
+                tool.Attributes.SetFloat("timestamp", -10f);
+                return pixeldata;
             }
 
-            tool.Attributes.SetFloat("timestamp", -10f);
             return pixeldata;
         }
 
