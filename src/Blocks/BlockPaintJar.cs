@@ -26,6 +26,7 @@ namespace VintageCanvas.src.Blocks
 
         ICoreClientAPI capi;
 
+        #region Rendering
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
@@ -164,7 +165,9 @@ namespace VintageCanvas.src.Blocks
 
             public Size2i AtlasSize => atlasSize;
         }
+        #endregion
 
+        #region Behaviour
         bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack heldStack = byPlayer.InventoryManager.ActiveHotbarSlot?.Itemstack;
@@ -291,5 +294,7 @@ namespace VintageCanvas.src.Blocks
                 return true;
             }
         }
+
+        #endregion
     }
 }

@@ -1,0 +1,377 @@
+[
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-whitelead",
+      "output": "vintagecanvas:paint-leadwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-metal-rusty",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-metal-lead",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cadmiumsulfide",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cadmiumselenide",
+      "output": "vintagecanvas:paint-vermillion"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cadmiumgreen",
+      "output": "vintagecanvas:paint-malachite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cassiterite",
+      "output": "vintagecanvas:paint-leadwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-chromiumoxide",
+      "output": "vintagecanvas:paint-malachite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-coal",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cobaltblue",
+      "output": "vintagecanvas:paint-ultramarine"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cobaltgreen",
+      "output": "vintagecanvas:paint-organicgreen"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-copperoxide",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cadmiumsulfide",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cuprorivaite",
+      "output": "vintagecanvas:paint-woad"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-fluorite",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-cadmiumsulfide",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-hematite",
+      "output": "vintagecanvas:paint-redochre"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-indigo",
+      "output": "vintagecanvas:paint-ultramarine"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-limonite",
+      "output": "vintagecanvas:paint-yellowochre"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-litharge",
+      "output": "vintagecanvas:paint-vermillion"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-magnetite",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-verdigris",
+      "output": "vintagecanvas:paint-malachite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-manganeseoxide",
+      "output": "vintagecanvas:paint-malachite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-manganesedioxide",
+      "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-massicot",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-picricacid",
+      "output": "vintagecanvas:paint-yellowochre"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-prussianblue",
+      "output": "vintagecanvas:paint-ultramarine"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-redphosphorous",
+      "output": "vintagecanvas:paint-vermillion"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-rhodochrosite",
+      "output": "vintagecanvas:paint-chalkwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-titaniumdioxide",
+      "output": "vintagecanvas:paint-leadwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-whitephosphorous",
+      "output": "vintagecanvas:paint-leadwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-yellowcake",
+      "output": "vintagecanvas:paint-leadtin"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-zincoxide",
+      "output": "vintagecanvas:paint-leadwhite"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-stone-bauxite",
+      "output": "vintagecanvas:paint-redochre"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  }
+
+]
