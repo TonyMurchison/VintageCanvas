@@ -401,10 +401,12 @@ namespace VintageCanvas.src.Items
                 double z = blockSel.HitPosition.Z;
                 int facing = blockSel.Face.Index;
 
-                double xcoord = (facing) switch
+                double xcoord = (facing) switch 
+                //This has changed between versions, I think? Used to require (0) => 1 + x, (1) => 1 + z
+                //Genuinely no idea why that would happen
                 {
-                    (0) => 1 + x,
-                    (1) => 1 + z,
+                    (0) => x,
+                    (1) => z,
                     (2) => 1 - x,
                     (3) => 1 - z,
                     (4) => x,
