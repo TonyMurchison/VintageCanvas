@@ -93,28 +93,6 @@
   },
   "behaviors": [
     { "name": "HorizontalAttachable" },
-    {
-      "name": "GroundStorable",
-      "properties": {
-        "layout": "Stacking",
-        "upSolid": true,
-        "placeRemoveSound": "game:block/walk/wood",
-        "stackingModel": "block/canvas-stacking-{ratio}",
-        "collisionBox": {
-          "x1": 0.125,
-          "y1": 0,
-          "z1": 0.125,
-          "x2": 0.875,
-          "y2": 0.0625,
-          "z2": 0.875
-        },
-        "cbScaleYByLayer": 1,
-        "modelItemsToStackSizeRatio": 1,
-        "stackingCapacity": 10,
-        "transferQuantity": 1,
-        "bulkTransferQuantity": 4
-      }
-    },
     { "name": "RightClickPickup" }
   ],
   "resistance": 0.1,

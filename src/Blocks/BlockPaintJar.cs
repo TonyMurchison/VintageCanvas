@@ -1,15 +1,22 @@
-﻿using HarmonyLib;
+﻿using Cairo;
+using HarmonyLib;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
+using VintageCanvas.src.Entities;
+using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 using Vintagestory.ServerMods.WorldEdit;
@@ -219,7 +226,63 @@ namespace VintageCanvas.src.Blocks
                         }
 
                         byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
-                    } 
+                    }
+
+                    //Behaviour with palette in main hand
+                    if (heldCode.StartsWith("palette"))
+                    {
+                        //Load additional paint
+                        if (jarcontent.Collectible.Code.PathStartsWith("paint"))
+                        {
+                            string paintName = jarcontent.Collectible.Code.EndVariant();
+                            int color = TextureUtil.PaintColors[paintName];
+
+                            if (heldStack.Attributes.HasAttribute("slots"))
+                            {
+                                var slots = SerializerUtil.Deserialize<BlockEntityPalette.Slot[]>(heldStack.Attributes.GetBytes("slots"));
+
+                                int activeslot = heldStack.Attributes.GetInt("activeslot");
+                                BlockEntityPalette.Slot activeSlot = slots[activeslot];
+
+                                float paintweight = 1f / (++activeSlot.fullness);
+                                activeSlot.paintColor = TextureUtil.BlendColor(color, activeSlot.paintColor, paintweight);
+
+                                slots[activeslot] = activeSlot;
+                                heldStack.Attributes.SetBytes("slots", SerializerUtil.Serialize(slots));
+                                heldStack.Attributes.SetInt("colorhash", BlockPalette.HashSlotColors(slots));
+
+                                if (VintageCanvasModSystem.config.PaintDepletion)
+                                {
+                                    TryTakeLiquid(jarstack, 0.01f);
+                                    DoLiquidMovedEffects(byPlayer, jarcontent, 1, EnumLiquidDirection.Pour);
+                                }
+                            }
+                        }
+
+                        //Clear slot w/ turpentine if shift key is held
+                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine")){ 
+                            if(byPlayer.Entity.Controls.ShiftKey && heldStack.Attributes.HasAttribute("slots"))
+                            {
+                                var slots = SerializerUtil.Deserialize<BlockEntityPalette.Slot[]>(heldStack.Attributes.GetBytes("slots"));
+
+                                int activeslot = heldStack.Attributes.GetInt("activeslot");
+                                BlockEntityPalette.Slot activeSlot = slots[activeslot];
+
+                                activeSlot.ClearSlot();
+
+                                slots[activeslot] = activeSlot;
+
+
+                                heldStack.Attributes.SetBytes("slots", SerializerUtil.Serialize(slots));
+                                heldStack.Attributes.SetInt("colorhash", BlockPalette.HashSlotColors(slots));
+                            }
+                            else
+                            {
+                                string hint = Lang.Get("vintagecanvas:clear-palette");
+                                (byPlayer.Entity.World.Api as ICoreClientAPI)?.TriggerIngameError(this, "clearpalette", hint);
+                            }
+                        }
+                    }
 
                 if (heldCode.StartsWith("brush"))
                     {
@@ -237,7 +300,7 @@ namespace VintageCanvas.src.Blocks
                                 }
                             }
                             else
-                            {                                
+                            {                              
 
                                 float curOpacity = heldStack.Attributes.GetFloat("opacity", 1f);
                                 heldStack.Attributes.SetFloat("opacity", 0.66f * curOpacity);
@@ -253,8 +316,7 @@ namespace VintageCanvas.src.Blocks
                         }
 
                         if (jarcontent.Collectible.Code.PathStartsWith("paint"))
-                        {
-                            
+                        {                            
                             string paintcode = jarcontent.Collectible.Code.ToString();
                             int paintcolor = paintColors[paintcode];
                             int curpaint = heldStack.Attributes.GetInt("paintcolor");

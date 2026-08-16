@@ -52,7 +52,7 @@
     "items": [ "*" ],
     "vintagecanvas": [ "*" ]
   },
-  "maxstacksize": 64,
+  "maxstacksize": 1,
   "storageFlags": 257,
   "materialDensity": 450,
 

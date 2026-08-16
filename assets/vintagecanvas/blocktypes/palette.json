@@ -40,7 +40,9 @@
   "sidesolid": {
     "all": false
   },
-
+  "heldTpIdleAnimationByType": {
+    "*": "holdbothhandslarge"
+  },
   "heldLeftTpIdleAnimationbyType": {
     "*": "holdinglanternlefthand"
   },
@@ -74,21 +76,25 @@
 
   "tpHandTransform": {
     "translation": {
-      "x": -0.8,
-      "y": 0.9,
-      "z": -0.4
-    },
-    "rotation": {
-      "x": -7,
-      "y": -180,
-      "z": 6
-    },
-    "origin": {
-      "x": 0.5,
-      "y": -2.5,
+      "x": 0.08,
+      "y": -0,
       "z": 0.5
     },
-    "scale": 0.73
+    "rotation": {
+      "x": -84,
+      "y": -39,
+      "z": 105
+    },
+    "origin": {
+      "x": 0.1,
+      "y": 0.1,
+      "z": 0.1
+    },
+    "scaleXyz": {
+      "x": -0.86,
+      "y": 0.86,
+      "z": 0.86
+    }
   },
 
   "tpOffHandTransform": {

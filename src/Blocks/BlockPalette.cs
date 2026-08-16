@@ -1,5 +1,6 @@
 ﻿using ProtoBuf;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,8 +20,63 @@ namespace VintageCanvas.src.Blocks
 {
     internal class BlockPalette : Block
     {
-        private Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
-        private Dictionary<int, int> ColorHashDict = new();
+        private static Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
+        private static Dictionary<int, int> ColorHashDict = new();
+        private SkillItem[] ToolModes;
+        private int paletteHash = 0;
+        public int activeSlot = 0;
+
+        
+        public override SkillItem[] GetToolModes(ItemSlot slot, IClientPlayer forPlayer, BlockSelection blockSel)
+        {            
+            if (!(slot == forPlayer.InventoryManager.ActiveHotbarSlot))
+            {
+                return ToolModes;
+            }
+
+            if(slot.Itemstack.Attributes.GetInt("colorhash", 0) == paletteHash)
+            {
+                return ToolModes;
+            }
+
+            if (!slot.Itemstack.Attributes.HasAttribute("slots")) { return null; }
+
+            byte[] slotdata = slot.Itemstack.Attributes.GetBytes("slots");
+            BlockEntityPalette.Slot[] slots = SerializerUtil.Deserialize<BlockEntityPalette.Slot[]>(slotdata);
+
+            ICoreClientAPI capi = forPlayer.Entity.World.Api as ICoreClientAPI;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (slots[i].paintColor != null)
+                {
+                    if (capi != null)
+                    {
+                        ToolModes[i].WithIcon(capi, (cr, x, y, w, h, rgba) =>
+                        {
+                            cr.SetSourceRGBA(TextureUtil.ARGBtoRGBA(slots[i].paintColor));
+                            cr.Rectangle(x, y, w, h);
+                            cr.Fill();
+                        });
+                    }
+                }
+            }
+
+            paletteHash = HashSlotColors(slots);
+            return ToolModes;
+        }
+
+        public override int GetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSelection)
+        {
+            return slot.Itemstack.Attributes.GetInt("toolmode", 0);
+        }
+
+        public override void SetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSelection, int toolMode)
+        {
+            //activeslot gets read out by BlockPaintJar during interaction
+            slot.Itemstack.Attributes.SetInt("activeslot", toolMode);            
+
+            return;
+        }
 
         public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
         {
@@ -159,7 +215,7 @@ namespace VintageCanvas.src.Blocks
                 MeshRefDict[(int)paletteId] = renderinfo.ModelRef;
                 ColorHashDict[(int)paletteId] = HashSlotColors(slots);
                 m.Dispose();
-
+                itemstack.Attributes.SetInt("colorhash", HashSlotColors(slots));
             }
             else if (MeshRefDict.ContainsKey((int)paletteId))
             {
@@ -176,6 +232,19 @@ namespace VintageCanvas.src.Blocks
                 {
                     int Id = IdRegistry.getCanvasId();
                     extractedStack.Attributes.SetInt("paletteid", Id);
+                    slot.MarkDirty();
+                }
+
+                if (!extractedStack.Attributes.HasAttribute("slots") && api.Side == EnumAppSide.Server)
+                {
+                    BlockEntityPalette.Slot[] slotdata = new BlockEntityPalette.Slot[9];
+
+                    for(int i = 0; i < slotdata.Length; i++)
+                    {
+                        slotdata[i] = new BlockEntityPalette.Slot();
+                    }
+
+                    extractedStack.Attributes.SetBytes("slots", SerializerUtil.Serialize(slotdata));
                     slot.MarkDirty();
                 }
             }
@@ -216,6 +285,42 @@ namespace VintageCanvas.src.Blocks
                 }
             }
             return hash;
+        }
+
+        public override void OnLoaded(ICoreAPI api)
+        {
+            base.OnLoaded(api);
+
+            ToolModes = new SkillItem[]
+            {
+                new SkillItem() { Code = new AssetLocation("Slot1"), Name = Lang.Get("Slot 1") },
+                new SkillItem() { Code = new AssetLocation("Slot2"), Name = Lang.Get("Slot 2") },
+                new SkillItem() { Code = new AssetLocation("Slot3"), Name = Lang.Get("Slot 3") },
+                new SkillItem() { Code = new AssetLocation("Slot4"), Name = Lang.Get("Slot 4") },
+                new SkillItem() { Code = new AssetLocation("Slot5"), Name = Lang.Get("Slot 5") },
+                new SkillItem() { Code = new AssetLocation("Slot6"), Name = Lang.Get("Slot 6") },
+                new SkillItem() { Code = new AssetLocation("Slot7"), Name = Lang.Get("Slot 7") },
+                new SkillItem() { Code = new AssetLocation("Slot8"), Name = Lang.Get("Slot 8") },
+                new SkillItem() { Code = new AssetLocation("Slot9"), Name = Lang.Get("Slot 9") }
+            };
+
+            if(api.Side == EnumAppSide.Client)
+            {
+                MeshRefDict.Clear();
+            }
+        }
+
+        public override void OnUnloaded(ICoreAPI api)
+        {
+            if (ToolModes != null)
+            {
+                foreach (SkillItem skillItem in ToolModes)
+                {
+                    skillItem.Texture?.Dispose();
+                }
+            }
+            MeshRefDict.Clear();
+            base.OnUnloaded(api);
         }
     }    
 }

@@ -18,8 +18,8 @@ namespace VintageCanvas.src.Items
     internal class ItemBrush : Item
     {
         //Keeping track of the brushes that have been renderred, and what colour they've been rendered in
-        private Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
-        private Dictionary<int, int> ColorDict = new();
+        private static Dictionary<int, MultiTextureMeshRef> MeshRefDict = new();
+        private static Dictionary<int, int> ColorDict = new();
 
         SkillItem[] toolModes;
         ICoreClientAPI capi;

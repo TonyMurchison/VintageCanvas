@@ -65,6 +65,7 @@
 
   "vintagecanvas:canvas-size": "This canvas will not fit onto an easel of this size",
   "vintagecanvas:fresco-target": "Fresco plaster needs a chiselled surface to adhere to",
+  "vintagecanvas:clear-palette": "Sneak + right-click to clear the selected palette slot",
 
   "game: handbook-category-vintagecanvas": "Vintage Canvas",
   "handbook-category-vintagecanvas:category": "Vintage Canvas",

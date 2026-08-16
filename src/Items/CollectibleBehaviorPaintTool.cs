@@ -323,7 +323,7 @@ namespace VintageCanvas.src.Items
             {
                 if (0 <= pixelindices[i] && (int)Math.Pow(canvasSize, 2) > pixelindices[i])
                 {
-                    if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
+                    if (blockSel != null && !changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
                     {
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;
