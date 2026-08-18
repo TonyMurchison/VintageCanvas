@@ -28,12 +28,14 @@ namespace VintageCanvas.src.Items
 
         public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
         {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+            dsc.AppendLine("\nUse a paint jar or palette to pick your paint. Use a jar of turpentine to thin the paint, or sneak+click to clean the brush.\n\nA brush without paint serves as a blending tool.\n");
             if (VintageCanvasModSystem.config.PaintDepletion)
             {
                 float paintamount = inSlot.Itemstack.Attributes.GetInt("paintamount") / (float)VintageCanvasModSystem.config.PixelsPerPaintUnit * 0.01f;
                 dsc.AppendLine("Paint on brush: " + Math.Abs(Math.Round(paintamount, 2)) + "L");
             }
-            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+            
         }
 
         public override void OnModifiedInInventorySlot(IWorldAccessor world, ItemSlot slot, ItemStack extractedStack = null)
@@ -232,5 +234,6 @@ namespace VintageCanvas.src.Items
             }
             base.OnUnloaded(api);
         }
+
     }
 }

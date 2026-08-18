@@ -31,14 +31,15 @@ namespace VintageCanvas.src.Items
         //When something is tagged with this behaviour, redirect any attack on an easel/microblock to Easel.OnBlockInteractX();
         public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
-            if (blockSel != null) {
+            if (blockSel != null)
+            {
                 if (IsPaintTarget(blockSel, byEntity.World))
                 {
                     this.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, true, ref handHandling, ref handling);
                     handling = EnumHandling.PreventDefault;
                     handHandling = EnumHandHandling.PreventDefault;
                     return;
-                }  
+                }
                 if (IsPaintContainer(blockSel, byEntity.World))
                 {
                     //Shelves and groundstorage work differently, so there are custom interaction redirects for each
@@ -48,7 +49,7 @@ namespace VintageCanvas.src.Items
                     {
                         BlockEntityGroundStorage begs = byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
                         ItemSlot s = begs.GetSlotAt(blockSel);
-                        BlockPaintJar bpj = s.Itemstack.Block as BlockPaintJar;                        
+                        BlockPaintJar bpj = s.Itemstack.Block as BlockPaintJar;
                         bpj.ContainerInteractions(begs, s, byPlayer, blockSel);
 
                     }
@@ -69,9 +70,9 @@ namespace VintageCanvas.src.Items
                         {
                             BlockPaintJar bpj = contents[selbox].Block as BlockPaintJar;
                             bpj.ContainerInteractions(bes, bes.Inventory[selbox], byPlayer, blockSel);
-                        }   
+                        }
                     }
-                    
+
                     handling = EnumHandling.PreventDefault;
                     handHandling = EnumHandHandling.PreventDefault;
                     return;
@@ -89,7 +90,7 @@ namespace VintageCanvas.src.Items
                     this.OnHeldInteractStep(secondsPassed, slot, byEntity, blockSel, entitySel, ref handling);
                     handling = EnumHandling.PreventDefault;
                     return true;
-                }                
+                }
             }
 
             return base.OnHeldAttackStep(secondsPassed, slot, byEntity, blockSel, entitySel, ref handling);
@@ -115,7 +116,8 @@ namespace VintageCanvas.src.Items
 
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
-            if (blockSel != null && IsPaintTarget(blockSel, byEntity.World)){
+            if (blockSel != null && IsPaintTarget(blockSel, byEntity.World))
+            {
                 handHandling = EnumHandHandling.PreventDefault;
                 handling = EnumHandling.PreventDefault;
                 return;
@@ -127,12 +129,12 @@ namespace VintageCanvas.src.Items
         public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandling handling)
         {
             //frequency limiter: only allow edits if the last edit was > 1/paintfrequency ago
-            
+
             if (!FrequencyTest(slot.Itemstack, secondsUsed))
-                {
+            {
                 return true;
             }
-            
+
 
             handling = EnumHandling.Handled;
             IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
@@ -155,10 +157,10 @@ namespace VintageCanvas.src.Items
             }
 
             if (blockSel.Block is BlockMicroBlock)
-            {                
+            {
                 BlockMicroBlock bmb = blockSel.Block as BlockMicroBlock;
                 BlockEntityMicroBlock bemb = (BlockEntityMicroBlock)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
-            
+
                 //TEMP
                 int i = blockSel.Face.Index;
                 string blockID = "vintagecanvasfresco" + blockSel.Position.ToString() + "-" + i;
@@ -181,7 +183,8 @@ namespace VintageCanvas.src.Items
             public int Face;
             public BlockPos Position;
 
-            public FrescoLocation(int f, BlockPos pos) {
+            public FrescoLocation(int f, BlockPos pos)
+            {
                 Face = f;
                 Position = pos;
             }
@@ -249,12 +252,12 @@ namespace VintageCanvas.src.Items
                 else return false;
             }
             return true;
-        }        
+        }
 
         #endregion
 
         #region ToolApplications
-        
+
         public int[] ApplyBrush(ItemStack held, int[] pixeldata, Vec2i[] basepixels, int canvasSize, BlockSelection blockSel)
         {
             int? brushPaint = held.Attributes.GetAsInt("paintcolor");
@@ -317,7 +320,7 @@ namespace VintageCanvas.src.Items
             changedpixels.Clear();
 
             //Transfer each changed pixeldata to the serverside data store
-            foreach(FrescoLocation fl in blockPainted)
+            foreach (FrescoLocation fl in blockPainted)
             {
                 BlockEntityMicroBlock bemb = world.BlockAccessor.GetBlockEntity(fl.Position) as BlockEntityMicroBlock;
                 if (bemb != null)
@@ -436,7 +439,7 @@ namespace VintageCanvas.src.Items
                 double z = blockSel.HitPosition.Z;
                 int facing = blockSel.Face.Index;
 
-                double xcoord = (facing) switch 
+                double xcoord = (facing) switch
                 //This has changed between versions, I think? Used to require (0) => 1 + x, (1) => 1 + z
                 //Genuinely no idea why that would happen
                 {
@@ -467,7 +470,7 @@ namespace VintageCanvas.src.Items
             {
                 BlockEasel be = getEasel(blockSel, byPlayer.Entity.World);
                 Vec2d UV = be.CanvasAngleRaycast(byPlayer.Entity.World, byPlayer, blockSel);
-                
+
                 float yoffset = be.Attributes["uvyoffset"].AsFloat();
                 Vec2d UVoffset = new Vec2d(0.5f, yoffset);
 
@@ -618,7 +621,8 @@ namespace VintageCanvas.src.Items
             return false;
         }
 
-        private bool IsPaintContainer(BlockSelection blockSel, IWorldAccessor world){
+        private bool IsPaintContainer(BlockSelection blockSel, IWorldAccessor world)
+        {
             if (blockSel == null) return false;
             if (blockSel.Block is BlockPalette || blockSel.Block is BlockShelf)
             {
@@ -629,7 +633,7 @@ namespace VintageCanvas.src.Items
             {
                 BlockEntityGroundStorage bgs = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
                 ItemStack groundcontents = bgs.GetSlotAt(blockSel).Itemstack;
-                if(groundcontents != null && groundcontents.Collectible is BlockPaintJar)
+                if (groundcontents != null && groundcontents.Collectible is BlockPaintJar)
                 {
                     return true;
                 }
@@ -647,8 +651,8 @@ namespace VintageCanvas.src.Items
                 VintageCanvasModSystem.NetworkHandler.SendPixelData(pos, TextureUtil.WriteCompressedPixelData(pixeldata), face);
                 be.MarkDirty(true);
             }
-        }
-
+        }        
         #endregion
+        
     }
 }

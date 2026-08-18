@@ -33,6 +33,8 @@ namespace VintageCanvas
             api.RegisterBlockClass("BlockPalette", typeof(BlockPalette));
             api.RegisterBlockClass("BlockFrescoPlaster", typeof(BlockFrescoPlaster));
             api.RegisterItemClass("ItemBrush", typeof(ItemBrush));
+            api.RegisterItemClass("ItemPigment", typeof(ItemPigment));
+            api.RegisterItemClass("ItemPastel", typeof(ItemPastel));
             api.RegisterBlockEntityClass("EaselEntity", typeof(BlockEntityEasel));
             api.RegisterBlockEntityClass("BlockEntityEaselH", typeof(BlockEntityEaselH));
             api.RegisterBlockEntityClass("BlockEntityCanvas", typeof(BlockEntityCanvas));

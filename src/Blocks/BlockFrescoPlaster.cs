@@ -24,5 +24,12 @@ namespace VintageCanvas.src.Blocks
                 handling = EnumHandHandling.PreventDefaultAction;
             }
         }
+
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+            dsc.AppendLine("\nRight-click onto a chiselled block to make a paintable surface.");
+        }
     }
 }

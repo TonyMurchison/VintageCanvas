@@ -47,10 +47,6 @@
     "zOffset": 1
   },
   "drops": [],
-  "combustibleProps": {
-    "burnTemperature": 150,
-    "burnDuration": 2
-  },
   "guiTransform": {
     "rotation": {
       "x": -25,

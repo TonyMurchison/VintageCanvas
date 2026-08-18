@@ -1,5 +1,6 @@
 {
   "code": "pigment",
+  "class": "ItemPigment",
   "variantgroups": [
     {
       "code": "type",

@@ -365,6 +365,29 @@ namespace VintageCanvas.src.Blocks
             //Rerouted to be accessible from CollectibleBheaviourPaintTool (left-click behaviour emulation)
             return ContainerInteractions(be, slot, byPlayer, blockSel);                       
         }
+
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+            BlockPaintJar bpj = inSlot.Itemstack.Block as BlockPaintJar;
+            ItemStack jarcontent = bpj.GetContent(inSlot.Itemstack);
+            if (jarcontent == null) 
+            {
+                dsc.AppendLine("\nFill with oil, then add a pigment to create your paint.");
+                return;
+            }
+            if (jarcontent.Collectible.Code.PathStartsWith("paint"))
+            {
+                if (jarcontent.Collectible.Variant["color"] == "ultramarine") dsc.AppendLine("\nMade from crushed lapis lazuli.");
+                else if (jarcontent.Collectible.Variant["color"] == "vermillion") dsc.AppendLine("\nMade from crushed cinnabar.");
+
+                dsc.AppendLine("\nReady to be placed down and used to colour a paint brush or palette.");
+            }
+            if (jarcontent.Collectible.Code.PathStartsWith("turpentine")) dsc.AppendLine("\nClick with a paintbrush to dilute your paint, or sneak+click to clean it off completely.");
+            if (jarcontent.Collectible.Code.PathStartsWith("oil")
+                || jarcontent.Collectible.Code.PathStartsWith("tempera")) dsc.AppendLine("\nRight-click with a pigment to finish your paint.");
+        }
         #endregion
     }
 }

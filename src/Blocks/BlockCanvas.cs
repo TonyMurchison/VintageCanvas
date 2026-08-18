@@ -133,8 +133,10 @@ namespace VintageCanvas.src.Blocks
         public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
         {
             base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+            dsc.AppendLine("\nPlace onto an easel to paint. When on the wall, right-click with a plank to create a frame.");
             if (inSlot.Itemstack.Attributes.HasAttribute("canvasid")) {
-                dsc.AppendLine($"Canvas ID: { inSlot.Itemstack.Attributes.GetInt("canvasid").ToString() }");                 
+                dsc.AppendLine($"\nCanvas ID: { inSlot.Itemstack.Attributes.GetInt("canvasid").ToString() }");                 
             }            
         }
     }

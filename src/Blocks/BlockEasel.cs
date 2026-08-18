@@ -207,6 +207,20 @@ namespace VintageCanvas.src.Blocks
 
             return ee;
         }
+
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+            if (inSlot.Itemstack.Block is not BlockEaselH)
+            {
+                dsc.AppendLine("\nA small, portable frame for holding similarly small canvases while you paint.");
+            }
+            else
+            {
+                dsc.AppendLine("\nAn imposing frame that will hold the biggest of canvases as you work.");
+            }
+        }
     }
 }
 

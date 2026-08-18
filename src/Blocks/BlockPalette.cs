@@ -26,15 +26,15 @@ namespace VintageCanvas.src.Blocks
         private int paletteHash = 0;
         public int activeSlot = 0;
 
-        
+
         public override SkillItem[] GetToolModes(ItemSlot slot, IClientPlayer forPlayer, BlockSelection blockSel)
-        {            
+        {
             if (!(slot == forPlayer.InventoryManager.ActiveHotbarSlot))
             {
                 return ToolModes;
             }
 
-            if(slot.Itemstack.Attributes.GetInt("colorhash", 0) == paletteHash)
+            if (slot.Itemstack.Attributes.GetInt("colorhash", 0) == paletteHash)
             {
                 return ToolModes;
             }
@@ -73,7 +73,7 @@ namespace VintageCanvas.src.Blocks
         public override void SetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSelection, int toolMode)
         {
             //activeslot gets read out by BlockPaintJar during interaction
-            slot.Itemstack.Attributes.SetInt("activeslot", toolMode);            
+            slot.Itemstack.Attributes.SetInt("activeslot", toolMode);
 
             return;
         }
@@ -102,7 +102,7 @@ namespace VintageCanvas.src.Blocks
             if (pe == null) return base.OnBlockInteractStart(world, byPlayer, blockSel);
 
             var playerStack = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
-            if(playerStack == null) 
+            if (playerStack == null)
             {
                 PickUpPalette(world, byPlayer, blockSel);
                 return true;
@@ -120,7 +120,7 @@ namespace VintageCanvas.src.Blocks
 
         public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
         {
-            if(dropQuantityMultiplier == 0) { return null; }
+            if (dropQuantityMultiplier == 0) { return null; }
             ItemStack[] paletteStack = base.GetDrops(world, pos, byPlayer, dropQuantityMultiplier);
             BlockEntityPalette pe = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityPalette;
             if (pe.paletteId != null)
@@ -129,7 +129,7 @@ namespace VintageCanvas.src.Blocks
             }
             if (pe.slots != null)
             {
-                paletteStack[0].Attributes.SetBytes("slots", 
+                paletteStack[0].Attributes.SetBytes("slots",
                     SerializerUtil.Serialize(pe.slots));
                 paletteStack[0].Attributes.SetInt("colorhash", HashSlotColors(pe.slots));
             }
@@ -139,7 +139,7 @@ namespace VintageCanvas.src.Blocks
         public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack)
         {
             bool pb = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
-            if(byItemStack != null && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            if (byItemStack != null && byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
             {
                 byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
                 byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
@@ -151,14 +151,14 @@ namespace VintageCanvas.src.Blocks
         public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
         {
             int? paletteId = itemstack.Attributes.TryGetInt("paletteid");
-            if (paletteId == null) return; 
+            if (paletteId == null) return;
 
             //Only update the mesh either if a) the mesh has never been built before, or b) the checksum of the colours is different from the record.
             bool updateMesh = false;
-            if (!MeshRefDict.ContainsKey((int)paletteId) && itemstack.Attributes.HasAttribute("slots")){ updateMesh = true; }
-            if (MeshRefDict.ContainsKey((int)paletteId) && ColorHashDict[(int)paletteId] != itemstack.Attributes.TryGetInt("colorhash")){ updateMesh = true; }
+            if (!MeshRefDict.ContainsKey((int)paletteId) && itemstack.Attributes.HasAttribute("slots")) { updateMesh = true; }
+            if (MeshRefDict.ContainsKey((int)paletteId) && ColorHashDict[(int)paletteId] != itemstack.Attributes.TryGetInt("colorhash")) { updateMesh = true; }
 
-            if(updateMesh)
+            if (updateMesh)
             {
                 //Create renderinfo
                 int[] pixeldata = new int[256];
@@ -240,7 +240,7 @@ namespace VintageCanvas.src.Blocks
                 {
                     BlockEntityPalette.Slot[] slotdata = new BlockEntityPalette.Slot[9];
 
-                    for(int i = 0; i < slotdata.Length; i++)
+                    for (int i = 0; i < slotdata.Length; i++)
                     {
                         slotdata[i] = new BlockEntityPalette.Slot();
                     }
@@ -256,7 +256,7 @@ namespace VintageCanvas.src.Blocks
         }
 
         private void PickUpPalette(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
-        {            
+        {
             ItemStack paletteStack = new ItemStack(this);
             //TODO picking up logic
             BlockEntityPalette pe = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityPalette;
@@ -278,7 +278,7 @@ namespace VintageCanvas.src.Blocks
         static public int HashSlotColors(BlockEntityPalette.Slot[] slots)
         {
             int hash = 0;
-            foreach(BlockEntityPalette.Slot slot in slots)
+            foreach (BlockEntityPalette.Slot slot in slots)
             {
                 unchecked
                 {
@@ -305,7 +305,7 @@ namespace VintageCanvas.src.Blocks
                 new SkillItem() { Code = new AssetLocation("Slot9"), Name = Lang.Get("Slot 9") }
             };
 
-            if(api.Side == EnumAppSide.Client)
+            if (api.Side == EnumAppSide.Client)
             {
                 MeshRefDict.Clear();
             }
@@ -323,5 +323,12 @@ namespace VintageCanvas.src.Blocks
             MeshRefDict.Clear();
             base.OnUnloaded(api);
         }
-    }    
+
+        public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+        {
+            base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+            dsc.AppendLine("\nA place to store and mix your paints. Choose your slot and right-click a paint jar to add it to the mix.\n\nWhile held in the off-hand, you can quickly swap paints on your brush with F.");
+        }
+    }
 }

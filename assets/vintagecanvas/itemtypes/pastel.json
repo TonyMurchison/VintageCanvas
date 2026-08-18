@@ -1,5 +1,6 @@
 {
   "code": "pastel",
+  "class": "ItemPastel",
   "variantgroups": [
     {
       "code": "type",
