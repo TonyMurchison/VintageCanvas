@@ -41,17 +41,40 @@ namespace VintageCanvas.src.Items
                 }  
                 if (IsPaintContainer(blockSel, byEntity.World))
                 {
-                    if(blockSel.Block is BlockGroundStorage)
+                    //Shelves and groundstorage work differently, so there are custom interaction redirects for each
+                    IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
+
+                    if (blockSel.Block is BlockGroundStorage)
                     {
                         BlockEntityGroundStorage begs = byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
                         ItemSlot s = begs.GetSlotAt(blockSel);
-                        BlockPaintJar bpj = s.Itemstack.Block as BlockPaintJar;
-                        IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
+                        BlockPaintJar bpj = s.Itemstack.Block as BlockPaintJar;                        
                         bpj.ContainerInteractions(begs, s, byPlayer, blockSel);
-                        handling = EnumHandling.PreventDefault;
-                        handHandling = EnumHandHandling.PreventDefault;
-                        return;
-                    }                    
+
+                    }
+                    if (blockSel.Block is BlockShelf)
+                    {
+                        BlockEntityShelf bes = byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityShelf;
+                        BlockShelf bs = blockSel.Block as BlockShelf;
+                        ItemStack[] contents = bes.GetContentStacks(false);
+
+                        int selbox = blockSel.SelectionBoxIndex * 2;
+
+                        //check front slot first
+                        selbox++;
+                        if (contents[selbox] == null) selbox--;
+
+                        if (contents[selbox] != null &&
+                            contents[selbox].Block is BlockPaintJar)
+                        {
+                            BlockPaintJar bpj = contents[selbox].Block as BlockPaintJar;
+                            bpj.ContainerInteractions(bes, bes.Inventory[selbox], byPlayer, blockSel);
+                        }   
+                    }
+                    
+                    handling = EnumHandling.PreventDefault;
+                    handHandling = EnumHandHandling.PreventDefault;
+                    return;
                 }
             }
             base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handHandling, ref handling);
@@ -75,7 +98,6 @@ namespace VintageCanvas.src.Items
         public override bool OnHeldAttackCancel(float secondsPassed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, EnumItemUseCancelReason cancelReason, ref EnumHandling handling)
         {
             if (blockSel != null)
-                //This is a problem, isn't it? Should always perform EndStroke.
             {
                 if (IsPaintTarget(blockSel, byEntity.World))
                 {
@@ -602,7 +624,7 @@ namespace VintageCanvas.src.Items
 
         private bool IsPaintContainer(BlockSelection blockSel, IWorldAccessor world){
             if (blockSel == null) return false;
-            if (blockSel.Block is BlockPalette)
+            if (blockSel.Block is BlockPalette || blockSel.Block is BlockShelf)
             {
                 return true;
             }
