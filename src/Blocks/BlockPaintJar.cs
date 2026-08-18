@@ -175,7 +175,8 @@ namespace VintageCanvas.src.Blocks
         #endregion
 
         #region Behaviour
-        bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
+
+        public bool ContainerInteractions(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack heldStack = byPlayer.InventoryManager.ActiveHotbarSlot?.Itemstack;
             if (heldStack == null || heldStack.Collectible is ILiquidInterface liquidInterface)
@@ -183,13 +184,14 @@ namespace VintageCanvas.src.Blocks
                 return base.OnContainedInteractStart(be, slot, byPlayer, blockSel);
             }
             else
-            {             
+            {
                 ItemStack jarstack = slot.Itemstack;
                 ItemStack jarcontent = this.GetContent(jarstack);
 
                 string heldCode = heldStack.Collectible.Code.Path;
 
-                if (jarcontent != null) {
+                if (jarcontent != null)
+                {
 
                     //Process pigments into their respective paints
                     if (pigmentRecipes.ContainsKey(heldCode) && mediums.Contains(jarcontent.Collectible.Code))
@@ -209,11 +211,11 @@ namespace VintageCanvas.src.Blocks
                             }
 
                             byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
-                        }                        
+                        }
                     }
 
                     //Make tempera medium
-                    if (jarcontent.Item.Code.BeginsWith("game", "water") && heldStack.Collectible.Code.BeginsWith("game", "egg")) 
+                    if (jarcontent.Item.Code.BeginsWith("game", "water") && heldStack.Collectible.Code.BeginsWith("game", "egg"))
                     {
                         jarcontent.Id = api.World.GetItem("vintagecanvas:tempera").Id;
                         slot.MarkDirty();
@@ -260,8 +262,9 @@ namespace VintageCanvas.src.Blocks
                         }
 
                         //Clear slot w/ turpentine if shift key is held
-                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine")){ 
-                            if(byPlayer.Entity.Controls.ShiftKey && heldStack.Attributes.HasAttribute("slots"))
+                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine"))
+                        {
+                            if (byPlayer.Entity.Controls.ShiftKey && heldStack.Attributes.HasAttribute("slots"))
                             {
                                 var slots = SerializerUtil.Deserialize<BlockEntityPalette.Slot[]>(heldStack.Attributes.GetBytes("slots"));
 
@@ -284,11 +287,12 @@ namespace VintageCanvas.src.Blocks
                         }
                     }
 
-                if (heldCode.StartsWith("brush"))
+                    if (heldCode.StartsWith("brush"))
                     {
                         //Incrementally decrease opacity when clicking on a turpentine jar
                         //When holding shift, fully clean the brush
-                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine")){
+                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine"))
+                        {
                             if (byPlayer.Entity.Controls.ShiftKey)
                             {
                                 heldStack.Attributes.SetInt("paintcolor", 0);
@@ -300,7 +304,7 @@ namespace VintageCanvas.src.Blocks
                                 }
                             }
                             else
-                            {                              
+                            {
 
                                 float curOpacity = heldStack.Attributes.GetFloat("opacity", 1f);
                                 heldStack.Attributes.SetFloat("opacity", 0.66f * curOpacity);
@@ -316,7 +320,7 @@ namespace VintageCanvas.src.Blocks
                         }
 
                         if (jarcontent.Collectible.Code.PathStartsWith("paint"))
-                        {                            
+                        {
                             string paintcode = jarcontent.Collectible.Code.ToString();
                             int paintcolor = paintColors[paintcode];
                             int curpaint = heldStack.Attributes.GetInt("paintcolor");
@@ -356,7 +360,11 @@ namespace VintageCanvas.src.Blocks
                 return true;
             }
         }
-
+        bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
+        {
+            //Rerouted to be accessible from CollectibleBheaviourPaintTool (left-click behaviour emulation)
+            return ContainerInteractions(be, slot, byPlayer, blockSel);                       
+        }
         #endregion
     }
 }

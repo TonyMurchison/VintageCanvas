@@ -17,6 +17,8 @@
     }
   ],
 
+  "maxstacksize": 64,
+
   "shape": {
     "base": "game:item/resource/hide/medium2"
   },
@@ -76,5 +78,5 @@
     },
     "scale": 4
   }
-  
+
 }

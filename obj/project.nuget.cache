@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "/LprsoQlDco=",
+  "dgSpecHash": "odIA4NHkOvo=",
   "success": true,
   "projectFilePath": "C:\\Users\\Wout\\source\\repos\\VintageCanvas\\VintageCanvas\\VintageCanvas\\VintageCanvas.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Wout\\.nuget\\packages\\mixbox\\2.0.0\\mixbox.2.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

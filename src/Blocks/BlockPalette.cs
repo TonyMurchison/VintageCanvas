@@ -99,7 +99,8 @@ namespace VintageCanvas.src.Blocks
         public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             var pe = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityPalette;
-           
+            if (pe == null) return base.OnBlockInteractStart(world, byPlayer, blockSel);
+
             var playerStack = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
             if(playerStack == null) 
             {

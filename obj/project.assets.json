@@ -1,11 +1,39 @@
 {
   "version": 4,
   "targets": {
-    "net10.0": {}
+    "net10.0": {
+      "Mixbox/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Mixbox.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Mixbox.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Mixbox/2.0.0": {
+      "sha512": "5goq9Nnp0hfkS0DaRtazrepY1bmlenJ+cLb1xXaT8saneaTQQqPGzaGEIWwoqhuTOg7dG1CH3dtozJOyzahW8A==",
+      "type": "package",
+      "path": "mixbox/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "README.md",
+        "icon.jpg",
+        "lib/netstandard2.0/Mixbox.dll",
+        "mixbox.2.0.0.nupkg.sha512",
+        "mixbox.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net10.0": []
+    "net10.0": [
+      "Mixbox >= 2.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Wout\\.nuget\\packages\\": {}
@@ -53,6 +81,12 @@
       "net10.0": {
         "framework": "net10.0",
         "targetAlias": "net10.0",
+        "dependencies": {
+          "Mixbox": {
+            "target": "Package",
+            "version": "[2.0.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

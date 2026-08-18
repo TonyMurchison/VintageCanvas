@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -11,6 +12,7 @@ using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 using static VintageCanvas.src.Entities.BlockEntityEasel;
+using Scrtwpns.Mixbox;
 
 namespace VintageCanvas.src.Utility
 {
@@ -51,15 +53,33 @@ namespace VintageCanvas.src.Utility
                     {"chalkwhite", -4080464 },
                     {"leadwhite", -1184275 }
                 };
-
-        public static int BlendColor(int basepixel, int overlaypixel, float alpha)
+        public static int BlendWithMixing(int basepixel, int overlaypixel, float alpha)
         {
             int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
             int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
-            int r = (int)(sr * alpha + dr * (1 - alpha));
-            int g = (int)(sg * alpha + dg * (1 - alpha));
-            int b = (int)(sb * alpha + db * (1 - alpha));
-            return (255 << 24) | (r << 16) | (g << 8) | b;
+
+            Color color1 = Color.FromArgb(sr, sg, sb);
+            Color color2 = Color.FromArgb(dr, dg, db);
+            Color colorMix = Color.FromArgb(Mixbox.Lerp(color1.ToArgb(), color2.ToArgb(), 1f - alpha));
+
+            return (255 << 24) | (colorMix.R << 16) | (colorMix.G << 8) | colorMix.B;
+        }
+
+        public static int BlendColor(int basepixel, int overlaypixel, float alpha)
+        {
+            if (VintageCanvasModSystem.config.MixBoxBlending)
+            {
+                return BlendWithMixing(basepixel, overlaypixel, alpha);
+            }
+            else
+            {
+                int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
+                int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
+                int r = (int)(sr * alpha + dr * (1 - alpha));
+                int g = (int)(sg * alpha + dg * (1 - alpha));
+                int b = (int)(sb * alpha + db * (1 - alpha));
+                return (255 << 24) | (r << 16) | (g << 8) | b;
+            }
         }
 
         public static float[] ARGBtoRGBA(int argb)

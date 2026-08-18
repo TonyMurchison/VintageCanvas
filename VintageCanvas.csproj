@@ -8,9 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="Mixbox" Version="2.0.0" />
     <Reference Include="VintagestoryAPI">
       <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
-      <Private>false</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="VSSurvivalMod">
       <HintPath>$(VINTAGE_STORY)/Mods/VSSurvivalMod.dll</HintPath>
@@ -60,6 +61,10 @@
   <Content Include="modicon.png" Condition="Exists('modicon.png')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="Mixbox" Version="2.0.0" />
 </ItemGroup>
 
 </Project>

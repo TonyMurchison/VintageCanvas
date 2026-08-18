@@ -32,14 +32,27 @@ namespace VintageCanvas.src.Items
         public override void OnHeldAttackStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handHandling, ref EnumHandling handling)
         {
             if (blockSel != null) {
-                if (IsPaintTarget(blockSel, byEntity.World) || 
-                    IsPaintContainer(blockSel, byEntity.World))
+                if (IsPaintTarget(blockSel, byEntity.World))
                 {
                     this.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, true, ref handHandling, ref handling);
                     handling = EnumHandling.PreventDefault;
                     handHandling = EnumHandHandling.PreventDefault;
                     return;
                 }  
+                if (IsPaintContainer(blockSel, byEntity.World))
+                {
+                    if(blockSel.Block is BlockGroundStorage)
+                    {
+                        BlockEntityGroundStorage begs = byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityGroundStorage;
+                        ItemSlot s = begs.GetSlotAt(blockSel);
+                        BlockPaintJar bpj = s.Itemstack.Block as BlockPaintJar;
+                        IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer).PlayerUID);
+                        bpj.ContainerInteractions(begs, s, byPlayer, blockSel);
+                        handling = EnumHandling.PreventDefault;
+                        handHandling = EnumHandHandling.PreventDefault;
+                        return;
+                    }                    
+                }
             }
             base.OnHeldAttackStart(slot, byEntity, blockSel, entitySel, ref handHandling, ref handling);
         }
