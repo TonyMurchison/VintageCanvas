@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "odIA4NHkOvo=",
+  "dgSpecHash": "F10JfaaPz74=",
   "success": true,
   "projectFilePath": "C:\\Users\\Wout\\source\\repos\\VintageCanvas\\VintageCanvas\\VintageCanvas\\VintageCanvas.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Wout\\.nuget\\packages\\mixbox\\2.0.0\\mixbox.2.0.0.nupkg.sha512"
+    "C:\\Users\\Wout\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+    "C:\\Users\\Wout\\.nuget\\packages\\mixbox\\2.0.0\\mixbox.2.0.0.nupkg.sha512",
+    "C:\\Users\\Wout\\.nuget\\packages\\system.drawing.common\\8.0.1\\system.drawing.common.8.0.1.nupkg.sha512"
   ],
   "logs": []
 }

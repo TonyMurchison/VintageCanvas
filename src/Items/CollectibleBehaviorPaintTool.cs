@@ -599,7 +599,7 @@ namespace VintageCanvas.src.Items
             return base.GetHeldTpHitAnimation(slot, byEntity, ref bhHandling);
         }
 
-        private bool IsPaintTarget(BlockSelection blockSel, IWorldAccessor world)
+        public static bool IsPaintTarget(BlockSelection blockSel, IWorldAccessor world)
         {
             if (blockSel == null) return false;
             if (blockSel.Block is BlockEasel ||
@@ -613,10 +613,6 @@ namespace VintageCanvas.src.Items
                 BlockMultiblock bm = (BlockMultiblock)blockSel.Block;
                 BlockPos bp = blockSel.Clone().Position.Add(bm.OffsetInv);
                 return (world.BlockAccessor.GetBlockEntity(bp) is BlockEntityEasel);
-                /*
-                BlockEntityEasel ee = (BlockEntityEasel)world.BlockAccessor.GetBlockEntity(bp);
-                return ee != null;
-                */
             }
 
             return false;
