@@ -1,15 +1,18 @@
 ﻿using Cairo;
 using HarmonyLib;
 using Microsoft.Win32.SafeHandles;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using VintageCanvas.src.Entities;
+using VintageCanvas.src.Items;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -20,6 +23,7 @@ using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 using Vintagestory.ServerMods.WorldEdit;
+using static VintageCanvas.src.Entities.BlockEntityPalette;
 
 namespace VintageCanvas.src.Blocks
 {
@@ -138,6 +142,8 @@ namespace VintageCanvas.src.Blocks
             {
                 renderinfo.ModelRef = meshrefs[hashcode];
             }
+
+            //TODO If the jar contains brushes, add brush model refs to the renderinfo
         }
 
         public string GetMeshCacheKey(ItemSlot slot)
@@ -179,10 +185,15 @@ namespace VintageCanvas.src.Blocks
         public bool ContainerInteractions(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack heldStack = byPlayer.InventoryManager.ActiveHotbarSlot?.Itemstack;
-            if (heldStack == null || heldStack.Collectible is ILiquidInterface liquidInterface)
+            if (heldStack == null )
             {
                 return base.OnContainedInteractStart(be, slot, byPlayer, blockSel);
             }
+            if (heldStack.Collectible is ILiquidInterface liquidInterface ) // AND the jar contains no brushes
+            {
+                return base.OnContainedInteractStart(be, slot, byPlayer, blockSel);
+            }
+
             else
             {
                 ItemStack jarstack = slot.Itemstack;
@@ -362,8 +373,94 @@ namespace VintageCanvas.src.Blocks
         }
         bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
-            //Rerouted to be accessible from CollectibleBheaviourPaintTool (left-click behaviour emulation)
-            return ContainerInteractions(be, slot, byPlayer, blockSel);                       
+            //First sees if there are brush storage interactions to be taken.
+            if (BrushStorageInteraction(slot, byPlayer)) return true;            
+
+            //Rerouted to be accessible from CollectibleBehaviourPaintTool (left-click behaviour emulation)
+            return ContainerInteractions(be, slot, byPlayer, blockSel);           
+        }
+
+        private bool BrushStorageInteraction(ItemSlot slot, IPlayer byPlayer)
+        {
+            //Read any contained brush data
+            ItemStack jarcontent = GetContent(slot.Itemstack);
+            byte[] brushData = slot.Itemstack.Attributes.GetBytes("brushes");
+            JarBrush[] brushes = [];
+            if (brushData != null)
+            {
+                brushes = SerializerUtil.Deserialize<JarBrush[]>(brushData);
+            }
+
+            if (jarcontent == null)
+            {
+                ItemStack held = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack;
+
+                //Try to place brush if crouching
+                if (byPlayer.Entity.Controls.ShiftKey && held != null)
+                {
+                    if (held.Collectible is ItemBrush && brushes.Length < 3)
+                    {
+                        JarBrush brush = new JarBrush(
+                            held.Collectible.Variant["size"],
+                            held.Attributes.GetInt("paintcolor", 0),
+                            held.Attributes.GetFloat("opacity", 1f));
+
+                        JarBrush[] newBrushes = brushes.Concat([brush]).ToArray();
+                        slot.Itemstack.Attributes.SetBytes("brushes", SerializerUtil.Serialize(newBrushes));
+                        byPlayer.InventoryManager.ActiveHotbarSlot.TakeOut(1);
+                        byPlayer.InventoryManager.ActiveHotbarSlot.MarkDirty();
+
+                        return true;
+                    }
+                }
+
+                //Try to retrieve brush otherwise
+                else
+                {
+                    if (byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack == null && brushes.Length > 0)
+                    {
+                        string size = brushes.Last().size;
+
+                        Item brush = api.World.GetItem(new AssetLocation("vintagecanvas:brush-" + size));
+                        ItemStack giveStack = new ItemStack(brush, 1);
+                        giveStack.Attributes.SetInt("paintcolor", brushes.Last().color);
+                        giveStack.Attributes.SetFloat("opacity", brushes.Last().opacity);
+                        byPlayer.InventoryManager.TryGiveItemstack(giveStack);
+
+                        JarBrush[] newBrushes = brushes.RemoveAt(brushes.Length - 1);
+                        slot.Itemstack.Attributes.SetBytes("brushes", SerializerUtil.Serialize(newBrushes));
+
+                        return true;
+                    }
+                }
+            }
+
+            if (brushes.Length > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [ProtoContract]
+        private class JarBrush
+        {
+            [ProtoMember(1)]
+            public string size = "small";
+            [ProtoMember(2)]
+            public int color = 0;
+            [ProtoMember(3)]
+            public float opacity = 1f;
+
+            public JarBrush() { }
+
+            public JarBrush(string size, int color, float opacity)
+            {
+                this.size = size;
+                this.color = color;
+                this.opacity = opacity;
+            }
         }
 
         public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
