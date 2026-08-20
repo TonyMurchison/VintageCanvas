@@ -253,5 +253,17 @@ namespace VintageCanvas.src.Utility
         {
             return TextureUtil.Compress(SerializerUtil.Serialize(pixeldata));
         }
+
+        public static int GetByteHashCode(byte[] key)
+        {
+            if (key == null) return 0;
+            unchecked
+            {
+                int result = 0;
+                foreach (byte b in key)
+                    result = (result * 31) ^ b;
+                return result;
+            }
+        }
     }
 }

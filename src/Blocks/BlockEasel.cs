@@ -26,13 +26,10 @@ namespace VintageCanvas.src.Blocks
     //Perform raycasting, calculate paint intersections
     public class BlockEasel : Block
     {
-        float paintFrequency = 20f;
         ICoreClientAPI capi;
         public string easelName = "vintagecanvas:easel";
         public string allowedCanvas = "canvas";
         public int canvasSize = 32;
-        private DateTime clearingClock;
-        private Vec2d previousUV = null;
 
         public override Vec4f GetSelectionColor(ICoreClientAPI capi, BlockPos pos)
         {

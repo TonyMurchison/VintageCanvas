@@ -39,7 +39,6 @@ namespace VintageCanvas.src.Entities
         public string textureName = "canvas.png";
         public string allowedCanvas = "canvas";
         private MeshData clientMesh;
-        DateTime textureTimer = new DateTime();
 
         public override void OnBlockBroken(IPlayer byPlayer = null)
         {
@@ -209,8 +208,6 @@ namespace VintageCanvas.src.Entities
                     Block.Shape,
                     capi
                     );
-
-                textureTimer = DateTime.Now;
             }
         }
 

@@ -1,0 +1,27 @@
+{
+  "code": "jarbrush",
+  "variantgroups": [
+    {
+      "code": "size",
+      "states": [ "small", "medium", "large" ]
+    }
+  ],
+
+  "shapebytype": {
+    "*": {
+      "base": "item/brush-{size}"
+    }
+  },
+  "textures": {
+    "wood": { "base": "game:block/wood/debarked/oak" },
+    "metal": { "base": "game:block/metal/ingot/iron" },
+    "painting": { "base": "game:block/hay/bamboo-side" },
+    "bristles": { "base": "game:block/hay/bamboo-side" }
+  },
+
+  "handbook": {
+    "groupBy": [ "brush-*" ]
+  },
+
+  "maxstacksize": 1
+}

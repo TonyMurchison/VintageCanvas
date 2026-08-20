@@ -1,13 +1,6 @@
-﻿using Cairo;
-using HarmonyLib;
-using Microsoft.Win32.SafeHandles;
-using ProtoBuf;
+﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
-using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -22,8 +15,6 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
-using Vintagestory.ServerMods.WorldEdit;
-using static VintageCanvas.src.Entities.BlockEntityPalette;
 
 namespace VintageCanvas.src.Blocks
 {
@@ -62,14 +53,50 @@ namespace VintageCanvas.src.Blocks
             }
         }
 
-        public MeshData GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos blockPos)
+        public new MeshData GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos blockPos)
         {            
             MeshData baseMesh = base.GenMesh(capi, GetContent(slot.Itemstack), blockPos);
 
-            
-            if (GetContent(slot.Itemstack) == null) return baseMesh;
-            string? painttype = GetContent(slot.Itemstack).Collectible.Variant["color"];
-            if (painttype == null) return baseMesh;
+            //If paint is in, render paint mess
+            if (GetContent(slot.Itemstack) != null)
+            {
+                string? painttype = GetContent(slot.Itemstack).Collectible.Variant["color"];
+                if (painttype != null)
+                {
+                    MeshData messMesh = GenMessMesh(slot, blockPos, painttype);
+                    baseMesh.AddMeshData(messMesh);
+                    messMesh.Dispose();
+                    return baseMesh;
+                }
+            }
+
+            //Else, if brushes are in, render those
+            byte[] brushBytes = slot.Itemstack.Attributes.GetBytes("brushes");
+            if (brushBytes != null && brushBytes.Length > 0)
+            {
+                JarBrush[] brushes = SerializerUtil.Deserialize<JarBrush[]>(brushBytes);
+
+                for(int i = 0; i < brushes.Length; i++)
+                {
+                    //Can't mix block and item MeshData, so it draws from an unsearchable Block copy of item/brush.json instead.
+                    Block block = api.World.GetBlock(new AssetLocation("vintagecanvas:jarbrush-" + brushes[i].size));
+                    capi.Tesselator.TesselateBlock(block, out MeshData brushMesh);
+
+                    //Transforming the default brush shape into place
+                    brushMesh.Rotate(-0.6f * (float)Math.PI, 0, 0);
+                    brushMesh.Translate(0, -0.5f, -0.5f);
+                    brushMesh.Rotate(0, (float)(0.66 * Math.PI * i), 0);
+                    brushMesh.Scale(0.8f, 0.8f, 0.8f);
+
+                    baseMesh.AddMeshData(brushMesh);
+                    brushMesh.Dispose();
+                }
+            }
+            return baseMesh;
+        }
+
+        private MeshData GenMessMesh(ItemSlot slot, BlockPos blockPos, string painttype)
+        {            
 
             Shape shape = api.Assets.Get("vintagecanvas:shapes/item/paintjar-mess.json")?.ToObject<Shape>();
             Block block = api.World.GetBlock(BlockId);
@@ -89,29 +116,37 @@ namespace VintageCanvas.src.Blocks
                     mts
                 );
 
-            baseMesh.AddMeshData(mesh);
-            mesh.Dispose();
-            
-            return baseMesh;
+            return mesh;
         }
 
+        //For rendering paint mess textures while held in UI
         public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo)
         {
+            #region Messrendering
             base.OnBeforeRender(capi, itemstack, target, ref renderinfo);
 
-            //Check if contentStack already rendered
+            //Check if there is a contentstack to render mess from
             ItemStack contentStack = GetContent(itemstack);
 
-            if (contentStack == null) return;
+            bool renderMess = true;
+            string? painttype = null;
+            int hashcode = 0;
 
-            string? painttype = contentStack.Collectible.Variant["color"];
-            if (painttype == null) return;
+            if (contentStack == null)
+            {
+                renderMess = false;
+            }
+            else 
+            {
+                painttype = contentStack.Collectible.Variant["color"];
+                if (painttype == null) renderMess = false;
+                hashcode = GetStackCacheHashCode(contentStack);
+            }                                 
 
-            int hashcode = GetStackCacheHashCode(contentStack);
 
-
-            //Else, run the base render, then append mess mesh to dictionary
-            if (!meshrefs.TryGetValue(hashcode, out MultiTextureMeshRef meshRef))
+            //If there is, and it's not yet been rendered, run the base render, then append mess mesh to dictionary
+            //TODO: Make less leaky by removing the texture corresponding to the previous hash when generating a new one.
+            if (!meshrefs.TryGetValue(hashcode, out MultiTextureMeshRef meshRef) && renderMess)
             {
                 Shape shape = api.Assets.Get("vintagecanvas:shapes/item/paintjar-mess.json")?.ToObject<Shape>();
                 Block block = api.World.GetBlock(BlockId);
@@ -137,13 +172,14 @@ namespace VintageCanvas.src.Blocks
                 meshrefs[hashcode] = renderinfo.ModelRef;
 
                 mesh.Dispose();
+                return;
             }      
-            else
+            else if (renderMess)
             {
                 renderinfo.ModelRef = meshrefs[hashcode];
+                return;
             }
-
-            //TODO If the jar contains brushes, add brush model refs to the renderinfo
+            #endregion           
         }
 
         public string GetMeshCacheKey(ItemSlot slot)
@@ -374,10 +410,17 @@ namespace VintageCanvas.src.Blocks
         bool IContainedInteractable.OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
             //First sees if there are brush storage interactions to be taken.
-            if (BrushStorageInteraction(slot, byPlayer)) return true;            
+            if (BrushStorageInteraction(slot, byPlayer))
+            {
+                ItemStack stack = slot.Itemstack.Clone();
+                slot.Itemstack = stack;
+                slot.MarkDirty();
+                be.MarkDirty(true);
+                return true;
+            }
 
-            //Rerouted to be accessible from CollectibleBehaviourPaintTool (left-click behaviour emulation)
-            return ContainerInteractions(be, slot, byPlayer, blockSel);           
+                //Rerouted to be accessible from CollectibleBehaviourPaintTool (left-click behaviour emulation)
+                return ContainerInteractions(be, slot, byPlayer, blockSel);           
         }
 
         private bool BrushStorageInteraction(ItemSlot slot, IPlayer byPlayer)
