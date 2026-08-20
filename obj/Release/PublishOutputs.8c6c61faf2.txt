@@ -3,3 +3,7 @@ C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.dll
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.deps.json
 C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\VintageCanvas.pdb
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\Microsoft.Win32.SystemEvents.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\Mixbox.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\System.Drawing.Common.dll
+C:\Users\Wout\source\repos\VintageCanvas\VintageCanvas\VintageCanvas\bin\Release\Mods\mod\publish\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll

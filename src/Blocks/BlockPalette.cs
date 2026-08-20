@@ -258,7 +258,6 @@ namespace VintageCanvas.src.Blocks
         private void PickUpPalette(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack paletteStack = new ItemStack(this);
-            //TODO picking up logic
             BlockEntityPalette pe = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityPalette;
             if (pe.paletteId != null)
             {

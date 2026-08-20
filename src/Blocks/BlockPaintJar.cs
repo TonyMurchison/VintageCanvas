@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -182,6 +183,7 @@ namespace VintageCanvas.src.Blocks
             #endregion           
         }
 
+        /*
         public string GetMeshCacheKey(ItemSlot slot)
         {
             string key = GetContent(slot.Itemstack)?.Collectible.Variant["color"] ?? "empty";
@@ -191,7 +193,7 @@ namespace VintageCanvas.src.Blocks
                 key += GetContent(slot.Itemstack).StackSize;
             }
             return key;
-        }
+        }*/
 
         public class MessTexSource : ITexPositionSource
         {
@@ -218,6 +220,26 @@ namespace VintageCanvas.src.Blocks
 
         #region Behaviour
 
+
+        public new string GetMeshCacheKey(ItemSlot slot)
+        {
+            ItemStack jarcontent = GetContent(slot.Itemstack);
+            byte[] brushData = slot.Itemstack.Attributes.GetBytes("brushes");
+            JarBrush[] brushes = [];
+            if (brushData != null)
+            {
+                brushes = SerializerUtil.Deserialize<JarBrush[]>(brushData);
+            }
+
+            string brushkey = "";
+            foreach(JarBrush brush in brushes)
+            {
+                brushkey = brushkey + brush.size;
+            }
+
+            return slot.Itemstack.Collectible.Code.ToShortString() + "-" + jarcontent?.StackSize + "x" + jarcontent?.Collectible.Code.ToShortString()
+                + "+" + brushkey;
+        }
         public bool ContainerInteractions(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel)
         {
             ItemStack heldStack = byPlayer.InventoryManager.ActiveHotbarSlot?.Itemstack;
@@ -413,14 +435,18 @@ namespace VintageCanvas.src.Blocks
             if (BrushStorageInteraction(slot, byPlayer))
             {
                 ItemStack stack = slot.Itemstack.Clone();
+
+                ItemStack contentStack = new ItemStack();
+                SetContent(slot.Itemstack, contentStack);
                 slot.Itemstack = stack;
                 slot.MarkDirty();
-                be.MarkDirty(true);
+                be.MarkDirty();
+
+
                 return true;
             }
-
-                //Rerouted to be accessible from CollectibleBehaviourPaintTool (left-click behaviour emulation)
-                return ContainerInteractions(be, slot, byPlayer, blockSel);           
+            //Rerouted to be accessible from CollectibleBehaviourPaintTool (left-click behaviour emulation)
+            return ContainerInteractions(be, slot, byPlayer, blockSel);           
         }
 
         private bool BrushStorageInteraction(ItemSlot slot, IPlayer byPlayer)

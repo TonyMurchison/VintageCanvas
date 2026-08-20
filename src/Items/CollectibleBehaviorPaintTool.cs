@@ -366,7 +366,6 @@ namespace VintageCanvas.src.Items
                         int newColor = TextureUtil.BlendColor(color, pixeldata[pixelindices[i]], alpha);
                         pixeldata[pixelindices[i]] = newColor;
 
-                        //TODO add blockPos to changedpixels for continuity
                         blockSel.Position.ToString();
                         changedpixels.Add(hashBlockPixel(blockSel, pixelindices[i]));
                         pixelspainted++;
@@ -387,7 +386,6 @@ namespace VintageCanvas.src.Items
         private int[] BlendPixels(int[] pixelindices, ItemStack held, int[] pixeldata, int canvasSize, BlockSelection blockSel)
         {
             if (pixeldata == null) return pixeldata;
-            //TODO for every pixel, 
 
             List<int> blendedColors = new();
             List<int> blendedIndices = new();
@@ -397,7 +395,7 @@ namespace VintageCanvas.src.Items
                 {
                     if (!changedpixels.Contains(hashBlockPixel(blockSel, pixelindices[i])))
                     {
-                        //test a radius(start with 2 ?), create an average rgb value for all those pixels, then BlendColor the pixel with that value
+                        //test a radius, create an average rgb value for all those pixels, then BlendColor the pixel with that value
                         List<int> nearbypixels = new();
                         for (int j = -2; j < 3; j++)
                         {

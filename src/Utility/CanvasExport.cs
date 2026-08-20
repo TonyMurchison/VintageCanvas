@@ -62,8 +62,6 @@ namespace VintageCanvas.src.Utility
                         TextCommandResult.Error("Not currently looking at a painting");
                     }
 
-                    //TODO Do the same for a canvas on an easel
-
                     return TextCommandResult.Success("Painting exported to screenshot folder");
                 });
         }

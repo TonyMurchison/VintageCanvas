@@ -66,7 +66,6 @@ namespace VintageCanvas.src.Utility
                 {
                     int[] pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/fresco.png")).ToBitmap(capi).Pixels;
                     
-                    //TODO instead of storing, use default texture until first paint stroke?
                     FrescoStore.Data.Add(frescoId, pixeldata);
                 }
                 
