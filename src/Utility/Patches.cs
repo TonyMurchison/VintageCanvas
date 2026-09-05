@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.Client.NoObf;
@@ -50,11 +51,12 @@ namespace VintageCanvas.src.Utility
             if (__result == null || decorIds == null) return;
 
             Block frescoBlock = capi.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white"));
-
+            Block transparentFrescoBlock = capi.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-transparent"));
 
             for (int i = 0; i < __result.Count; i++)
             {
-                if (decorIds[i] != frescoBlock.BlockId)
+                if (decorIds[i] != frescoBlock.BlockId 
+                    && decorIds[i] != transparentFrescoBlock.BlockId)
                 {
                     continue;
                 }
@@ -64,7 +66,15 @@ namespace VintageCanvas.src.Utility
 
                 if (!FrescoStore.Data.ContainsKey(frescoId))
                 {
-                    int[] pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/fresco.png")).ToBitmap(capi).Pixels;
+                    int[] pixeldata = new int[1024];
+                    if (decorIds[i] == frescoBlock.BlockId)
+                    {
+                        pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/fresco.png")).ToBitmap(capi).Pixels;
+                    }
+                    if (decorIds[i] == transparentFrescoBlock.BlockId)
+                    {
+                        pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/empty.png")).ToBitmap(capi).Pixels;
+                    }
                     
                     FrescoStore.Data.Add(frescoId, pixeldata);
                 }
@@ -85,6 +95,31 @@ namespace VintageCanvas.src.Utility
                 }
 
                 __result[i] = vm;                
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(BlockEntityMicroBlock), "GetBlockInfo")]
+    public static class ChiselInfoPatch
+    {
+        static void Postfix(IPlayer forPlayer, StringBuilder dsc)
+        {
+            if (forPlayer?.CurrentBlockSelection?.Face != null)
+            {
+                BlockPos pos = forPlayer.CurrentBlockSelection.Position;
+                BlockEntityMicroBlock? bemb = forPlayer.Entity.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+                int[]? decors = bemb.DecorIds;
+                if (decors == null) return;
+                int? decor = decors[forPlayer.CurrentBlockSelection.Face.Index];
+                if (decor == forPlayer.Entity.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-white")).BlockId
+                    || decor == forPlayer.Entity.World.GetBlock(new AssetLocation("vintagecanvas:frescoplaster-transparent")).BlockId)
+                {
+                    var str = dsc.ToString();
+                    System.String ps = Lang.Get("Paintable surface");
+                    if (!str.EndsWith(ps + "\r\n")){
+                        dsc.AppendLine(ps);
+                    }
+                }
             }
         }
     }

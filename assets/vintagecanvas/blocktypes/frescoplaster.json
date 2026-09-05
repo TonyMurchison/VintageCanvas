@@ -14,7 +14,7 @@
   "variantgroups": [
     {
       "code": "type",
-      "states": [ "white" ]
+      "states": [ "white", "transparent" ]
     }
   ],
   "attributes": {
@@ -30,19 +30,31 @@
   "creativeinventory": {
     "general": [ "*" ],
     "decorative": [ "*" ],
-    "vintagecanvas":  [ "*" ]
+    "vintagecanvas": [ "*" ]
   },
   "replaceable": 5500,
   "resistance": 0,
   "lightAbsorption": 0,
-  "textures": {
-    "all": {
-      "base": "block/canvas"
+
+  "texturesByType": {
+    "*-white": {
+      "all": {
+        "base": "block/canvas"
+      },
+      "flour": {
+        "base": "block/canvas"
+      }
     },
-    "flour": {
-      "base": "block/canvas"
+    "*-transparent": {
+      "all": {
+        "base": "game:block/glass/quartz"
+      },
+      "flour": {
+        "base": "game:block/glass/quartz"
+      }
     }
   },
+
   "vertexflags": {
     "zOffset": 1
   },

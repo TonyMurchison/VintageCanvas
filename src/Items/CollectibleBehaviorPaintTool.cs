@@ -520,20 +520,31 @@ namespace VintageCanvas.src.Items
             return pixeldata;
         }
 
-        private int AverageColors(int[] nearbypixels, int[] pixeldata)
+        private int AverageColors(int[] nearbypixelindices, int[] pixeldata)
         {
-            if (nearbypixels.Length == 0)
+            if (nearbypixelindices.Length == 0)
             {
                 return 0;
             }
+            //Mixbox mixing behaviour
+            if (VintageCanvasModSystem.config.MixBoxBlending)
+            {
+                int color = pixeldata[nearbypixelindices[0]];
+                for (int i = 1; i < nearbypixelindices.Length; i++){
+                    color = TextureUtil.BlendColor(color, pixeldata[nearbypixelindices[i]], 1f - (1f / (i + 1f)));
+                }
+                return color;
+            }
+
+            //Default mixing behaviour
             int r = 0; int g = 0; int b = 0;
-            foreach (int pixel in nearbypixels)
+            foreach (int pixel in nearbypixelindices)
             {
                 r += (pixeldata[pixel] >> 16) & 0xFF;
                 g += (pixeldata[pixel] >> 8) & 0xFF;
                 b += (pixeldata[pixel]) & 0xFF;
             }
-            r = r / nearbypixels.Length; g = g / nearbypixels.Length; b = b / nearbypixels.Length;
+            r = r / nearbypixelindices.Length; g = g / nearbypixelindices.Length; b = b / nearbypixelindices.Length;
 
             return (255 << 24) | (r << 16) | (g << 8) | b;
 

@@ -58,8 +58,10 @@
 
   "vintagecanvas:item-vellum": "Vellum",
   "vintagecanvas:block-frescoplaster-white": "Fresco plaster",
+  "vintagecanvas:block-frescoplaster-transparent": "Transparent fresco plaster",
   "vintagecanvas:item-pastel-carbonblack": "Charcoal stick",
   "vintagecanvas:item-pastel-chalkwhite": "Chalk stick",
+  "Paintable surface": "Paintable surface",
 
   "game:tabname-vintagecanvas": "Vintage Canvas",
 
