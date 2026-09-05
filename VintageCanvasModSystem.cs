@@ -142,4 +142,14 @@ namespace VintageCanvas
         [ProtoMember(3)] public int PosZ { get; set; }
         [ProtoMember(4)] public int Face { get; set; }
     }
+
+    [ProtoContract]
+    public class CanvasNameSavePacket
+    {
+        [ProtoMember(1)] public int PosX { get; set; }
+        [ProtoMember(2)] public int PosY { get; set; }
+        [ProtoMember(3)] public int PosZ { get; set; }
+        [ProtoMember(4)] public string canvasname { get; set; }
+        [ProtoMember(5)] public string authorname { get; set; }
+    }
 }

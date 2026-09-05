@@ -38,7 +38,9 @@ namespace VintageCanvas.src.Utility
                     .SetMessageHandler<FrameSavePacket>(OnServerReceiveFrameSave)
                     .RegisterMessageType<FrescoPushPacket>()
                     .RegisterMessageType<FrescoRequestPacket>()
-                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest);             
+                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest) 
+                    .RegisterMessageType<CanvasNameSavePacket>()
+                    .SetMessageHandler<CanvasNameSavePacket>(OnServerReceiveCanvasNameSave);
             }
                 else
                 {
@@ -47,12 +49,25 @@ namespace VintageCanvas.src.Utility
                     .RegisterMessageType<PaintSavePacket>()
                     .RegisterMessageType<PaletteSavePacket>()
                     .RegisterMessageType<FrameSavePacket>()
-                    .RegisterMessageType<FrescoPushPacket>()
+                    .RegisterMessageType<FrescoPushPacket>()                    
                     .SetMessageHandler<FrescoPushPacket>(OnClientReceiveFrescoPush)
-                    .RegisterMessageType<FrescoRequestPacket>();
+                    .RegisterMessageType<FrescoRequestPacket>()
+                    .RegisterMessageType<CanvasNameSavePacket>();
 
                 }
             }
+
+        private void OnServerReceiveCanvasNameSave(IServerPlayer fromPlayer, CanvasNameSavePacket packet)
+        {
+            var sapi = (ICoreServerAPI)api;
+            var pos = new BlockPos(packet.PosX, packet.PosY, packet.PosZ);
+
+            var ee = sapi.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
+            if (ee != null)
+            {
+                ee.UpdateName(packet.canvasname, packet.authorname);
+            }
+        }
 
         private void OnClientReceiveFrescoPush(FrescoPushPacket packet)
         {
@@ -214,6 +229,19 @@ namespace VintageCanvas.src.Utility
                 PosY = pos.Y,
                 PosZ = pos.Z,
                 FrameType = frametype
+            });
+        }
+
+        public void SendNameData(BlockPos pos, string cn, string an)
+        {
+            if (api.Side != EnumAppSide.Client) return;
+            ((ICoreClientAPI)api).Network.GetChannel(ChannelId).SendPacket(new CanvasNameSavePacket
+            {
+                PosX = pos.X,
+                PosY = pos.Y,
+                PosZ = pos.Z,
+                canvasname = cn,
+                authorname = an
             });
         }
     }    

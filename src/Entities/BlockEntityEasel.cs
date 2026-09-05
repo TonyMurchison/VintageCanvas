@@ -293,5 +293,21 @@ namespace VintageCanvas.src.Entities
             base.OnBlockUnloaded();
             clientMesh?.Dispose();
         }
+
+        public void UpdateName(string canvasname, string authorname)
+        {
+            ItemStack stack = CanvasSlot.Itemstack;
+            if(stack != null)
+            {
+                if (!stack.Attributes.HasAttribute("canvasname"))
+                {
+                    stack.Attributes.SetString("canvasname", canvasname);
+                }
+                if (!stack.Attributes.HasAttribute("authorname"))
+                {
+                    stack.Attributes.SetString("authorname", authorname);
+                }
+            }
+        }
     }
 }

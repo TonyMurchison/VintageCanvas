@@ -4,6 +4,7 @@ using VintageCanvas.src.Entities;
 using VintageCanvas.src.Utility;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 
 namespace VintageCanvas.src.Blocks
@@ -24,6 +25,12 @@ namespace VintageCanvas.src.Blocks
             {
                 blockdrops.Attributes.SetBytes("vc_pixeldata", TextureUtil.WriteCompressedPixelData(pixeldata));
             }
+            if (ce.canvasName != null)
+            {
+                blockdrops.Attributes.SetString("canvasname", ce.canvasName);
+                blockdrops.Attributes.SetString("authorname", ce.authorName);
+            }
+
             return [blockdrops];
         }
         
@@ -44,6 +51,11 @@ namespace VintageCanvas.src.Blocks
             if (ce != null && ce.canvasId != null)
             {
                 canvasStack.Attributes.SetInt("canvasid", (int)id);
+            }
+            if (ce != null && ce.canvasName != null)
+            {
+                canvasStack.Attributes.SetString("canvasname", ce.canvasName);
+                canvasStack.Attributes.SetString("authorname", ce.authorName);
             }
             return canvasStack;
         }
@@ -130,14 +142,33 @@ namespace VintageCanvas.src.Blocks
             }            
         }
 
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string s = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            BlockEntityCanvas ce = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityCanvas;
+            if (ce != null && ce.canvasName != null) {
+                s += "Name: " + ce.canvasName;
+                s += "\nAuthor: " + ce.authorName;
+            }
+            return s;
+        }
         public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
         {
             base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
             dsc.AppendLine("\nPlace onto an easel to paint. When on the wall, right-click with a plank to create a frame.");
+
+            if (inSlot.Itemstack.Attributes.HasAttribute("canvasname"))
+            {
+                dsc.AppendLine("\n" + Lang.Get("Name: ") + inSlot.Itemstack.Attributes.GetString("canvasname").ToString()); 
+                dsc.AppendLine(Lang.Get("Author: ") + inSlot.Itemstack.Attributes.GetString("authorname").ToString());
+            }
+
+            /*
             if (inSlot.Itemstack.Attributes.HasAttribute("canvasid")) {
                 dsc.AppendLine($"\nCanvas ID: { inSlot.Itemstack.Attributes.GetInt("canvasid").ToString() }");                 
-            }            
+            } 
+            */
         }
     }
 }

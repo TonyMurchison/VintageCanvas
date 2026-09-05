@@ -55,14 +55,14 @@ namespace VintageCanvas.src.Utility
                 };
         public static int BlendWithMixing(int basepixel, int overlaypixel, float alpha)
         {
-            int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
-            int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
+            int sa = (basepixel >> 24) & 0xFF; int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
+            int da = (basepixel >> 24) & 0xFF; int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
 
-            Color color1 = Color.FromArgb(sr, sg, sb);
-            Color color2 = Color.FromArgb(dr, dg, db);
+            Color color1 = Color.FromArgb(sa, sr, sg, sb);
+            Color color2 = Color.FromArgb(da, dr, dg, db);
             Color colorMix = Color.FromArgb(Mixbox.Lerp(color1.ToArgb(), color2.ToArgb(), 1f - alpha));
 
-            return (255 << 24) | (colorMix.R << 16) | (colorMix.G << 8) | colorMix.B;
+            return (colorMix.A << 24) | (colorMix.R << 16) | (colorMix.G << 8) | colorMix.B;
         }
 
         public static int BlendColor(int basepixel, int overlaypixel, float alpha)
@@ -73,12 +73,14 @@ namespace VintageCanvas.src.Utility
             }
             else
             {
-                int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
-                int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
+                int sa = (basepixel >> 24) & 0xFF; int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
+                int da = (basepixel >> 24) & 0xFF; int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
+
+                int a = (int)(sa * alpha + da * (1 - alpha));
                 int r = (int)(sr * alpha + dr * (1 - alpha));
                 int g = (int)(sg * alpha + dg * (1 - alpha));
                 int b = (int)(sb * alpha + db * (1 - alpha));
-                return (255 << 24) | (r << 16) | (g << 8) | b;
+                return (a << 24) | (r << 16) | (g << 8) | b;
             }
         }
 

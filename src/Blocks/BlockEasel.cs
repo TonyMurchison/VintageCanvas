@@ -18,6 +18,7 @@ using Vintagestory.API.Util;
 using Vintagestory.Client;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
+using static VintageCanvas.src.Entities.BlockEntityPalette;
 
 namespace VintageCanvas.src.Blocks
 {
@@ -79,17 +80,52 @@ namespace VintageCanvas.src.Blocks
 
             if (held != null) {
                 //canvas placement
-                if (held.Collectible.Code.Path.StartsWith(allowedCanvas) && ee.CanvasSlot.Empty)
+                if (held.Collectible.Code.Path.StartsWith(allowedCanvas) 
+                    && ee.CanvasSlot.Empty)
                 {
                     SetCanvas(held, byPlayer, world, ee);
                     return true;
                 }
-                else if ( held.Collectible.Code.Path.StartsWith("canvas") || held.Collectible.Code.Path.StartsWith("largecanvas") )
+
+                else if (held.Collectible.Code.Path.StartsWith("canvas") || held.Collectible.Code.Path.StartsWith("largecanvas"))
                 {
                     string hint = Lang.Get("vintagecanvas:canvas-size");
                     (world.Api as ICoreClientAPI)?.TriggerIngameError(this, "wrongsize", hint);
                     return true;
-                }                
+                }
+
+                //Signing
+                else if (held.Collectible.Attributes?.IsTrue("writingTool") == true
+                    && !ee.CanvasSlot.Empty ) {
+
+                    //Only the first person to sign a canvas is allowed to change the name
+                    if (!ee.CanvasSlot.Itemstack.Attributes.HasAttribute("canvasname")
+                        || ee.CanvasSlot.Itemstack.Attributes.GetAsString("authorname") == byPlayer.PlayerName.ToString())
+                    {
+                        if (api.Side == EnumAppSide.Client)
+                        {
+                            var dlg = new GuiPaintingSigning(api as ICoreClientAPI);
+                            dlg.OnClosed += () =>
+                            {
+                                if (dlg.IsSigned)
+                                {
+                                    ee.CanvasSlot.Itemstack.Attributes.SetString("canvasname", dlg.Title);
+                                    ee.CanvasSlot.Itemstack.Attributes.SetString("authorname", byPlayer.PlayerName);
+
+                                    VintageCanvasModSystem.NetworkHandler.SendNameData(blockSel.Position, dlg.Title, byPlayer.PlayerName);
+                                }
+                            };
+                            dlg.TryOpen();
+                        }
+                    }
+                    else
+                    {
+                        string hint = Lang.Get("vintagecanvas:already-signed");
+                        (world.Api as ICoreClientAPI)?.TriggerIngameError(this, "alreadysigned", hint);
+                    }
+                
+                }
+
             }
 
             return base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -203,6 +239,31 @@ namespace VintageCanvas.src.Blocks
             }
 
             return ee;
+        }
+
+        public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer)
+        {
+            string s = base.GetPlacedBlockInfo(world, pos, forPlayer);
+            BlockEntityEasel ee = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
+            if (ee == null) return s;
+
+            if (ee.CanvasSlot.Itemstack != null 
+                && ee.CanvasSlot.Itemstack.Attributes.HasAttribute("canvasname"))
+            {
+                s += "Name: " + ee.CanvasSlot.Itemstack.Attributes.GetAsString("canvasname");
+                s += "\nAuthor: " + ee.CanvasSlot.Itemstack.Attributes.GetAsString("authorname");
+            }
+            else if (ee.CanvasSlot.Itemstack != null)
+            {
+                s += Lang.Get("Name: ") + Lang.Get("Unknown");
+                s += "\n" + Lang.Get("Author: ") + Lang.Get("Unknown");
+            }
+            else
+            {
+                s += Lang.Get("No canvas");
+            }
+
+            return s;
         }
 
         public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)

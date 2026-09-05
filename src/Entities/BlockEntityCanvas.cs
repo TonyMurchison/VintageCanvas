@@ -22,6 +22,9 @@ namespace VintageCanvas.src.Entities
         public int canvasSize = 32;
         public string textureName = "canvas.png";
 
+        public string? canvasName;
+        public string? authorName;
+
         Dictionary<string, string> FrameSequence = new Dictionary<string, string>{
             { "none", "simple" },
             { "simple", "fancy" },
@@ -86,6 +89,12 @@ namespace VintageCanvas.src.Entities
                 {
                     UpdateTexture();
                 }, 10);
+            }
+
+            if (byItemStack.Attributes.HasAttribute("canvasname"))
+            {
+                canvasName = byItemStack.Attributes.GetAsString("canvasname");
+                authorName = byItemStack.Attributes.GetAsString("authorname");
             }
 
             base.OnBlockPlaced(byItemStack);
@@ -208,6 +217,11 @@ namespace VintageCanvas.src.Entities
                 {
                     tree.SetBytes("vc_pixeldata", TextureUtil.WriteCompressedPixelData(pixeldata));
                 }
+                if (canvasName != null)
+                {
+                    tree["canvasname"] = new StringAttribute(canvasName);
+                    tree["authorname"] = new StringAttribute(authorName);
+                }
             }
             catch
             {
@@ -225,7 +239,13 @@ namespace VintageCanvas.src.Entities
                 {
                     UpdateTexture();
                 }
-            }                   
+            }
+
+            if (tree.HasAttribute("canvasname"))
+            {
+                canvasName = tree.GetAsString("canvasname");
+                authorName = tree.GetAsString("authorname");
+            }
 
         }
 
