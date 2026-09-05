@@ -56,7 +56,7 @@ namespace VintageCanvas.src.Utility
         public static int BlendWithMixing(int basepixel, int overlaypixel, float alpha)
         {
             int sa = (basepixel >> 24) & 0xFF; int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
-            int da = (basepixel >> 24) & 0xFF; int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
+            int da = (overlaypixel >> 24) & 0xFF; int dr = (overlaypixel >> 16) & 0xFF, dg = (overlaypixel >> 8) & 0xFF, db = overlaypixel & 0xFF;
 
             Color color1 = Color.FromArgb(sa, sr, sg, sb);
             Color color2 = Color.FromArgb(da, dr, dg, db);
