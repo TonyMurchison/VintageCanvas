@@ -1,0 +1,37 @@
+[
+  {
+    "ingredientPattern": "PKJ",
+    "ingredients": {
+      "P": {
+        "type": "block",
+        "code": "game:linen-*"
+      },
+      "K": {
+        "type": "item",
+        "tags": [ "tool-knife" ],
+        "isTool": true
+      },
+      "J": {
+        "type": "block",
+        "code": "paintjar-*-fired"
+      }
+    },
+    "attributes": {
+      "liquidContainerProps": {
+        "requiresContent": {
+          "type": "item",
+          "code": "turpentine*"
+        },
+        "requiresLitres": 0.1
+      }
+    },
+    "width": 3,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "rag",
+      "quantity": 1
+    }
+  }
+
+]

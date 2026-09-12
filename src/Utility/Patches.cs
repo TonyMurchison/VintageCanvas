@@ -69,7 +69,7 @@ namespace VintageCanvas.src.Utility
                     int[] pixeldata = new int[1024];
                     if (decorIds[i] == frescoBlock.BlockId)
                     {
-                        pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/fresco.png")).ToBitmap(capi).Pixels;
+                        pixeldata = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/canvas.png")).ToBitmap(capi).Pixels;
                     }
                     if (decorIds[i] == transparentFrescoBlock.BlockId)
                     {
@@ -108,6 +108,7 @@ namespace VintageCanvas.src.Utility
             {
                 BlockPos pos = forPlayer.CurrentBlockSelection.Position;
                 BlockEntityMicroBlock? bemb = forPlayer.Entity.World.BlockAccessor.GetBlockEntity(pos) as BlockEntityMicroBlock;
+                if (bemb == null) return;
                 int[]? decors = bemb.DecorIds;
                 if (decors == null) return;
                 int? decor = decors[forPlayer.CurrentBlockSelection.Face.Index];

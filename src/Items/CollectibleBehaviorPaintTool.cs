@@ -301,6 +301,34 @@ namespace VintageCanvas.src.Items
             }
         }
 
+        public int[] ApplyEraser(ItemStack held, int[] pixeldata, Vec2i[] basepixels, int canvasSize, BlockSelection blockSel, ICoreClientAPI capi)
+        {            
+            
+            HashSet<int> pixels = new HashSet<int>();
+
+            foreach (Vec2i basepixelvec in basepixels)
+            {
+                if (basepixelvec.Y >= canvasSize || basepixelvec.X >= canvasSize
+                    || basepixelvec.Y < 0 || basepixelvec.X < 0) continue;
+
+                int basepixel = basepixelvec.Y * canvasSize + basepixelvec.X;
+                pixels.Add(basepixel);
+                }
+
+            //For chiselled blocks, set alpha to zero in order 
+            if (blockSel.Block is BlockMicroBlock)
+            {
+                return MakePixelsTransparent(pixels.ToArray(), pixeldata, canvasSize, blockSel);
+            }
+
+            else
+            {
+                return MakePixelsCanvas(pixels.ToArray(), pixeldata, canvasSize, blockSel, capi);
+            }
+
+        }
+        
+
         //Hashing pixel indices with their block coordinates, so that they don't overlap between blocks
         private int hashBlockPixel(BlockSelection blockSel, int pixel)
         {
@@ -344,6 +372,27 @@ namespace VintageCanvas.src.Items
             }
         }
 
+        private int[] MakePixelsTransparent(int[] pixelindices, int[] pixeldata, int canvasSize, BlockSelection blockSel)
+        {
+            foreach(int pixelindex in pixelindices)
+            {
+                int baseColor = pixeldata[pixelindex];
+                int newColor = TextureUtil.MakeTransparent(baseColor);
+                pixeldata[pixelindex] = newColor;
+            }
+            return pixeldata;
+        }
+
+        private int[] MakePixelsCanvas(int[] pixelindices, int[] pixeldata, int canvasSize, BlockSelection blockSel, ICoreClientAPI capi)
+        {
+            foreach (int pixelindex in pixelindices)
+            {
+                int baseColor = pixeldata[pixelindex];
+                int newColor = TextureUtil.MakeCanvas(baseColor, pixelindex, canvasSize, capi);
+                pixeldata[pixelindex] = newColor;
+            }
+            return pixeldata;
+        }
 
         private int[] PaintPixels(int[] pixelindices, int color, float alpha, ItemStack held, int[] pixeldata, int canvasSize, BlockSelection blockSel)
         {
@@ -459,7 +508,7 @@ namespace VintageCanvas.src.Items
                 };
 
                 //Offset by 0.5 pixel
-                interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0.5 / 32), canvasSize);
+                interpolatedPixels = InterpolatePixels(previousUV, new Vec2d(xcoord, ycoord), new Vec2d(0, 0), canvasSize);
 
             }
 
@@ -482,6 +531,12 @@ namespace VintageCanvas.src.Items
             {
                 pixeldata = ApplyBrush(tool, pixeldata, interpolatedPixels, canvasSize, blockSel);
             }
+
+            if (tool.Collectible.Code.PathStartsWith("rag"))
+            {
+                pixeldata = ApplyEraser(tool, pixeldata, interpolatedPixels, canvasSize, blockSel, byPlayer.Entity.World.Api as ICoreClientAPI);
+            }
+
             if (tool.Collectible.Code.PathStartsWith("pastel"))
             {
                 if (tool.Collectible.Code.EndVariant() == "carbonblack")
@@ -510,7 +565,7 @@ namespace VintageCanvas.src.Items
                             pixelcoords.Add(pixel[0] + canvasSize * pixel[1]);
                         }
                     }
-                    pixeldata = PaintPixels(pixelcoords.ToArray(), 936298687, 0.5f, tool, pixeldata, canvasSize, blockSel);
+                    pixeldata = PaintPixels(pixelcoords.ToArray(), -3225409, 0.5f, tool, pixeldata, canvasSize, blockSel);
                 }
 
                 tool.Attributes.SetFloat("timestamp", -10f);

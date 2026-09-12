@@ -1,0 +1,112 @@
+{
+  "code": "rag",
+
+  "behaviors": [
+    { "name": "CollectibleBehaviorPaintTool" },
+    {
+      "name": "GroundStorable",
+      "properties": {
+        "layout": "Quadrants",
+        "collisionBox": {
+          "x1": 0,
+          "y1": 0,
+          "z1": 0,
+          "x2": 1,
+          "y2": 0.25,
+          "z2": 1
+        }
+      }
+    }
+  ],
+
+  "tags": [ "tool" ],
+
+  "shapebytype": {
+    "*": {
+      "base": "item/rag"
+    }
+  },
+  "textureByType": {
+    "*": {
+      "base": "game:block/cloth/linen/mordant"
+    }
+  },
+
+  "creativeinventory": {
+    "general": [ "*" ],
+    "items": [ "*" ],
+    "tools": [ "*" ],
+    "vintagecanvas": [ "*" ]
+  },
+
+  "onDisplayTransform": {
+    "translation": {
+      "x": 0.05,
+      "y": 0,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
+    },
+    "scale": 0.65
+  },
+  "attributes": {
+    "groundStorageTransform": {
+      "translation": {
+        "x": 0,
+        "y": 0.11,
+        "z": 0
+      },
+      "rotation": {
+        "x": 0,
+        "y": -41,
+        "z": 0
+      },
+      "scale": 1.16
+    }
+  },
+  "handbook": {
+    "groupBy": [ "rag" ]
+  },
+
+  "maxstacksize": 1,
+  "materialDensity": 500,
+  "guiTransform": {
+    "translation": {
+      "x": -10,
+      "y": -12,
+      "z": 0
+    },
+    "rotation": {
+      "x": 55,
+      "y": -28,
+      "z": 0
+    },
+    "origin": {
+      "x": 0.48,
+      "y": 0.15,
+      "z": 0.8
+    },
+    "scale": 3.85
+  },
+  "tpHandTransform": {
+    "translation": {
+      "x": -0.3,
+      "y": 0.9,
+      "z": 0.7799
+    },
+    "rotation": {
+      "x": -130,
+      "y": 81,
+      "z": -63
+    },
+    "origin": {
+      "x": 0.7,
+      "y": -0.8,
+      "z": 0
+    },
+    "scale": 0.87
+  }
+}

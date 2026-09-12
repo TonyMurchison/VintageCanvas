@@ -84,6 +84,24 @@ namespace VintageCanvas.src.Utility
             }
         }
 
+        public static int MakeTransparent(int basepixel)
+        {
+            int sr = (basepixel >> 16) & 0xFF, sg = (basepixel >> 8) & 0xFF, sb = basepixel & 0xFF;
+            return (0 << 24) | (sr << 16) | (sg << 8) | sb;
+        }
+
+        public static int MakeCanvas(int basepixel, int pixelindex, int canvasSize, ICoreClientAPI capi)
+        {
+            string ctex = "canvas.png";
+            if(canvasSize  == 64)
+            {
+                ctex = "canvas-large.png";
+            }
+            BitmapRef bmp = capi.Assets.Get(new AssetLocation("vintagecanvas:textures/block/" + ctex)).ToBitmap(capi);
+            return bmp.Pixels[pixelindex];
+
+        }
+
         public static float[] ARGBtoRGBA(int argb)
         {
             float r = (float)(((argb >> 16) & 0xFF) / 255f);
