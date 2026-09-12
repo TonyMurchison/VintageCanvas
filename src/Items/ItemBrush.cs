@@ -153,7 +153,8 @@ namespace VintageCanvas.src.Items
 
         public override void SetToolMode(ItemSlot slot, IPlayer byPlayer, BlockSelection blockSelection, int toolMode)
         {
-            if (!byPlayer.InventoryManager.OffhandHotbarSlot.Itemstack.Collectible.Code.PathStartsWith("palette"))
+            if (byPlayer.InventoryManager.OffhandHotbarSlot.Itemstack == null ||
+                !byPlayer.InventoryManager.OffhandHotbarSlot.Itemstack.Collectible.Code.PathStartsWith("palette"))
             {
                 return;
             }

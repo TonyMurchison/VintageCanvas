@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using VintageCanvas.src.Blocks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -99,7 +100,35 @@ namespace VintageCanvas.src.Utility
         }
     }
 
-    [HarmonyPatch(typeof(BlockEntityMicroBlock), "GetBlockInfo")]
+    [HarmonyPatch(typeof(BlockEntityChisel), "Interact")]
+    public static class ScrapeFrescoPatch
+    {
+        static void Postfix(IPlayer byPlayer, BlockSelection blockSel)
+        {
+            if (byPlayer != null && byPlayer.InventoryManager.ActiveTool == EnumTool.Knife)
+            {
+                if (!byPlayer.Entity.World.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak))
+                {
+                    return;
+                }
+
+                var face = blockSel.Face.Index;
+                BlockEntityMicroBlock bec = byPlayer.Entity.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityMicroBlock;
+                if (bec == null) return;
+                if (bec.DecorIds != null)
+                {
+                    string frescoId = "vintagecanvasfresco" + blockSel.Position.ToString() + "-" + face;
+                    if (FrescoStore.Data.ContainsKey(frescoId))
+                    {
+                        FrescoStore.Data.Remove(frescoId);
+                    }
+                }
+            }
+            return;
+        }
+    }
+
+        [HarmonyPatch(typeof(BlockEntityMicroBlock), "GetBlockInfo")]
     public static class ChiselInfoPatch
     {
         static void Postfix(IPlayer forPlayer, StringBuilder dsc)
