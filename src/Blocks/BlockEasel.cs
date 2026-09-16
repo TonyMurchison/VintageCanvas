@@ -279,6 +279,27 @@ namespace VintageCanvas.src.Blocks
                 dsc.AppendLine("\nAn imposing frame that will hold the biggest of canvases as you work.");
             }
         }
+        public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1)
+        {
+            //Force drop any contents when breaking in creative to avoid loss of work
+            if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Creative)
+            {
+                BlockEntityEasel bee = world.BlockAccessor.GetBlockEntity(pos) as BlockEntityEasel;
+                if (bee != null && bee.CanvasSlot.Itemstack != null)
+                {
+                    var canvasStack = bee.CanvasSlot.Itemstack.Clone();
+
+                    if (bee.pixeldata != null)
+                    {
+                        var cdata = TextureUtil.WriteCompressedPixelData(bee.pixeldata);
+                        canvasStack.Attributes.SetBytes("vc_pixeldata", cdata);
+                    }
+                    canvasStack.Attributes.SetBool("vc_rendered", false);
+                    world.SpawnItemEntity(canvasStack, pos);
+                }
+            }
+            base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+        }
     }
 }
 

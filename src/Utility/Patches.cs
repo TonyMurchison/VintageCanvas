@@ -8,9 +8,12 @@ using System.Text;
 using VintageCanvas.src.Blocks;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
+using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
@@ -127,8 +130,39 @@ namespace VintageCanvas.src.Utility
             return;
         }
     }
+    
+    //Constantly offsets any off-hand hunger value of artists back to default
+    [HarmonyPatch(typeof(EntityBehaviorHunger), "OnGameTick")]
+    public static class OffsetArtistHunger
+    {
+        static void Prefix(EntityBehaviorHunger __instance, float deltaTime)
+        {
+            Entity entity = __instance.entity;
+            EntityPlayer player = entity as EntityPlayer;
+                
+            if (player == null || entity.WatchedAttributes.GetInt("ambidextrous", 0) == 0 && false)
+            {
+                return;
+            }
+            EntityFloatStats stats = entity.Stats["hungerrate"];
 
-        [HarmonyPatch(typeof(BlockEntityMicroBlock), "GetBlockInfo")]
+            var c = player.WatchedAttributes["characterClass"];
+
+            if(stats != null && c.ToString() == "canvaspainter")
+            {
+                if (stats.ValuesByKey.ContainsKey("offhanditem"))
+                {                    
+                    player.Stats.Set("hungerrate", "vintagecanvas:ambidextrous", -0.2f, false);
+                }
+                else
+                {
+                    ((Entity)player).Stats.Remove("hungerrate", "vintagecanvas:ambidextrous");
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(BlockEntityMicroBlock), "GetBlockInfo")]
     public static class ChiselInfoPatch
     {
         static void Postfix(IPlayer forPlayer, StringBuilder dsc)

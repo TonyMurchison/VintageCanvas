@@ -19,7 +19,7 @@
     "height": 1,
     "output": {
       "type": "item",
-      "code": "clothes-beret",
+      "code": "clothes-head-beret",
       "quantity": 1
     }
   },
@@ -44,7 +44,7 @@
     "height": 1,
     "output": {
       "type": "item",
-      "code": "clothes-beret",
+      "code": "clothes-head-beret",
       "quantity": 1
     }
   }

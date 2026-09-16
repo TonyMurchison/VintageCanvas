@@ -1,6 +1,12 @@
 {
   "code": "clothes",
-  "variantgroups": [    
+  "variantgroups": [
+    {
+      "code": "bodypart",
+      "states": [
+        "head"
+      ]
+    },
     {
       "code": "head",
       "states": [

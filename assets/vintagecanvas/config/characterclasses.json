@@ -1,0 +1,43 @@
+[
+  {
+    "enabled": true,
+    "code": "canvaspainter",
+    "traits": [
+      "forager",
+      "ambidextrous",
+      "fleetfooted",
+      "frail",
+      "kind"
+    ],
+    "gear": [
+      {
+        "type": "item",
+        "code": "game:clothes-upperbody-homespun-shirt"
+      },
+      {
+        "type": "item",
+        "code": "game:clothes-nadiya-upperbodyover-coat-short"
+      },
+      {
+        "type": "item",
+        "code": "game:clothes-lowerbody-fine-trousers"
+      },
+      {
+        "type": "item",
+        "code": "game:clothes-foot-hobnailboots"
+      },
+      {
+        "type": "item",
+        "code": "game:clothes-hand-minstrel-gloves"
+      },
+      {
+        "type": "item",
+        "code": "game:clothes-waist-heavy-tool-belt"
+      },
+      {
+        "type": "item",
+        "code": "vintagecanvas:clothes-head-beret"
+      }
+    ]
+  }
+]

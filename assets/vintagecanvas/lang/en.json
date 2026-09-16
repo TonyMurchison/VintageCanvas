@@ -66,6 +66,14 @@
 
   "game:tabname-vintagecanvas": "Vintage Canvas",
 
+
+  "game:characterclass-canvaspainter": "Artist",
+  "game:characterdesc-canvaspainter": "<font color=\"#99c9f9\"><i>This world is full enough of horror and despair. Strive to see wonder take hold once again.</i></font><br><br>Artists are coordinated and resourceful, turning everything they find into a source of creativity. Their somewhat sheltered lives left them ill-prepared for combat.",
+  "game:trait-ambidextrous": "<font color=\"#84ff84\">• Ambidextrous </font>",
+  "game:traitname-ambidextrous": "Ambidextrous",
+  "game:charattribute-ambidextrous-1": "Off-hand items do not carry a hunger penalty",
+
+
   "Name canvas": "Name canvas",
   "Name: ": "Name: ",
   "Author: ": "Author: ",
