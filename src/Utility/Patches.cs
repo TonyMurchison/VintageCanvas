@@ -12,9 +12,7 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
-using Vintagestory.API.Server;
-using Vintagestory.API.Util;
-using Vintagestory.Client.NoObf;
+using Vintagestory.Common;
 using Vintagestory.GameContent;
 using Vintagestory.GameContent.Mechanics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -130,33 +128,24 @@ namespace VintageCanvas.src.Utility
             return;
         }
     }
-    
-    //Constantly offsets any off-hand hunger value of artists back to default
-    [HarmonyPatch(typeof(EntityBehaviorHunger), "OnGameTick")]
-    public static class OffsetArtistHunger
+
+
+    [HarmonyPatch(typeof(InventoryPlayerHotbar), "updateSlotStatMods", new[] { typeof(List<string>), typeof(ItemSlot), typeof(string)})]
+    public static class CancelArtistHunger
     {
-        static void Prefix(EntityBehaviorHunger __instance, float deltaTime)
+        static void Postfix(InventoryPlayerHotbar __instance, List<string> list, ItemSlot slot, string handcategory)
         {
-            Entity entity = __instance.entity;
-            EntityPlayer player = entity as EntityPlayer;
-                
-            if (player == null || entity.WatchedAttributes.GetInt("ambidextrous", 0) == 0 && false)
-            {
-                return;
-            }
-            EntityFloatStats stats = entity.Stats["hungerrate"];
+            IPlayer player = __instance.Player;
 
-            var c = player.WatchedAttributes["characterClass"];
+            //TODO: Detect the trait instead of the class
+            var c = player.Entity.WatchedAttributes["characterClass"];
 
-            if(stats != null && c.ToString() == "canvaspainter")
+            if (player.Entity.Stats["hungerrate"] != null && c.ToString() == "canvaspainter")
             {
-                if (stats.ValuesByKey.ContainsKey("offhanditem"))
-                {                    
-                    player.Stats.Set("hungerrate", "vintagecanvas:ambidextrous", -0.2f, false);
-                }
-                else
+                if (player.Entity.Stats["hungerrate"].ValuesByKey.ContainsKey("offhanditem"))
                 {
-                    ((Entity)player).Stats.Remove("hungerrate", "vintagecanvas:ambidextrous");
+                    player.Entity.Stats.Remove("hungerrate", "offhanditem");
+                    //player.Entity.Stats.Set("hungerrate", "vintagecanvas:ambidextrous", -0.2f, false);
                 }
             }
         }
