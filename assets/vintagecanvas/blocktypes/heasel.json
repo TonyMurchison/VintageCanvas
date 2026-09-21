@@ -91,7 +91,15 @@
       "canvasangle": "7.5",
       "uvyoffset": "0.58",
       "originheight": "3.075",
-      "canvassize": "64"
+      "canvassize": "64",
+      "handbook": {
+        "extraSections": [
+          {
+            "title": "vintagecanvas:block-handbooktitle-heasel",
+            "text": "vintagecanvas:block-handbooktext-heasel"
+          }
+        ]
+      }
     }
   },
 

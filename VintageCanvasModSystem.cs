@@ -41,6 +41,7 @@ namespace VintageCanvas
             api.RegisterBlockEntityClass("BlockEntityLargeCanvas", typeof(BlockEntityLargeCanvas));
             api.RegisterBlockEntityClass("BlockEntityPalette", typeof(BlockEntityPalette));
             api.RegisterCollectibleBehaviorClass("CollectibleBehaviorPaintTool", typeof(CollectibleBehaviorPaintTool));
+            api.RegisterCollectibleBehaviorClass("CollectibleBehaviorDecorTool", typeof(CollectibleBehaviorDecorTool));
 
             new Harmony("vintagecanvas").PatchAll();
 

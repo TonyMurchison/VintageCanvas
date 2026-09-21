@@ -5,19 +5,7 @@
   "variantgroups": [
     {
       "code": "color",
-      "states": [
-        "vermillion",
-        "redochre",
-        "ultramarine",
-        "yellowochre",
-        "woad",
-        "leadtin",
-        "organicgreen",
-        "malachite",
-        "leadwhite",
-        "chalkwhite",
-        "carbonblack"
-      ]
+      "loadFromProperties": "vintagecanvas:paint"
     }
   ],
 

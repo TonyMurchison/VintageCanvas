@@ -13,6 +13,7 @@
   "vintagecanvas:item-brush-small": "Small brush",
   "vintagecanvas:item-brush-medium": "Medium brush",
   "vintagecanvas:item-brush-large": "Large brush",
+  "vintagecanvas:item-roller-*": "Paint roller",
   "vintagecanvas:item-clothes-beret": "Artist's beret",
   "vintagecanvas:item-rag": "Turpentine rag",
 
@@ -66,6 +67,10 @@
 
   "game:tabname-vintagecanvas": "Vintage Canvas",
 
+  "vintagecanvas:block-handbooktitle-easel": "Easel",
+  "vintagecanvas:block-handbooktext-easel": "A small easel for making block-sized paintings. Use right-click to place a canvas, then use pigment sticks or paint brushes to create your painting.",
+  "vintagecanvas:block-handbooktitle-heasel": "Large easel",
+  "vintagecanvas:block-handbooktext-heasel": "Also known as an H-Frame. Large and sturdy enough to support canvases of up to 2x2 blocks. Use right-click to place a canvas, then use pigment sticks or paint brushes to create your painting.",
 
   "game:characterclass-canvaspainter": "Artist",
   "game:characterdesc-canvaspainter": "<font color=\"#99c9f9\"><i>This world is full enough of horror and despair. Strive to see wonder take hold once again.</i></font><br><br>Artists are coordinated and resourceful, turning everything they find into a source of creativity. Their somewhat sheltered lives left them ill-prepared for combat.",

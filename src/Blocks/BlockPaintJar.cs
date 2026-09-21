@@ -356,6 +356,31 @@ namespace VintageCanvas.src.Blocks
                         }
                     }
 
+                    //Pick up paint with paint roller
+                    if (heldCode.StartsWith("roller"))
+                    {
+                        var api = byPlayer.Entity.World.Api;
+
+                        if (jarcontent.Collectible.Code.PathStartsWith("turpentine"))
+                        {
+                            if (byPlayer.Entity.Controls.ShiftKey)
+                            {
+                                Item item = api.World.GetItem("vintagecanvas:roller-none");
+                                ItemStack newStack = new ItemStack(item, 1);
+                                byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack = newStack;
+                            }
+                        }
+
+                        if (jarcontent.Collectible.Code.PathStartsWith("paint"))
+                        {
+                            var paintcode = "vintagecanvas:roller-" + jarcontent.Collectible.Variant["color"].ToString();
+                            Item item = api.World.GetItem(paintcode);
+                            ItemStack newStack = new ItemStack(item, 1);
+                            byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack = newStack;
+                            this.TryTakeLiquid(slot.Itemstack, 0.1f);
+                        }
+                    }
+
                     if (heldCode.StartsWith("brush"))
                     {
                         //Incrementally decrease opacity when clicking on a turpentine jar

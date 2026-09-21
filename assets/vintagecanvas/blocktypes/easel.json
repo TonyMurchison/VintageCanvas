@@ -4,8 +4,6 @@
   "class": "BlockEasel",
   "blockmaterial": "Wood",
 
-
-
   "variantgroups": [
     {
       "code": "woodtype",
@@ -44,7 +42,15 @@
     "canvasangle": "15",
     "uvyoffset": "0.3898",
     "originheight": "2.1137",
-    "canvassize": "32"
+    "canvassize": "32",
+    "handbook": {
+      "extraSections": [
+        {
+          "title": "vintagecanvas:block-handbooktitle-easel",
+          "text": "vintagecanvas:block-handbooktext-easel"
+        }
+      ]
+    }
   },
 
   "textures": {

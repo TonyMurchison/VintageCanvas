@@ -1,0 +1,38 @@
+{
+  "Code": "paint",
+  "variants": [
+    {
+      "Code": "vermillion"
+    },
+    {
+      "Code": "redochre"
+    },
+    {
+      "Code": "ultramarine"
+    },
+    {
+      "Code": "yellowochre"
+    },
+    {
+      "Code": "woad"
+    },
+    {
+      "Code": "leadtin"
+    },
+    {
+      "Code": "organicgreen"
+    },
+    {
+      "Code": "malachite"
+    },
+    {
+      "Code": "leadwhite"
+    },
+    {
+      "Code": "chalkwhite"
+    },
+    {
+      "Code": "carbonblack"
+    }
+  ]
+}
