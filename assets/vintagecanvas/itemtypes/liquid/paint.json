@@ -11,7 +11,13 @@
 
   "attributes": {
     "handbook": {
-      "ignoreCreativeInvStacks": true
+      "ignoreCreativeInvStacks": true,
+      "extraSections": [
+        {
+          "title": "vintagecanvas:block-handbooktitle-paint",
+          "text": "vintagecanvas:block-handbooktext-paint"
+        }
+      ]
     },
     "coolingMedium": false,
     "waterTightContainerProps": {

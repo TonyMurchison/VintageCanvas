@@ -1,0 +1,27 @@
+[
+  {
+    "ingredientPattern": "R,S,H",
+    "ingredients": {
+      "R": {
+        "type": "item",
+        "code": "game:cloth-plain"
+      },
+      "S": {
+        "type": "item",
+        "code": "game:rod-*"
+      },
+      "H": {
+        "type": "item",
+        "code": "game:stick"
+      }
+    },
+    "name": "Roller",
+    "width": 1,
+    "height": 3,
+    "output": {
+      "type": "item",
+      "code": "roller-none",
+      "quantity": 1
+    }
+  }
+]

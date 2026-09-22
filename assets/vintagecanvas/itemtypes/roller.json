@@ -15,6 +15,14 @@
   ],
 
   "attributes": {
+    "handbook": {
+      "extraSections": [
+        {
+          "title": "vintagecanvas:block-handbooktitle-roller",
+          "text": "vintagecanvas:block-handbooktext-roller"
+        }
+      ]
+    },
     "rackable": true,
     "toolrackTransform": {
       "translation": {

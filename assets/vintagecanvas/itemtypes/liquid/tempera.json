@@ -5,7 +5,13 @@
 
   "attributes": {
     "handbook": {
-      "ignoreCreativeInvStacks": true
+      "ignoreCreativeInvStacks": true,
+      "extraSections": [
+        {
+          "title": "vintagecanvas:block-handbooktitle-tempera",
+          "text": "vintagecanvas:block-handbooktext-tempera"
+        }
+      ]
     },
     "coolingMedium": false,
     "waterTightContainerProps": {

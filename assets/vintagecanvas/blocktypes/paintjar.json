@@ -5,6 +5,7 @@
     "vintagecanvas": [ "*" ]
   },
   "blockmaterial": "Ceramic",
+  "storageFlags": 257,
 
   "classByType": {
     "*-fired": "BlockPaintJar"
@@ -31,7 +32,7 @@
   "attributes": {
 
     "mediums": [
-      { "medium": "vintagecanvas:tempera"},
+      { "medium": "vintagecanvas:tempera" },
       { "medium": "game:oilportion-flax" },
       { "medium": "game:oilportion-olive" },
       { "medium": "expandedfoods:foodoilportion-flax" },
