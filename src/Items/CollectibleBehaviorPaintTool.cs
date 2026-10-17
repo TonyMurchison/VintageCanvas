@@ -515,7 +515,11 @@ namespace VintageCanvas.src.Items
             if (blockSel.Block is BlockEasel ||
                 blockSel.Block is BlockMultiblock)
             {
-                BlockEasel be = getEasel(blockSel, byPlayer.Entity.World);
+                BlockEntityEasel bee = getEaselEntity(blockSel, byPlayer.Entity.World);
+                if (bee.CanvasSlot == null || bee.CanvasSlot.Empty) return pixeldata;
+
+                BlockEasel be = getEasel(blockSel, byPlayer.Entity.World);               
+
                 Vec2d UV = be.CanvasAngleRaycast(byPlayer.Entity.World, byPlayer, blockSel);
 
                 float yoffset = be.Attributes["uvyoffset"].AsFloat();
@@ -671,7 +675,7 @@ namespace VintageCanvas.src.Items
             if (blockSel == null) return false;
             if (blockSel.Block is BlockEasel ||
                 blockSel.Block is BlockMicroBlock)
-            {
+            {                
                 return true;
             }
 

@@ -1,0 +1,20 @@
+[
+  {
+    "op": "add",
+    "path": "/combustiblePropsByType",
+    "file": "game:itemtypes/resource/crushed/crushed.json",
+    "value": {
+      "*-chromite": {
+        "meltingPoint": 1000,
+        "meltingDuration": 13,
+        "smeltedRatio": 1,
+        "requiresContainer": false,
+        "smeltedStack": {
+          "type": "item",
+          "code": "vintagecanvas:pigment-viridian",
+          "stacksize": 1
+        }
+      }
+    }
+  }
+]

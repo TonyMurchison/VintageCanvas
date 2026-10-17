@@ -1,0 +1,21 @@
+{
+  "code": "verdigris",
+  "sealHours": 48,
+  "ingredients": [
+    {
+      "type": "item",
+      "code": "game:alcoholportion",
+      "litres": 0.2
+    },
+    {
+      "type": "item",
+      "code": "game:nugget-nativecopper",
+      "quantity": 1
+    }
+  ],
+  "output": {
+    "type": "item",
+    "code": "vintagecanvas:pigment-verdigris",
+    "stackSize": 1
+  }
+}

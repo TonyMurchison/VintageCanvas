@@ -1,0 +1,23 @@
+[
+  {
+    "op": "replace",
+    "path": "/0/enabled",
+    "value": false,
+    "file": "config/characterclasses.json",
+    "condition": {
+      "when": "vintagecanvas:artistClassEnabled",
+      "isvalue": "false"
+    }
+  },
+
+  {
+    "op": "replace",
+    "path": "/0/enabled",
+    "value": true,
+    "file": "config/characterclasses.json",
+    "condition": {
+      "when": "vintagecanvas:artistClassEnabled",
+      "isvalue": "true"
+    }
+  }
+]

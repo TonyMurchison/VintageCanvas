@@ -16,6 +16,30 @@
   {
     "op": "add",
     "path": "/grindingProps",
+    "file": "game:blocktypes/soil/peatbrick.json",
+    "value": {
+      "groundStack": {
+        "type": "item",
+        "code": "vintagecanvas:pigment-vandyke"
+      }
+    }
+  },
+
+  {
+    "op": "add",
+    "path": "/grindingProps",
+    "file": "game:blocktypes/soil/peatbrick.json",
+    "value": {
+      "groundStack": {
+        "type": "item",
+        "code": "vintagecanvas:pigment-vandyke"
+      }
+    }
+  },
+
+  {
+    "op": "add",
+    "path": "/grindingProps",
     "file": "game:blocktypes/soil/packeddirt.json",
     "value": {
       "groundStack": {
@@ -111,8 +135,15 @@
           "type": "item",
           "code": "vintagecanvas:pigment-woad"
         }
+      },
+      "flower-westerngorse-*": {
+        "groundStack": {
+          "type": "item",
+          "code": "vintagecanvas:pigment-weld"
+        }      
+
+        }
       }
-    }
   },
 
   {

@@ -128,6 +128,8 @@ namespace VintageCanvas.src.Entities
             if (jarStack.Collectible is ILiquidInterface liquidInterface)
             {
                 content = liquidInterface.GetContent(jarStack);
+                if (content == null) return;
+
                 if (content.Collectible.Code.PathStartsWith("paint"))
                 {
                     string paintName = content.Collectible.Code.EndVariant();

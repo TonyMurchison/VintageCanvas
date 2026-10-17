@@ -136,9 +136,12 @@ namespace VintageCanvas.src.Utility
         static void Postfix(InventoryPlayerHotbar __instance, List<string> list, ItemSlot slot, string handcategory)
         {
             IPlayer player = __instance.Player;
+            if (player?.Entity == null) return;
 
             //TODO: Detect the trait instead of the class
             var c = player.Entity.WatchedAttributes["characterClass"];
+
+            if (c == null) return;
 
             if (player.Entity.Stats["hungerrate"] != null && c.ToString() == "canvaspainter")
             {

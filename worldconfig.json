@@ -1,0 +1,11 @@
+{
+  "PlayStyles": [],
+  "WorldConfigAttributes": [
+    {
+      "Category": "vintagecanvas",
+      "Code": "artistClassEnabled",
+      "DataType": "Bool",
+      "Default":  "True"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "variantgroups": [
     {
       "code": "type",
-      "states": [ "redochre", "yellowochre", "woad", "leadtin", "organicgreen", "malachite", "chalkwhite", "leadwhite"]
+      "loadFromProperties": "vintagecanvas:paint"
     }
   ],
 
@@ -30,44 +30,58 @@
   "textureByType": {
     "*": { "base": "liquid/{type}" }
   },
+  "combustiblePropsByType": {
+    "*-yellowochre": {
+      "meltingPoint": 700,
+      "meltingDuration": 13,
+      "smeltedRatio": 1,
+      "requiresContainer": false,
+        "smeltedStack": {
+          "type": "item",
+          "code": "pigment-burntumber",
+          "stacksize": 1
+        }
+    }
+  },
+
   "creativeinventory": {
     "general": [ "*" ],
     "items": [ "*" ],
-    "vintagecanvas":  [ "*" ]
+    "vintagecanvas": [ "*" ]
   },
 
-    "dissolveInWater": true,
-    "displaycaseable": true,
-    "shelvable": true,
-    "onDisplayTransform": {
-      "translation": {
-        "x": 0.05,
-        "y": 0,
-        "z": 0
-      },
-      "origin": {
-        "x": 0.5,
-        "y": 0,
-        "z": 0.5
-      },
-      "scale": 0.65
+  "dissolveInWater": true,
+  "displaycaseable": true,
+  "shelvable": true,
+  "onDisplayTransform": {
+    "translation": {
+      "x": 0.05,
+      "y": 0,
+      "z": 0
     },
-    "groundStorageTransform": {
-      "translation": {
-        "x": 0,
-        "y": -0.055,
-        "z": 0
-      },
-      "rotation": {
-        "x": 0.1,
-        "y": 8,
-        "z": 0.1
-      },
-      "scale": 0.9
+    "origin": {
+      "x": 0.5,
+      "y": 0,
+      "z": 0.5
     },
-    "handbook": {
-      "groupBy": [ "pigment-*" ]
+    "scale": 0.65
+  },
+  "groundStorageTransform": {
+    "translation": {
+      "x": 0,
+      "y": -0.055,
+      "z": 0
     },
+    "rotation": {
+      "x": 0.1,
+      "y": 8,
+      "z": 0.1
+    },
+    "scale": 0.9
+  },
+  "handbook": {
+    "groupBy": [ "pigment-*" ]
+  },
 
   "maxstacksize": 64,
   "materialDensity": 500,

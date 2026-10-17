@@ -15,6 +15,7 @@
   "vintagecanvas:item-brush-large": "Large brush",
   "vintagecanvas:item-roller-*": "Paint roller",
   "vintagecanvas:item-clothes-beret": "Artist's beret",
+  "vintagecanvas:item-clothes-head-beret": "Artist's beret",
   "vintagecanvas:item-rag": "Turpentine rag",
 
   "vintagecanvas:item-paintjar-*-raw": "Raw paint jar",
@@ -30,6 +31,13 @@
   "vintagecanvas:incontainer-item-paint-leadwhite": "Lead white paint",
   "vintagecanvas:incontainer-item-paint-chalkwhite": "Chalk white paint",
   "vintagecanvas:incontainer-item-paint-carbonblack": "Carbon black paint",
+  "vintagecanvas:incontainer-item-paint-burntumber": "Burnt umber paint",
+  "vintagecanvas:incontainer-item-paint-vandyke": "Van Dyke brown paint",
+  "vintagecanvas:incontainer-item-paint-verdigris": "Verdigris paint",
+  "vintagecanvas:incontainer-item-paint-viridian": "Viridian paint",
+  "vintagecanvas:incontainer-item-paint-brazilwood": "Brazilwood paint",
+  "vintagecanvas:incontainer-item-paint-weld": "Weld paint",
+
   "vintagecanvas:incontainer-item-turpentine": "Turpentine",
   "vintagecanvas:incontainer-item-tempera": "Tempera",
 
@@ -44,6 +52,12 @@
   "vintagecanvas:item-pigment-leadwhite": "Lead white pigment",
   "vintagecanvas:item-pigment-chalkwhite": "Chalk white pigment",
   "vintagecanvas:item-pigment-carbonblack": "Carbon black pigment",
+  "vintagecanvas:item-pigment-burntumber": "Burnt umber pigment",
+  "vintagecanvas:item-pigment-vandyke": "Van Dyke brown pigment",
+  "vintagecanvas:item-pigment-verdigris": "Verdigris pigment",
+  "vintagecanvas:item-pigment-viridian": "Viridian pigment",
+  "vintagecanvas:item-pigment-brazilwood": "Brazilwood pigment",
+  "vintagecanvas:item-pigment-weld": "Weld pigment",
 
   "vintagecanvas:item-paint-vermillion": "Vermillion paint",
   "vintagecanvas:item-paint-redochre": "Red ochre paint",
@@ -56,6 +70,13 @@
   "vintagecanvas:item-paint-leadwhite": "Lead white paint",
   "vintagecanvas:item-paint-chalkwhite": "Chalk white paint",
   "vintagecanvas:item-paint-carbonblack": "Carbon black paint",
+  "vintagecanvas:item-paint-burntumber": "Burnt umber paint",
+  "vintagecanvas:item-paint-vandyke": "Van Dyke brown paint",
+  "vintagecanvas:item-paint-verdigris": "Verdigris paint",
+  "vintagecanvas:item-paint-viridian": "Viridian paint",
+  "vintagecanvas:item-paint-brazilwood": "Brazilwood paint",
+  "vintagecanvas:item-paint-weld": "Weld paint",
+
   "vintagecanvas:item-turpentine": "Turpentine",
   "vintagecanvas:item-tempera": "Tempera",
 
@@ -70,6 +91,12 @@
   "vintagecanvas:block-wallpaint-leadwhite": "Lead white paint",
   "vintagecanvas:block-wallpaint-chalkwhite": "Chalk white paint",
   "vintagecanvas:block-wallpaint-carbonblack": "Carbon black paint",
+  "vintagecanvas:block-wallpaint-burntumber": "Burnt umber paint",
+  "vintagecanvas:block-wallpaint-vandyke": "Van Dyke brown paint",
+  "vintagecanvas:block-wallpaint-verdigris": "Verdigris paint",
+  "vintagecanvas:block-wallpaint-viridian": "Viridian paint",
+  "vintagecanvas:block-wallpaint-brazilwood": "Brazilwood paint",
+  "vintagecanvas:block-wallpaint-weld": "Weld paint",
 
   "vintagecanvas:item-vellum": "Vellum",
   "vintagecanvas:block-frescoplaster-white": "Fresco plaster",

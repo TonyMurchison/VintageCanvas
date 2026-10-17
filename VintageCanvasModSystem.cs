@@ -10,11 +10,13 @@ using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
+using Vintagestory.GameContent;
 
 namespace VintageCanvas
 {
     public class VintageCanvasModSystem : ModSystem
     {
+
         ICoreServerAPI sapi;
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
@@ -26,7 +28,7 @@ namespace VintageCanvas
         {
             base.Start(api);
             api.RegisterBlockClass("BlockPaintJar", typeof(BlockPaintJar));
-            api.RegisterBlockClass("BlockCanvas", typeof(BlockCanvas));
+            api.RegisterBlockClass("BlockCanvas", typeof(src.Blocks.BlockCanvas));
             api.RegisterBlockClass("BlockLargeCanvas", typeof(BlockLargeCanvas));
             api.RegisterBlockClass("BlockEasel", typeof(BlockEasel));
             api.RegisterBlockClass("BlockEaselH", typeof(BlockEaselH));
@@ -73,6 +75,7 @@ namespace VintageCanvas
 
         public override void StartServerSide(ICoreServerAPI api)
         {
+            config = api.LoadModConfig<VintageCanvasConfig>("VintageCanvasConfig.json");
             sapi = api;
             api.Event.GameWorldSave += OnWorldSave;
             api.Event.SaveGameLoaded += OnWorldLoad;

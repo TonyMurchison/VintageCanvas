@@ -88,6 +88,32 @@
       {
         "input": "pigment-leadwhite",
         "output": "vintagecanvas:paint-leadwhite"
+      },
+
+
+      {
+        "input": "pigment-burntumber",
+        "output": "vintagecanvas:paint-burntumber"
+      },
+      {
+        "input": "pigment-vandyke",
+        "output": "vintagecanvas:paint-vandyke"
+      },
+      {
+        "input": "pigment-verdigris",
+        "output": "vintagecanvas:paint-verdigris"
+      },
+      {
+        "input": "pigment-viridian",
+        "output": "vintagecanvas:paint-viridian"
+      },
+      {
+        "input": "pigment-brazilwood",
+        "output": "vintagecanvas:paint-brazilwood"
+      },
+      {
+        "input": "pigment-weld",
+        "output": "vintagecanvas:paint-weld"
       }
     ],
 
@@ -135,6 +161,32 @@
       {
         "input": "vintagecanvas:paint-leadwhite",
         "output": "-1184275"
+      },
+
+
+      {
+        "input": "vintagecanvas:paint-burntumber",
+        "output": "-11386571"
+      },
+      {
+        "input": "vintagecanvas:paint-vandyke",
+        "output": "-13491944"
+      },
+      {
+        "input": "vintagecanvas:paint-verdigris",
+        "output": "-14371397"
+      },
+      {
+        "input": "vintagecanvas:paint-viridian",
+        "output": "-14319009"
+      },
+      {
+        "input": "vintagecanvas:paint-brazilwood",
+        "output": "-7717500"
+      },
+      {
+        "input": "vintagecanvas:paint-weld",
+        "output": "-3948716"
       }
     ],
 

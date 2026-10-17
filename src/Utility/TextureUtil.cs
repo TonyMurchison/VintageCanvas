@@ -51,7 +51,14 @@ namespace VintageCanvas.src.Utility
                     {"malachite", -14241530 },
                     {"carbonblack", -16119286 },
                     {"chalkwhite", -4080464 },
-                    {"leadwhite", -1184275 }
+                    {"leadwhite", -1184275 },
+                    {"burntumber", -11386571 },
+                    {"vandyke", -13426408 },
+                    {"verdigris", -14371397 },
+                    {"viridian", -14319009 },
+                    {"brazilwood", -7717500 },
+                    {"weld", -3948716 },
+
                 };
         public static int BlendWithMixing(int basepixel, int overlaypixel, float alpha)
         {

@@ -1,0 +1,21 @@
+{
+  "code": "brazilwood",
+  "sealHours": 48,
+  "ingredients": [
+    {
+      "type": "item",
+      "code": "game:waterportion",
+      "litres": 10
+    },
+    {
+      "type": "block",
+      "code": "game:log-placed-purpleheart-ud",
+      "quantity": 1
+    }
+  ],
+  "output": {
+    "type": "item",
+    "code": "vintagecanvas:pigment-brazilwood",
+    "stackSize": 1
+  }
+}
