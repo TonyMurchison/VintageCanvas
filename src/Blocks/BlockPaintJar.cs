@@ -368,6 +368,8 @@ namespace VintageCanvas.src.Blocks
                                 Item item = api.World.GetItem("vintagecanvas:roller-none");
                                 ItemStack newStack = new ItemStack(item, 1);
                                 byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack = newStack;
+                                slot.MarkDirty();
+                                be.MarkDirty();
                             }
                         }
 
@@ -378,6 +380,8 @@ namespace VintageCanvas.src.Blocks
                             ItemStack newStack = new ItemStack(item, 1);
                             byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack = newStack;
                             this.TryTakeLiquid(slot.Itemstack, 0.1f);
+                            slot.MarkDirty();
+                            be.MarkDirty();
                         }
                     }
 

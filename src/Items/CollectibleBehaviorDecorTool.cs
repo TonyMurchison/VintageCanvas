@@ -44,7 +44,9 @@ namespace VintageCanvas.src.Items
                 if (target == null) return;                
 
                 //Translucent decor on soil, glass and grass for some reason makes an Xray tool, so don't do that
-                if (!(target is BlockSoil) && !target.Code.PathStartsWith("glass"))
+                if (!(target is BlockSoil) 
+                    && !(target is BlockGroundStorage)
+                    && !target.Code.PathStartsWith("glass"))
                 {
                     bool painted = false;
 

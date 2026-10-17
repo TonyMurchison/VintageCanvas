@@ -15,7 +15,7 @@
     "path": "/attributes/pigmentrecipes/-",
     "value": {
       "input": "powdered-metal-rusty",
-      "output": "vintagecanvas:paint-carbonblack"
+      "output": "vintagecanvas:paint-vandyke"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -103,7 +103,7 @@
     "path": "/attributes/pigmentrecipes/-",
     "value": {
       "input": "powdered-ore-cobaltblue",
-      "output": "vintagecanvas:paint-ultramarine"
+      "output": "vintagecanvas:paint-viridian"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -136,7 +136,7 @@
     "path": "/attributes/pigmentrecipes/-",
     "value": {
       "input": "powdered-ore-cadmiumsulfide",
-      "output": "vintagecanvas:paint-leadtin"
+      "output": "vintagecanvas:paint-veridian"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -169,7 +169,7 @@
     "path": "/attributes/pigmentrecipes/-",
     "value": {
       "input": "powdered-ore-cadmiumsulfide",
-      "output": "vintagecanvas:paint-leadtin"
+      "output": "vintagecanvas:paint-weld"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -180,7 +180,7 @@
     "path": "/attributes/pigmentrecipes/-",
     "value": {
       "input": "powdered-ore-hematite",
-      "output": "vintagecanvas:paint-redochre"
+      "output": "vintagecanvas:paint-burntumber"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -234,8 +234,8 @@
     "op": "add",
     "path": "/attributes/pigmentrecipes/-",
     "value": {
-      "input": "powdered-ore-verdigris",
-      "output": "vintagecanvas:paint-malachite"
+      "input": "powdered-ore-malachite",
+      "output": "vintagecanvas:paint-verdigris"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
@@ -258,6 +258,17 @@
     "value": {
       "input": "powdered-ore-manganesedioxide",
       "output": "vintagecanvas:paint-carbonblack"
+    },
+    "file": "vintagecanvas:blocktypes/paintjar.json",
+    "dependsOn": [ { "modid": "em" } ]
+  },
+
+  {
+    "op": "add",
+    "path": "/attributes/pigmentrecipes/-",
+    "value": {
+      "input": "powdered-ore-manganeseviolet",
+      "output": "vintagecanvas:paint-brazilwood"
     },
     "file": "vintagecanvas:blocktypes/paintjar.json",
     "dependsOn": [ { "modid": "em" } ]
