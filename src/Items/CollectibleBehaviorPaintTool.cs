@@ -156,7 +156,7 @@ namespace VintageCanvas.src.Items
                 handling = EnumHandling.Handled;
             }
 
-            if (blockSel.Block is BlockMicroBlock)
+            if (isChiselSurface(blockSel.Block)) // is BlockMicroBlock)
             {
                 BlockMicroBlock bmb = blockSel.Block as BlockMicroBlock;
                 BlockEntityMicroBlock bemb = (BlockEntityMicroBlock)byEntity.World.BlockAccessor.GetBlockEntity(blockSel.Position);
@@ -316,7 +316,7 @@ namespace VintageCanvas.src.Items
                 }
 
             //For chiselled blocks, set alpha to zero in order 
-            if (blockSel.Block is BlockMicroBlock)
+            if (isChiselSurface(blockSel.Block))
             {
                 return MakePixelsTransparent(pixels.ToArray(), pixeldata, canvasSize, blockSel);
             }
@@ -333,7 +333,7 @@ namespace VintageCanvas.src.Items
         private int hashBlockPixel(BlockSelection blockSel, int pixel)
         {
             int hash = unchecked(pixel);
-            if (blockSel.Block is BlockMicroBlock)
+            if (isChiselSurface(blockSel.Block)) // is BlockMicroBlock)
             {
                 hash += unchecked(blockSel.Position.X * 10000);
                 hash += unchecked(blockSel.Position.Y * 1000000);
@@ -359,7 +359,7 @@ namespace VintageCanvas.src.Items
             }
             blockPainted.Clear();
 
-            if (IsPaintTarget(blockSel, world) && blockSel.Block is not BlockMicroBlock)
+            if (IsPaintTarget(blockSel, world) && !isChiselSurface(blockSel.Block )) //is not BlockMicroBlock)
             {
                 BlockEntityEasel ee = getEaselEntity(blockSel, world);
                 if (world.Side == EnumAppSide.Client) ee.SynchroniseTexture();
@@ -479,7 +479,7 @@ namespace VintageCanvas.src.Items
             Vec2i[] interpolatedPixels = [];
             int canvasSize = 32;
 
-            if (blockSel.Block is BlockMicroBlock)
+            if (isChiselSurface(blockSel.Block))// is BlockMicroBlock)
             {
                 double x = blockSel.HitPosition.X;
                 double y = blockSel.HitPosition.Y;
@@ -659,9 +659,7 @@ namespace VintageCanvas.src.Items
             IPlayer byPlayer = byEntity.World.PlayerByUid((byEntity as EntityPlayer)?.PlayerUID);
             if (byPlayer.CurrentBlockSelection != null)
             {
-                if (byPlayer.CurrentBlockSelection.Block is BlockEasel
-                    || byPlayer.CurrentBlockSelection.Block is BlockMultiblock
-                    || byPlayer.CurrentBlockSelection.Block is BlockMicroBlock)
+                if (IsPaintTarget(byPlayer.CurrentBlockSelection, byEntity.World))
                 {
                     bhHandling = EnumHandling.PreventDefault;
                 }
@@ -672,9 +670,10 @@ namespace VintageCanvas.src.Items
 
         public static bool IsPaintTarget(BlockSelection blockSel, IWorldAccessor world)
         {
-            if (blockSel == null) return false;
+            if (blockSel == null || blockSel.Block == null) return false;
+
             if (blockSel.Block is BlockEasel ||
-                blockSel.Block is BlockMicroBlock)
+                isChiselSurface(blockSel.Block)) //VSRoofing
             {                
                 return true;
             }
@@ -713,13 +712,21 @@ namespace VintageCanvas.src.Items
         public void SynchroniseFrescoTexture(int[] pixeldata, BlockPos pos, int face, IWorldAccessor world)
         {
 
-            if (world.BlockAccessor.GetBlock(pos) is BlockMicroBlock)
+            if (isChiselSurface(world.BlockAccessor.GetBlock(pos)))
             {
                 BlockEntity be = world.BlockAccessor.GetBlockEntity(pos);
                 VintageCanvasModSystem.NetworkHandler.SendPixelData(pos, TextureUtil.WriteCompressedPixelData(pixeldata), face);
                 be.MarkDirty(true);
             }
         }        
+
+        static public bool isChiselSurface(Block block)
+        {
+            if (block is BlockMicroBlock) return true;
+            if (block.Code.GetNameWithDomain().StartsWith("vsroofing:roof-filled")) return true;
+
+            return false;
+        }
         #endregion
         
     }

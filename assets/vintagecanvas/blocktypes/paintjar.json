@@ -54,6 +54,14 @@
         "output": "vintagecanvas:paint-ultramarine"
       },
       {
+        "input": "pigment-vermillion",
+        "output": "vintagecanvas:paint-vermillion"
+      },
+      {
+        "input": "pigment-ultramarine",
+        "output": "vintagecanvas:paint-ultramarine"
+      },
+      {
         "input": "pigment-redochre",
         "output": "vintagecanvas:paint-redochre"
       },

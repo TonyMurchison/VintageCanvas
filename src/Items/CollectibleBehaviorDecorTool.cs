@@ -56,8 +56,10 @@ namespace VintageCanvas.src.Items
 
                     
 
-                    if (target is BlockMicroBlock)
+                    if (target is BlockMicroBlock ||
+                        target.Code.PathStartsWith("roof-filled")) //VS Roofing
                     {
+                        byPlayer.Entity.Api.Logger.Debug("Targetting microblock");
                         BlockEntityMicroBlock bemb = byEntity.Api.World.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityMicroBlock;
                         bemb.SetDecor(paintblock, blockSel.Face);
                         bemb.MarkDirty(true);
@@ -66,6 +68,8 @@ namespace VintageCanvas.src.Items
                     }
                     else
                     {
+
+                        if (target.Class.StartsWith("vsroofing")) return;
                         painted = byEntity.World.BlockAccessor.SetDecor(paintblock, blockSel.Position, blockSel.Face);
                     }
 

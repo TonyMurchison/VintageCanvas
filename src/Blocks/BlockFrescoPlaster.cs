@@ -13,7 +13,8 @@ namespace VintageCanvas.src.Blocks
     {
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
         {
-            if (blockSel.Block is BlockMicroBlock)
+            if (blockSel.Block is BlockMicroBlock
+                || blockSel.Block.Code.PathStartsWith("roof-filled")) //VSRoofing
             {
                 base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
             }

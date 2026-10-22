@@ -1,0 +1,21 @@
+{
+  "code": "ultramarine",
+  "sealHours": 4,
+  "ingredients": [
+    {
+      "type": "item",
+      "code": "game:dilutedcassiteriteportion",
+      "litres": 1
+    },
+    {
+      "type": "item",
+      "code": "game:powder-lapislazuli",
+      "quantity": 1
+    }
+  ],
+  "output": {
+    "type": "item",
+    "code": "vintagecanvas:pigment-ultramarine",
+    "stackSize": 1
+  }
+}

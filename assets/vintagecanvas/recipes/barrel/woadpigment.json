@@ -1,0 +1,21 @@
+{
+  "code": "woadpigment",
+  "sealHours": 4,
+  "ingredients": [
+    {
+      "type": "item",
+      "code": "game:dye-woad",
+      "litres": 1
+    },
+    {
+      "type": "item",
+      "code": "game:bonemeal",
+      "quantity": 1
+    }
+  ],
+  "output": {
+    "type": "item",
+    "code": "vintagecanvas:pigment-woad",
+    "stackSize": 1
+  }
+}

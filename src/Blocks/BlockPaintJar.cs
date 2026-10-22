@@ -453,6 +453,43 @@ namespace VintageCanvas.src.Blocks
                                 }
                             }
                         }
+
+                        //Uses blood from Butchering
+                        if (jarcontent.Collectible.Code.PathStartsWith("blood"))
+                        {
+                            int paintcolor = -7857391;
+                            int curpaint = heldStack.Attributes.GetInt("paintcolor");
+                            if (paintcolor != 0)
+                            {
+                                heldStack.Attributes.SetInt("paintcolor", paintcolor);
+                                heldStack.Attributes.SetFloat("opacity", 1f);
+
+                                string brushsize = byPlayer.InventoryManager.ActiveHotbarSlot.Itemstack.Item.Variant["size"];
+                                int pickupcount = (brushsize) switch
+                                {
+                                    ("small") => 1,
+                                    ("medium") => 2,
+                                    ("large") => 4
+                                };
+
+                                if (VintageCanvasModSystem.config.PaintDepletion)
+                                {
+                                    if (heldStack.Attributes.GetInt("paintcolor") == curpaint)
+                                    {
+                                        int curamount = heldStack.Attributes.GetInt("paintamount");
+                                        heldStack.Attributes.SetInt("paintamount", heldStack.Attributes.GetInt("paintamount") + (pickupcount * VintageCanvasModSystem.config.PixelsPerPaintUnit));
+                                    }
+                                    else
+                                    {
+                                        heldStack.Attributes.SetInt("paintamount", pickupcount * VintageCanvasModSystem.config.PixelsPerPaintUnit);
+                                    }
+                                    this.TryTakeLiquid(jarstack, pickupcount * 0.01f);
+                                    DoLiquidMovedEffects(byPlayer, jarcontent, 1, EnumLiquidDirection.Pour);
+                                    be.MarkDirty();
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 }
                 return true;

@@ -38,9 +38,10 @@ namespace VintageCanvas.src.Utility
                     .SetMessageHandler<FrameSavePacket>(OnServerReceiveFrameSave)
                     .RegisterMessageType<FrescoPushPacket>()
                     .RegisterMessageType<FrescoRequestPacket>()
-                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest) 
+                    .SetMessageHandler<FrescoRequestPacket>(OnServerReceiveFrescoRequest)
                     .RegisterMessageType<CanvasNameSavePacket>()
-                    .SetMessageHandler<CanvasNameSavePacket>(OnServerReceiveCanvasNameSave);
+                    .SetMessageHandler<CanvasNameSavePacket>(OnServerReceiveCanvasNameSave);              
+
             }
                 else
                 {
@@ -49,14 +50,13 @@ namespace VintageCanvas.src.Utility
                     .RegisterMessageType<PaintSavePacket>()
                     .RegisterMessageType<PaletteSavePacket>()
                     .RegisterMessageType<FrameSavePacket>()
-                    .RegisterMessageType<FrescoPushPacket>()                    
+                    .RegisterMessageType<FrescoPushPacket>()
                     .SetMessageHandler<FrescoPushPacket>(OnClientReceiveFrescoPush)
                     .RegisterMessageType<FrescoRequestPacket>()
                     .RegisterMessageType<CanvasNameSavePacket>();
 
-                }
             }
-
+            }
         private void OnServerReceiveCanvasNameSave(IServerPlayer fromPlayer, CanvasNameSavePacket packet)
         {
             var sapi = (ICoreServerAPI)api;

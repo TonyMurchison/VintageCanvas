@@ -9,5 +9,7 @@ namespace VintageCanvas.src.Utility
         public bool PaintDepletion = false;
         public int PixelsPerPaintUnit = 300;
         public bool MixBoxBlending = true;
+
+        public bool EnableArtistClass = false;
     }
 }

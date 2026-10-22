@@ -1,5 +1,7 @@
-﻿using HarmonyLib;
+﻿using Cairo.Freetype;
+using HarmonyLib;
 using ProtoBuf;
+using System.Linq;
 using VintageCanvas.src.Blocks;
 using VintageCanvas.src.Entities;
 using VintageCanvas.src.Items;
@@ -18,6 +20,7 @@ namespace VintageCanvas
     {
 
         ICoreServerAPI sapi;
+        ICoreClientAPI capi;
         IServerNetworkChannel serverChannel;
         IClientNetworkChannel clientChannel;
         public static VintageCanvasConfig config;
@@ -78,11 +81,12 @@ namespace VintageCanvas
             config = api.LoadModConfig<VintageCanvasConfig>("VintageCanvasConfig.json");
             sapi = api;
             api.Event.GameWorldSave += OnWorldSave;
-            api.Event.SaveGameLoaded += OnWorldLoad;
+            api.Event.SaveGameLoaded += OnWorldLoad;            
         }
 
         public override void StartClientSide(ICoreClientAPI api)
         {
+            capi = api;
         }
 
         private void OnWorldSave()
