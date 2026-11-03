@@ -152,5 +152,19 @@
         }
       }
     }
+  },
+
+  {
+    "op": "add",
+    "path": "/grindingPropsByType",
+    "file": "game:itemtypes/resource/crushed/crushed.json",
+    "value": {
+      "*-chromite": {
+        "groundStack": {
+          "type": "item",
+          "code": "vintagecanvas:pigment-viridian"
+        }
+      }
+    }
   }
 ]
